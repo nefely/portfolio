@@ -1,13 +1,19 @@
 import Header from "@/app/components/Header.jsx";
-import Sale from "@/app/components/Sale.jsx";
-import Shop from "@/app/components/Shop.jsx";
+import SliderSection from "@/app/components/SliderSection.jsx";
+import GridSection from "@/app/components/GridSection.jsx";
+import CardSection from "@/app/components/CardSection.jsx";
+import { StoreProvider } from "@/store/StoreContext";
 
 export default function Home() {
   return (
-    <div>
-      <Header />
-      <Sale />
-      <Shop />
-    </div>
+    <StoreProvider>
+      <div>
+        <Header />
+        <CardSection />
+        <SliderSection data="sale" />
+        <GridSection data="products"/>
+        <GridSection data="favorites"/>
+      </div>
+    </StoreProvider>
   );
 }

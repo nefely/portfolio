@@ -1,0 +1,207 @@
+"use client"
+
+import { createContext } from "react"
+
+export const Store = {
+  products: [
+    {
+      id: 1,
+      name: "Яблука",
+      stock: 42,
+      price: 35,
+      unit: "kg",
+      photo: "/products/apples.jpg",
+      description: "Свіжі яблука сорту Голден, солодкі та соковиті.",
+    },
+    {
+      id: 2,
+      name: "Банани",
+      stock: 30,
+      price: 55,
+      unit: "kg",
+      photo: "/products/bananas.jpg",
+      description: "Стиглі банани, ідеальні для перекусу чи смузі.",
+    },
+    {
+      id: 3,
+      name: "Молоко 1л",
+      stock: 15,
+      price: 42,
+      unit: "pcs",
+      photo: "/products/milk.jpg",
+      description: "Пастеризоване молоко 2.5% жирності, 1 літр.",
+    },
+    {
+      id: 4,
+      name: "Хліб пшеничний",
+      stock: 20,
+      price: 28,
+      unit: "pcs",
+      photo: "/products/bread.jpg",
+      description: "Свіжоспечений пшеничний хліб, буханка 500 г.",
+    },
+    {
+      id: 5,
+      name: "Помідори",
+      stock: 25,
+      price: 60,
+      unit: "kg",
+      photo: "/products/tomatoes.jpg",
+      description: "Соковиті грунтові помідори.",
+    },
+    {
+      id: 6,
+      name: "Яйця",
+      stock: 50,
+      price: 65,
+      unit: "pcs",
+      photo: "/products/eggs.jpg",
+      description: "Свіжі курячі яйця, десяток.",
+    },
+    {
+      id: 7,
+      name: "Сир твердий",
+      stock: 18,
+      price: 210,
+      unit: "kg",
+      photo: "/products/cheese.jpg",
+      description: "Твердий сир витримки 60 днів, насичений смак.",
+    },
+    {
+      id: 8,
+      name: "Картопля",
+      stock: 60,
+      price: 22,
+      unit: "kg",
+      photo: "/products/potatoes.jpg",
+      description: "Молода картопля, ідеальна для смаження та супів.",
+    },
+    {
+      id: 9,
+      name: "Курка охолоджена",
+      stock: 24,
+      price: 180,
+      unit: "kg",
+      photo: "/products/chicken.jpg",
+      description: "Охолоджена куряча тушка, вагова.",
+    },
+    {
+      id: 10,
+      name: "Кава в зернах",
+      stock: 12,
+      price: 320,
+      unit: "pcs",
+      photo: "/products/coffee.jpg",
+      description: "Кава в зернах середнього ступеня прожарки, 250 г.",
+    },
+  ],
+  sale: [
+    {
+      id: 11,
+      name: "Кефір",
+      stock: 20,
+      price: 32,
+      oldPrice: 45,
+      unit: "pcs",
+      photo: "/products/kefir.jpg",
+      description: "Кефір 2.5% жирності, 0.5 л.",
+    },
+    {
+      id: 12,
+      name: "Гречка",
+      stock: 35,
+      price: 38,
+      oldPrice: 52,
+      unit: "kg",
+      photo: "/products/buckwheat.jpg",
+      description: "Гречана крупа першого сорту, розсипчаста.",
+    },
+    {
+      id: 13,
+      name: "Огірки",
+      stock: 40,
+      price: 45,
+      oldPrice: 65,
+      unit: "kg",
+      photo: "/products/cucumbers.jpg",
+      description: "Хрусткі грунтові огірки.",
+    },
+    {
+      id: 14,
+      name: "Ковбаса варена",
+      stock: 16,
+      price: 145,
+      oldPrice: 190,
+      unit: "kg",
+      photo: "/products/sausage.jpg",
+      description: "Варена ковбаса домашнього типу.",
+    },
+    {
+      id: 15,
+      name: "Печиво",
+      stock: 28,
+      price: 55,
+      oldPrice: 75,
+      unit: "pcs",
+      photo: "/products/cookies.jpg",
+      description: "Печиво здобне, пачка 300 г.",
+    },
+  ],
+  favorites: [
+    {
+      id: 16,
+      name: "Мед",
+      stock: 14,
+      price: 220,
+      unit: "pcs",
+      photo: "/products/honey.jpg",
+      description: "Натуральний квітковий мед, банка 0.5 л.",
+    },
+    {
+      id: 17,
+      name: "Волоські горіхи",
+      stock: 22,
+      price: 260,
+      unit: "kg",
+      photo: "/products/walnuts.jpg",
+      description: "Волоські горіхи очищені, високої якості.",
+    },
+    {
+      id: 18,
+      name: "Йогурт",
+      stock: 33,
+      price: 34,
+      unit: "pcs",
+      photo: "/products/yogurt.jpg",
+      description: "Натуральний йогурт без добавок, 0.4 л.",
+    },
+    {
+      id: 19,
+      name: "Апельсини",
+      stock: 45,
+      price: 58,
+      unit: "kg",
+      photo: "/products/oranges.jpg",
+      description: "Соковиті апельсини, ідеальні для соку.",
+    },
+    {
+      id: 20,
+      name: "Шоколад",
+      stock: 27,
+      price: 68,
+      unit: "pcs",
+      photo: "/products/chocolate.jpg",
+      description: "Молочний шоколад, плитка 90 г.",
+    },
+  ]
+}
+
+export const StoreContext = createContext(Store)
+
+export function StoreProvider({ children }) {
+  return (
+    <StoreContext.Provider value={Store}>
+      {children}
+    </StoreContext.Provider>
+  )
+}
