@@ -7,12 +7,10 @@ export default function BoardFilters({ profiles, createdBy, assignedTo, onCreate
   const hasFilter = createdBy !== "all" || assignedTo !== "all";
 
   return (
-    // Sticky to the left edge of the board's own horizontal scroll
-    // container (see Board.jsx's <main overflow-x-auto>), so the bar stays
-    // in view instead of scrolling away with the columns behind it. Fixed
-    // to one column's width on mobile so the two filters wrap onto their
-    // own rows instead of overflowing the screen.
-    <div className="sticky left-0 z-10 mb-4 flex w-72 flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white/95 px-3 py-2 shadow-sm backdrop-blur sm:w-fit sm:flex-nowrap sm:gap-3">
+    // No card/border of its own — it's just the expanded contents of the
+    // toolbar above the board, so on mobile it naturally spans the full
+    // width of the screen instead of floating as a separate box.
+    <div className="mt-2 flex w-full flex-wrap items-center gap-2 sm:flex-nowrap sm:gap-3">
       <div className="flex w-full items-center gap-1.5 sm:w-auto">
         <label htmlFor="filter-created-by" className="shrink-0 text-xs font-medium text-slate-500">
           Created by

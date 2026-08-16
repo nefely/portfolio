@@ -16,6 +16,7 @@ import {
   horizontalListSortingStrategy,
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
+import { Filter } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { positionBetween } from "@/lib/positioning";
 import { useToast } from "@/components/ui/Toast";
@@ -38,6 +39,8 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
   const [editingTask, setEditingTask] = useState(null);
   const [filterCreatedBy, setFilterCreatedBy] = useState("all");
   const [filterAssignedTo, setFilterAssignedTo] = useState("all");
+  const [showFilters, setShowFilters] = useState(false);
+  const hasActiveFilters = filterCreatedBy !== "all" || filterAssignedTo !== "all";
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -302,15 +305,37 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
   }
 
   return (
-    <main className="flex-1 overflow-x-auto px-4 py-6 sm:px-6">
-      <BoardFilters
-        profiles={profiles}
-        createdBy={filterCreatedBy}
-        assignedTo={filterAssignedTo}
-        onCreatedByChange={setFilterCreatedBy}
-        onAssignedToChange={setFilterAssignedTo}
-      />
+    <>
+      <div className="border-b border-slate-200/70 bg-white/70 px-4 py-2 backdrop-blur sm:px-6">
+        <button
+          type="button"
+          onClick={() => setShowFilters((v) => !v)}
+          className={`flex items-center gap-1.5 rounded-lg px-2 py-1 text-sm font-medium transition ${
+            showFilters || hasActiveFilters
+              ? "bg-indigo-50 text-indigo-600"
+              : "text-slate-500 hover:bg-slate-100"
+          }`}
+          aria-expanded={showFilters}
+        >
+          <Filter size={14} />
+          Filters
+          {hasActiveFilters && (
+            <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" aria-hidden="true" />
+          )}
+        </button>
 
+        {showFilters && (
+          <BoardFilters
+            profiles={profiles}
+            createdBy={filterCreatedBy}
+            assignedTo={filterAssignedTo}
+            onCreatedByChange={setFilterCreatedBy}
+            onAssignedToChange={setFilterAssignedTo}
+          />
+        )}
+      </div>
+
+      <main className="flex-1 overflow-x-auto px-4 py-6 sm:px-6">
       <DndContext
         // dnd-kit auto-generates its a11y announcer ids (DndDescribedBy-N)
         // from a module-level counter, which increments differently on the
@@ -375,6 +400,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
           You don&apos;t have any columns yet — add one to start planning tasks.
         </p>
       )}
-    </main>
+      </main>
+    </>
   );
 }
