@@ -17,9 +17,12 @@ export function ToastProvider({ children }) {
   const showToast = useCallback((message, variant = "info") => {
     const id = ++idRef.current;
     setToasts((prev) => [...prev, { id, message, variant }]);
+    // Errors mean a change didn't actually save — give them longer on screen
+    // than routine success/info toasts so they're hard to miss.
+    const duration = variant === "error" ? 8000 : 4000;
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 4000);
+    }, duration);
   }, []);
 
   return (

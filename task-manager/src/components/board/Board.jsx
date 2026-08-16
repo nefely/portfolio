@@ -127,6 +127,7 @@ export default function Board({ initialColumns, initialTasks, userId }) {
       const after = reordered[newIndex + 1];
       const newPosition = positionBetween(before?.position, after?.position);
 
+      const prevColumns = columns;
       setColumns((prev) =>
         prev.map((c) => (c.id === active.id ? { ...c, position: newPosition } : c))
       );
@@ -135,7 +136,10 @@ export default function Board({ initialColumns, initialTasks, userId }) {
         .from("columns")
         .update({ position: newPosition })
         .eq("id", active.id);
-      if (error) reportError(error, "Couldn't save the new column order.");
+      if (error) {
+        setColumns(prevColumns);
+        reportError(error, "Couldn't save the new column order.");
+      }
       return;
     }
 
@@ -143,43 +147,45 @@ export default function Board({ initialColumns, initialTasks, userId }) {
 
     const activeId = active.id;
     const overId = over.id;
-    let persist = null;
 
-    setTasks((prev) => {
-      const activeIndex = prev.findIndex((t) => t.id === activeId);
-      if (activeIndex === -1) return prev;
-      const activeItem = prev[activeIndex];
-      const containerId = activeItem.column_id;
+    // Compute the new position from the current render's `tasks` state
+    // directly, rather than inside the setTasks updater — that updater isn't
+    // guaranteed to run synchronously, so a value assigned inside it (and
+    // read right after, like the old `persist` variable used to be) can
+    // still be unset by the time we get here, silently skipping the save.
+    const activeIndex = tasks.findIndex((t) => t.id === activeId);
+    if (activeIndex === -1) return;
+    const activeItem = tasks[activeIndex];
+    const containerId = activeItem.column_id;
 
-      const siblings = prev
-        .filter((t) => t.column_id === containerId && t.id !== activeId)
-        .sort((a, b) => a.position - b.position);
+    const siblings = tasks
+      .filter((t) => t.column_id === containerId && t.id !== activeId)
+      .sort((a, b) => a.position - b.position);
 
-      let overIndex;
-      if (over.data.current?.type === "Task") {
-        overIndex = siblings.findIndex((t) => t.id === overId);
-        if (overIndex === -1) overIndex = siblings.length;
-      } else {
-        overIndex = siblings.length;
-      }
+    let overIndex;
+    if (over.data.current?.type === "Task") {
+      overIndex = siblings.findIndex((t) => t.id === overId);
+      if (overIndex === -1) overIndex = siblings.length;
+    } else {
+      overIndex = siblings.length;
+    }
 
-      const before = siblings[overIndex - 1];
-      const after = siblings[overIndex];
-      const newPosition = positionBetween(before?.position, after?.position);
+    const before = siblings[overIndex - 1];
+    const after = siblings[overIndex];
+    const newPosition = positionBetween(before?.position, after?.position);
 
-      persist = { id: activeItem.id, column_id: containerId, position: newPosition };
+    const prevTasks = tasks;
+    setTasks((prev) =>
+      prev.map((t) => (t.id === activeId ? { ...t, column_id: containerId, position: newPosition } : t))
+    );
 
-      const updated = [...prev];
-      updated[activeIndex] = { ...activeItem, position: newPosition };
-      return updated;
-    });
-
-    if (persist) {
-      const { error } = await supabase
-        .from("tasks")
-        .update({ column_id: persist.column_id, position: persist.position })
-        .eq("id", persist.id);
-      if (error) reportError(error, "Couldn't save the task's new position.");
+    const { error } = await supabase
+      .from("tasks")
+      .update({ column_id: containerId, position: newPosition })
+      .eq("id", activeItem.id);
+    if (error) {
+      setTasks(prevTasks);
+      reportError(error, "Couldn't save the task's new position.");
     }
   }
 
@@ -205,15 +211,23 @@ export default function Board({ initialColumns, initialTasks, userId }) {
   }
 
   async function renameColumn(id, name) {
+    const prevColumns = columns;
     setColumns((prev) => prev.map((c) => (c.id === id ? { ...c, name } : c)));
     const { error } = await supabase.from("columns").update({ name }).eq("id", id);
-    if (error) reportError(error, "Couldn't rename the column.");
+    if (error) {
+      setColumns(prevColumns);
+      reportError(error, "Couldn't rename the column.");
+    }
   }
 
   async function recolorColumn(id, color) {
+    const prevColumns = columns;
     setColumns((prev) => prev.map((c) => (c.id === id ? { ...c, color } : c)));
     const { error } = await supabase.from("columns").update({ color }).eq("id", id);
-    if (error) reportError(error, "Couldn't change the column color.");
+    if (error) {
+      setColumns(prevColumns);
+      reportError(error, "Couldn't change the column color.");
+    }
   }
 
   async function deleteColumn(id) {
@@ -248,9 +262,13 @@ export default function Board({ initialColumns, initialTasks, userId }) {
   }
 
   async function updateTask(id, patch) {
+    const prevTasks = tasks;
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...patch } : t)));
     const { error } = await supabase.from("tasks").update(patch).eq("id", id);
-    if (error) reportError(error, "Couldn't save the task.");
+    if (error) {
+      setTasks(prevTasks);
+      reportError(error, "Couldn't save the task.");
+    }
   }
 
   async function deleteTask(id) {
@@ -266,6 +284,11 @@ export default function Board({ initialColumns, initialTasks, userId }) {
   return (
     <main className="flex-1 overflow-x-auto px-4 py-6 sm:px-6">
       <DndContext
+        // dnd-kit auto-generates its a11y announcer ids (DndDescribedBy-N)
+        // from a module-level counter, which increments differently on the
+        // server vs. during client hydration and trips React's hydration
+        // check. Passing a fixed id makes it deterministic instead.
+        id="task-board"
         sensors={sensors}
         collisionDetection={closestCorners}
         onDragStart={handleDragStart}
