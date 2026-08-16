@@ -19,6 +19,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { positionBetween } from "@/lib/positioning";
 import { useToast } from "@/components/ui/Toast";
+import BoardFilters from "./BoardFilters";
 import Column from "./Column";
 import AddColumnForm from "./AddColumnForm";
 import TaskModal from "./TaskModal";
@@ -35,6 +36,8 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
   const [activeTask, setActiveTask] = useState(null);
   const [activeColumn, setActiveColumn] = useState(null);
   const [editingTask, setEditingTask] = useState(null);
+  const [filterCreatedBy, setFilterCreatedBy] = useState("all");
+  const [filterAssignedTo, setFilterAssignedTo] = useState("all");
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -48,14 +51,31 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
     [columns]
   );
 
+  // Filtering only changes what's displayed — drag-and-drop math above still
+  // reads from the full `tasks` state, so moving cards around stays correct
+  // even while a filter hides some of them.
+  const visibleTasks = useMemo(() => {
+    return tasks.filter((t) => {
+      if (filterCreatedBy !== "all" && t.user_id !== filterCreatedBy) return false;
+      if (filterAssignedTo === "unassigned" && t.assigned_to) return false;
+      if (
+        filterAssignedTo !== "all" &&
+        filterAssignedTo !== "unassigned" &&
+        t.assigned_to !== filterAssignedTo
+      )
+        return false;
+      return true;
+    });
+  }, [tasks, filterCreatedBy, filterAssignedTo]);
+
   const tasksByColumn = useMemo(() => {
     const map = {};
     for (const col of columns) map[col.id] = [];
-    for (const task of [...tasks].sort((a, b) => a.position - b.position)) {
+    for (const task of [...visibleTasks].sort((a, b) => a.position - b.position)) {
       if (map[task.column_id]) map[task.column_id].push(task);
     }
     return map;
-  }, [columns, tasks]);
+  }, [columns, visibleTasks]);
 
   const findContainerId = useCallback(
     (id) => {
@@ -283,6 +303,14 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
 
   return (
     <main className="flex-1 overflow-x-auto px-4 py-6 sm:px-6">
+      <BoardFilters
+        profiles={profiles}
+        createdBy={filterCreatedBy}
+        assignedTo={filterAssignedTo}
+        onCreatedByChange={setFilterCreatedBy}
+        onAssignedToChange={setFilterAssignedTo}
+      />
+
       <DndContext
         // dnd-kit auto-generates its a11y announcer ids (DndDescribedBy-N)
         // from a module-level counter, which increments differently on the
