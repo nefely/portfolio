@@ -26,7 +26,7 @@ import { TaskCardGhost } from "./TaskCard";
 
 const COLUMN_PALETTE = ["#3b82f6", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#06b6d4"];
 
-export default function Board({ initialColumns, initialTasks, userId }) {
+export default function Board({ initialColumns, initialTasks, profiles, userId }) {
   const supabase = useMemo(() => createClient(), []);
   const showToast = useToast();
 
@@ -302,6 +302,7 @@ export default function Board({ initialColumns, initialTasks, userId }) {
                 key={column.id}
                 column={column}
                 tasks={tasksByColumn[column.id] ?? []}
+                profiles={profiles}
                 onRename={renameColumn}
                 onRecolor={recolorColumn}
                 onDelete={deleteColumn}
@@ -334,6 +335,7 @@ export default function Board({ initialColumns, initialTasks, userId }) {
       {editingTask && (
         <TaskModal
           task={editingTask}
+          profiles={profiles}
           onClose={() => setEditingTask(null)}
           onSave={updateTask}
           onDelete={deleteTask}

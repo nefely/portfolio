@@ -4,7 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 
-export default function TaskCard({ task, color, onOpen }) {
+export default function TaskCard({ task, color, assignee, onOpen }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: task.id,
     data: { type: "Task", task },
@@ -40,6 +40,15 @@ export default function TaskCard({ task, color, onOpen }) {
           <p className="mt-0.5 line-clamp-2 text-xs text-slate-400">{task.description}</p>
         ) : null}
       </div>
+
+      {assignee && (
+        <span
+          title={`Assigned to ${assignee.email}`}
+          className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-[10px] font-semibold text-indigo-600"
+        >
+          {assignee.email[0].toUpperCase()}
+        </span>
+      )}
     </div>
   );
 }

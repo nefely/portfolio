@@ -8,7 +8,7 @@ import TaskCard from "./TaskCard";
 import AddTaskForm from "./AddTaskForm";
 import ColorPicker from "./ColorPicker";
 
-export default function Column({ column, tasks, onRename, onRecolor, onDelete, onAddTask, onOpenTask }) {
+export default function Column({ column, tasks, profiles, onRename, onRecolor, onDelete, onAddTask, onOpenTask }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column.id,
     data: { type: "Column", column },
@@ -126,7 +126,13 @@ export default function Column({ column, tasks, onRename, onRecolor, onDelete, o
       <div className="thin-scrollbar flex-1 space-y-2 overflow-y-auto px-3 pb-2">
         <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} color={column.color} onOpen={() => onOpenTask(task)} />
+            <TaskCard
+              key={task.id}
+              task={task}
+              color={column.color}
+              assignee={profiles?.find((p) => p.id === task.assigned_to)}
+              onOpen={() => onOpenTask(task)}
+            />
           ))}
         </SortableContext>
         {tasks.length === 0 && (

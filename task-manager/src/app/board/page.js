@@ -16,19 +16,31 @@ export default async function BoardPage() {
 
   if (!user) redirect("/login");
 
-  const [{ data: columns, error: columnsError }, { data: tasks, error: tasksError }] =
-    await Promise.all([
-      supabase.from("columns").select("*").eq("user_id", user.id).order("position"),
-      supabase.from("tasks").select("*").eq("user_id", user.id).order("position"),
-    ]);
+  // This is a shared board — everyone signed in sees the same columns and
+  // tasks, so none of these are scoped to the current user.
+  const [
+    { data: columns, error: columnsError },
+    { data: tasks, error: tasksError },
+    { data: profiles, error: profilesError },
+  ] = await Promise.all([
+    supabase.from("columns").select("*").order("position"),
+    supabase.from("tasks").select("*").order("position"),
+    supabase.from("profiles").select("id, email").order("email"),
+  ]);
 
   if (columnsError) console.error(columnsError);
   if (tasksError) console.error(tasksError);
+  if (profilesError) console.error(profilesError);
 
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar email={user.email} />
-      <Board initialColumns={columns ?? []} initialTasks={tasks ?? []} userId={user.id} />
+      <Board
+        initialColumns={columns ?? []}
+        initialTasks={tasks ?? []}
+        profiles={profiles ?? []}
+        userId={user.id}
+      />
     </div>
   );
 }

@@ -55,28 +55,63 @@ create trigger tasks_set_updated_at
   for each row execute function public.set_updated_at();
 
 -- ---------------------------------------------------------------------------
--- Row Level Security — every row is only visible/editable by its owner.
+-- Profiles — a public mirror of auth.users so the client can list people
+-- (e.g. for the "Assigned to" dropdown). auth.users itself isn't queryable
+-- from client code, so every signed-in user gets a row here too.
+-- ---------------------------------------------------------------------------
+
+create table if not exists public.profiles (
+  id uuid primary key references auth.users (id) on delete cascade,
+  email text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.profiles enable row level security;
+
+drop policy if exists "Profiles are viewable by any signed-in user" on public.profiles;
+create policy "Profiles are viewable by any signed-in user"
+  on public.profiles
+  for select
+  using (auth.uid() is not null);
+
+-- Backfill profiles for accounts that already existed before this table did.
+insert into public.profiles (id, email)
+select id, email from auth.users
+on conflict (id) do nothing;
+
+-- Who a task is assigned to. Nullable — a task can be unassigned.
+alter table public.tasks
+  add column if not exists assigned_to uuid references public.profiles (id) on delete set null;
+
+-- ---------------------------------------------------------------------------
+-- Row Level Security — this is a shared board: every signed-in user can see
+-- and manage every column/task. `user_id` on both tables is kept and now
+-- means "created by" (shown as such in the UI) rather than "owner" — it's no
+-- longer what gates visibility.
 -- ---------------------------------------------------------------------------
 
 alter table public.columns enable row level security;
 alter table public.tasks enable row level security;
 
 drop policy if exists "Users manage their own columns" on public.columns;
-create policy "Users manage their own columns"
+drop policy if exists "Any signed-in user can view and manage columns" on public.columns;
+create policy "Any signed-in user can view and manage columns"
   on public.columns
   for all
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
+  using (auth.uid() is not null)
+  with check (auth.uid() is not null);
 
 drop policy if exists "Users manage their own tasks" on public.tasks;
-create policy "Users manage their own tasks"
+drop policy if exists "Any signed-in user can view and manage tasks" on public.tasks;
+create policy "Any signed-in user can view and manage tasks"
   on public.tasks
   for all
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
+  using (auth.uid() is not null)
+  with check (auth.uid() is not null);
 
 -- ---------------------------------------------------------------------------
--- New user bootstrap — create the default board columns automatically.
+-- New user bootstrap — everyone joins the same shared board, so a new
+-- signup just needs a profile row (no personal columns to seed anymore).
 -- ---------------------------------------------------------------------------
 
 create or replace function public.handle_new_user()
@@ -85,10 +120,8 @@ language plpgsql
 security definer set search_path = public
 as $$
 begin
-  insert into public.columns (user_id, name, color, position) values
-    (new.id, 'To Do', '#3b82f6', 1000),
-    (new.id, 'In Progress', '#f59e0b', 2000),
-    (new.id, 'Done', '#10b981', 3000);
+  insert into public.profiles (id, email) values (new.id, new.email)
+  on conflict (id) do nothing;
   return new;
 end;
 $$;

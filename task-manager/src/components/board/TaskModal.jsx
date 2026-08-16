@@ -3,10 +3,13 @@
 import { useEffect, useState } from "react";
 import { Trash2, X } from "lucide-react";
 
-export default function TaskModal({ task, onClose, onSave, onDelete }) {
+export default function TaskModal({ task, profiles, onClose, onSave, onDelete }) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description ?? "");
+  const [assignedTo, setAssignedTo] = useState(task.assigned_to ?? "");
   const [saving, setSaving] = useState(false);
+
+  const createdBy = profiles?.find((p) => p.id === task.user_id)?.email ?? "Unknown";
 
   useEffect(() => {
     function handleKey(e) {
@@ -20,7 +23,7 @@ export default function TaskModal({ task, onClose, onSave, onDelete }) {
     const trimmed = title.trim();
     if (!trimmed) return;
     setSaving(true);
-    await onSave(task.id, { title: trimmed, description });
+    await onSave(task.id, { title: trimmed, description, assigned_to: assignedTo || null });
     setSaving(false);
     onClose();
   }
@@ -60,6 +63,39 @@ export default function TaskModal({ task, onClose, onSave, onDelete }) {
           placeholder="Add more details…"
           className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
         />
+
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div>
+            <label className="mb-1 block text-xs font-medium tracking-wide text-slate-400 uppercase">
+              Created by
+            </label>
+            <p className="truncate rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-500">
+              {createdBy}
+            </p>
+          </div>
+
+          <div>
+            <label
+              htmlFor="assigned-to"
+              className="mb-1 block text-xs font-medium tracking-wide text-slate-400 uppercase"
+            >
+              Assigned to
+            </label>
+            <select
+              id="assigned-to"
+              value={assignedTo}
+              onChange={(e) => setAssignedTo(e.target.value)}
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+            >
+              <option value="">Unassigned</option>
+              {profiles?.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.email}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
         <div className="mt-5 flex items-center justify-between">
           <button
