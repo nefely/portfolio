@@ -3,7 +3,7 @@ import { logout } from "@/lib/auth/actions";
 export default function Navbar({ email }) {
   return (
     <header className="sticky top-0 z-30 border-b border-white/60 bg-white/70 backdrop-blur">
-      <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-3 sm:px-6">
+      <div className="mx-auto flex items-center justify-between px-4 py-3 sm:px-6">
         <div className="flex items-center gap-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-violet-500 text-lg shadow-md shadow-indigo-200">
             🗂️
