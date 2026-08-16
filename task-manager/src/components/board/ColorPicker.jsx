@@ -1,31 +1,45 @@
 "use client";
 
+import { Check } from "lucide-react";
+
 export const COLUMN_COLORS = [
-  "#3b82f6", // blue
-  "#8b5cf6", // violet
-  "#ec4899", // pink
-  "#f43f5e", // rose
-  "#f59e0b", // amber
-  "#10b981", // emerald
-  "#06b6d4", // cyan
-  "#64748b", // slate
+  { value: "#3b82f6", name: "Blue" },
+  { value: "#8b5cf6", name: "Violet" },
+  { value: "#ec4899", name: "Pink" },
+  { value: "#f43f5e", name: "Rose" },
+  { value: "#f59e0b", name: "Amber" },
+  { value: "#10b981", name: "Emerald" },
+  { value: "#06b6d4", name: "Cyan" },
+  { value: "#64748b", name: "Slate" },
 ];
 
 export default function ColorPicker({ value, onChange }) {
   return (
-    <div className="grid grid-cols-4 gap-2 p-1">
-      {COLUMN_COLORS.map((color) => (
-        <button
-          key={color}
-          type="button"
-          onClick={() => onChange(color)}
-          aria-label={`Choose color ${color}`}
-          className={`h-6 w-6 rounded-full transition hover:scale-110 ${
-            value === color ? "ring-2 ring-offset-2 ring-slate-400" : ""
-          }`}
-          style={{ backgroundColor: color }}
-        />
-      ))}
+    <div className="w-max">
+      <p className="mb-2 px-0.5 text-xs font-medium tracking-wide text-slate-400 uppercase">
+        Column color
+      </p>
+      <div className="grid grid-cols-4 gap-2.5">
+        {COLUMN_COLORS.map((color) => {
+          const selected = value === color.value;
+          return (
+            <button
+              key={color.value}
+              type="button"
+              onClick={() => onChange(color.value)}
+              aria-label={color.name}
+              title={color.name}
+              className="flex h-8 w-8 items-center justify-center rounded-full shadow-sm transition hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              style={{
+                backgroundColor: color.value,
+                boxShadow: selected ? `0 0 0 2px white, 0 0 0 4px ${color.value}` : undefined,
+              }}
+            >
+              {selected && <Check size={15} className="text-white drop-shadow-sm" strokeWidth={3} />}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

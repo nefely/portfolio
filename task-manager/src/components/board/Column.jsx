@@ -96,7 +96,7 @@ export default function Column({ column, tasks, onRename, onRecolor, onDelete, o
           {showColorPicker && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setShowColorPicker(false)} />
-              <div className="animate-pop-in absolute right-0 top-8 z-20 rounded-xl border border-slate-100 bg-white p-2 shadow-xl">
+              <div className="animate-pop-in absolute right-0 top-8 z-20 w-52 max-w-[85vw] rounded-2xl border border-slate-100 bg-white p-3 shadow-xl">
                 <ColorPicker
                   value={column.color}
                   onChange={(color) => {
