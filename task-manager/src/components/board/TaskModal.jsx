@@ -35,7 +35,7 @@ export default function TaskModal({ task, profiles, columns, userId, onClose, on
   useEffect(() => {
     let cancelled = false;
     supabase
-      .from("comments")
+      .from("task_manager_comments")
       .select("*")
       .eq("task_id", task.id)
       .order("created_at", { ascending: true })
@@ -55,7 +55,7 @@ export default function TaskModal({ task, profiles, columns, userId, onClose, on
     if (!trimmed || postingComment) return;
     setPostingComment(true);
     const { data, error } = await supabase
-      .from("comments")
+      .from("task_manager_comments")
       .insert({ task_id: task.id, user_id: userId, body: trimmed })
       .select()
       .single();
@@ -84,7 +84,7 @@ export default function TaskModal({ task, profiles, columns, userId, onClose, on
     const prevComments = comments;
     setComments((prev) => prev.map((c) => (c.id === commentId ? { ...c, body: trimmed } : c)));
     setEditingCommentId(null);
-    const { error } = await supabase.from("comments").update({ body: trimmed }).eq("id", commentId);
+    const { error } = await supabase.from("task_manager_comments").update({ body: trimmed }).eq("id", commentId);
     if (error) {
       console.error(error);
       setComments(prevComments);
@@ -94,7 +94,7 @@ export default function TaskModal({ task, profiles, columns, userId, onClose, on
   async function deleteComment(commentId) {
     const prevComments = comments;
     setComments((prev) => prev.filter((c) => c.id !== commentId));
-    const { error } = await supabase.from("comments").delete().eq("id", commentId);
+    const { error } = await supabase.from("task_manager_comments").delete().eq("id", commentId);
     if (error) {
       console.error(error);
       setComments(prevComments);

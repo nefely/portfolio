@@ -24,14 +24,14 @@ begin
   end if;
 
   select id into todo_id
-    from public.columns where user_id = target_user_id and name = 'To Do' limit 1;
+    from public.task_manager_columns where user_id = target_user_id and name = 'To Do' limit 1;
   select id into inprogress_id
-    from public.columns where user_id = target_user_id and name = 'In Progress' limit 1;
+    from public.task_manager_columns where user_id = target_user_id and name = 'In Progress' limit 1;
   select id into done_id
-    from public.columns where user_id = target_user_id and name = 'Done' limit 1;
+    from public.task_manager_columns where user_id = target_user_id and name = 'Done' limit 1;
 
   if todo_id is not null then
-    insert into public.tasks (user_id, column_id, title, description, position)
+    insert into public.task_manager_tasks (user_id, column_id, title, description, position)
     select target_user_id, todo_id, v.title, v.description, v.position
     from (values
       ('Design the landing page', 'Sketch a hero section and pick a color palette.', 1000::double precision),
@@ -39,31 +39,31 @@ begin
       ('Set up a CI pipeline', 'Run lint and build checks on every push.', 3000)
     ) as v(title, description, position)
     where not exists (
-      select 1 from public.tasks t where t.column_id = todo_id and t.title = v.title
+      select 1 from public.task_manager_tasks t where t.column_id = todo_id and t.title = v.title
     );
   end if;
 
   if inprogress_id is not null then
-    insert into public.tasks (user_id, column_id, title, description, position)
+    insert into public.task_manager_tasks (user_id, column_id, title, description, position)
     select target_user_id, inprogress_id, v.title, v.description, v.position
     from (values
       ('Implement drag-and-drop', 'Wire up dnd-kit for tasks and columns.', 1000::double precision),
       ('Connect Supabase auth', 'Email/password login with session refresh via proxy.js.', 2000)
     ) as v(title, description, position)
     where not exists (
-      select 1 from public.tasks t where t.column_id = inprogress_id and t.title = v.title
+      select 1 from public.task_manager_tasks t where t.column_id = inprogress_id and t.title = v.title
     );
   end if;
 
   if done_id is not null then
-    insert into public.tasks (user_id, column_id, title, description, position)
+    insert into public.task_manager_tasks (user_id, column_id, title, description, position)
     select target_user_id, done_id, v.title, v.description, v.position
     from (values
       ('Initialize the Next.js project', 'App Router, Tailwind CSS v4, ESLint.', 1000::double precision),
       ('Design the database schema', 'columns + tasks tables with Row Level Security.', 2000)
     ) as v(title, description, position)
     where not exists (
-      select 1 from public.tasks t where t.column_id = done_id and t.title = v.title
+      select 1 from public.task_manager_tasks t where t.column_id = done_id and t.title = v.title
     );
   end if;
 end $$;

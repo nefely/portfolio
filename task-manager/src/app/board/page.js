@@ -23,9 +23,9 @@ export default async function BoardPage() {
     { data: tasks, error: tasksError },
     { data: profiles, error: profilesError },
   ] = await Promise.all([
-    supabase.from("columns").select("*").order("position"),
-    supabase.from("tasks").select("*").order("position"),
-    supabase.from("profiles").select("id, email").order("email"),
+    supabase.from("task_manager_columns").select("*").order("position"),
+    supabase.from("task_manager_tasks").select("*").order("position"),
+    supabase.from("task_manager_profiles").select("id, email").order("email"),
   ]);
 
   if (columnsError) console.error(columnsError);

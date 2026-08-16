@@ -156,7 +156,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
       );
 
       const { error } = await supabase
-        .from("columns")
+        .from("task_manager_columns")
         .update({ position: newPosition })
         .eq("id", active.id);
       if (error) {
@@ -203,7 +203,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
     );
 
     const { error } = await supabase
-      .from("tasks")
+      .from("task_manager_tasks")
       .update({ column_id: containerId, position: newPosition })
       .eq("id", activeItem.id);
     if (error) {
@@ -221,7 +221,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
     const color = COLUMN_PALETTE[columns.length % COLUMN_PALETTE.length];
 
     const { data, error } = await supabase
-      .from("columns")
+      .from("task_manager_columns")
       .insert({ user_id: userId, name, color, position: lastPosition + 1000 })
       .select()
       .single();
@@ -236,7 +236,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
   async function renameColumn(id, name) {
     const prevColumns = columns;
     setColumns((prev) => prev.map((c) => (c.id === id ? { ...c, name } : c)));
-    const { error } = await supabase.from("columns").update({ name }).eq("id", id);
+    const { error } = await supabase.from("task_manager_columns").update({ name }).eq("id", id);
     if (error) {
       setColumns(prevColumns);
       reportError(error, "Couldn't rename the column.");
@@ -246,7 +246,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
   async function recolorColumn(id, color) {
     const prevColumns = columns;
     setColumns((prev) => prev.map((c) => (c.id === id ? { ...c, color } : c)));
-    const { error } = await supabase.from("columns").update({ color }).eq("id", id);
+    const { error } = await supabase.from("task_manager_columns").update({ color }).eq("id", id);
     if (error) {
       setColumns(prevColumns);
       reportError(error, "Couldn't change the column color.");
@@ -259,7 +259,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
     setColumns((prev) => prev.filter((c) => c.id !== id));
     setTasks((prev) => prev.filter((t) => t.column_id !== id));
 
-    const { error } = await supabase.from("columns").delete().eq("id", id);
+    const { error } = await supabase.from("task_manager_columns").delete().eq("id", id);
     if (error) {
       setColumns(prevColumns);
       setTasks(prevTasks);
@@ -272,7 +272,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
     const lastPosition = columnTasks.length ? Math.max(...columnTasks.map((t) => t.position)) : 0;
 
     const { data, error } = await supabase
-      .from("tasks")
+      .from("task_manager_tasks")
       .insert({ user_id: userId, column_id: columnId, title, position: lastPosition + 1000 })
       .select()
       .single();
@@ -299,7 +299,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
     }
 
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...finalPatch } : t)));
-    const { error } = await supabase.from("tasks").update(finalPatch).eq("id", id);
+    const { error } = await supabase.from("task_manager_tasks").update(finalPatch).eq("id", id);
     if (error) {
       setTasks(prevTasks);
       reportError(error, "Couldn't save the task.");
@@ -309,7 +309,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
   async function deleteTask(id) {
     const prevTasks = tasks;
     setTasks((prev) => prev.filter((t) => t.id !== id));
-    const { error } = await supabase.from("tasks").delete().eq("id", id);
+    const { error } = await supabase.from("task_manager_tasks").delete().eq("id", id);
     if (error) {
       setTasks(prevTasks);
       reportError(error, "Couldn't delete the task.");
