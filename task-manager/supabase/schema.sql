@@ -89,6 +89,29 @@ alter table public.tasks
   add column if not exists priority text not null default 'medium';
 
 -- ---------------------------------------------------------------------------
+-- Comments — a running discussion thread on each task.
+-- ---------------------------------------------------------------------------
+
+create table if not exists public.comments (
+  id uuid primary key default gen_random_uuid(),
+  task_id uuid not null references public.tasks (id) on delete cascade,
+  user_id uuid not null references auth.users (id) on delete cascade,
+  body text not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists comments_task_id_idx on public.comments (task_id);
+
+alter table public.comments enable row level security;
+
+drop policy if exists "Any signed-in user can view and manage comments" on public.comments;
+create policy "Any signed-in user can view and manage comments"
+  on public.comments
+  for all
+  using (auth.uid() is not null)
+  with check (auth.uid() is not null);
+
+-- ---------------------------------------------------------------------------
 -- Row Level Security — this is a shared board: every signed-in user can see
 -- and manage every column/task. `user_id` on both tables is kept and now
 -- means "created by" (shown as such in the UI) rather than "owner" — it's no

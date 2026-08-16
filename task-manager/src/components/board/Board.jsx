@@ -402,6 +402,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
           task={editingTask}
           profiles={profiles}
           columns={columns}
+          userId={userId}
           onClose={() => setEditingTask(null)}
           onSave={updateTask}
           onDelete={deleteTask}
