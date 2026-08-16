@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  --background: #eef2ff;
+  --foreground: #1e1b3a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  color: var(--foreground);
+  background:
+    radial-gradient(1200px 600px at 8% -10%, #c7d2fe66, transparent),
+    radial-gradient(1000px 500px at 100% 0%, #fbcfe866, transparent),
+    var(--background);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Slim, unobtrusive scrollbars for the board columns. */
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99, 102, 241, 0.35) transparent;
+}
+.thin-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(99, 102, 241, 0.35);
+  border-radius: 999px;
+}
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 150ms ease-out;
+}
+.animate-pop-in {
+  animation: pop-in 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.animate-slide-in {
+  animation: slide-in 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
