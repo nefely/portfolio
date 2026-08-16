@@ -286,8 +286,20 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
 
   async function updateTask(id, patch) {
     const prevTasks = tasks;
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...patch } : t)));
-    const { error } = await supabase.from("tasks").update(patch).eq("id", id);
+
+    // Changing status from the modal (rather than dragging) still needs a
+    // position within the target column — append it to the end, same as a
+    // freshly-added task would get.
+    let finalPatch = patch;
+    const current = tasks.find((t) => t.id === id);
+    if (patch.column_id && current && patch.column_id !== current.column_id) {
+      const columnTasks = tasks.filter((t) => t.column_id === patch.column_id);
+      const lastPosition = columnTasks.length ? Math.max(...columnTasks.map((t) => t.position)) : 0;
+      finalPatch = { ...patch, position: lastPosition + 1000 };
+    }
+
+    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...finalPatch } : t)));
+    const { error } = await supabase.from("tasks").update(finalPatch).eq("id", id);
     if (error) {
       setTasks(prevTasks);
       reportError(error, "Couldn't save the task.");
@@ -389,6 +401,7 @@ export default function Board({ initialColumns, initialTasks, profiles, userId }
         <TaskModal
           task={editingTask}
           profiles={profiles}
+          columns={columns}
           onClose={() => setEditingTask(null)}
           onSave={updateTask}
           onDelete={deleteTask}

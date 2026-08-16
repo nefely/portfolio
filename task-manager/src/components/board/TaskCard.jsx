@@ -4,6 +4,18 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 
+const PRIORITY_DOT = {
+  high: "bg-rose-500",
+  medium: "bg-amber-400",
+  low: "bg-slate-300",
+};
+
+const PRIORITY_LABEL = {
+  high: "High priority",
+  medium: "Medium priority",
+  low: "Low priority",
+};
+
 export default function TaskCard({ task, color, assignee, onOpen }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: task.id,
@@ -35,7 +47,13 @@ export default function TaskCard({ task, color, assignee, onOpen }) {
       </span>
 
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-slate-800">{task.title}</p>
+        <div className="flex items-center gap-1.5">
+          <span
+            title={PRIORITY_LABEL[task.priority] ?? PRIORITY_LABEL.medium}
+            className={`h-1.5 w-1.5 shrink-0 rounded-full ${PRIORITY_DOT[task.priority] ?? PRIORITY_DOT.medium}`}
+          />
+          <p className="truncate text-sm font-medium text-slate-800">{task.title}</p>
+        </div>
         {task.description ? (
           <p className="mt-0.5 line-clamp-2 text-xs text-slate-400">{task.description}</p>
         ) : null}

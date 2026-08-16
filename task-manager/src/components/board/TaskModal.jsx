@@ -3,13 +3,16 @@
 import { useEffect, useState } from "react";
 import { Trash2, X } from "lucide-react";
 
-export default function TaskModal({ task, profiles, onClose, onSave, onDelete }) {
+export default function TaskModal({ task, profiles, columns, onClose, onSave, onDelete }) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description ?? "");
   const [assignedTo, setAssignedTo] = useState(task.assigned_to ?? "");
+  const [columnId, setColumnId] = useState(task.column_id);
+  const [priority, setPriority] = useState(task.priority ?? "medium");
   const [saving, setSaving] = useState(false);
 
   const createdBy = profiles?.find((p) => p.id === task.user_id)?.email ?? "Unknown";
+  const sortedColumns = [...(columns ?? [])].sort((a, b) => a.position - b.position);
 
   useEffect(() => {
     function handleKey(e) {
@@ -23,7 +26,13 @@ export default function TaskModal({ task, profiles, onClose, onSave, onDelete })
     const trimmed = title.trim();
     if (!trimmed) return;
     setSaving(true);
-    await onSave(task.id, { title: trimmed, description, assigned_to: assignedTo || null });
+    await onSave(task.id, {
+      title: trimmed,
+      description,
+      assigned_to: assignedTo || null,
+      column_id: columnId,
+      priority,
+    });
     setSaving(false);
     onClose();
   }
@@ -63,6 +72,48 @@ export default function TaskModal({ task, profiles, onClose, onSave, onDelete })
           placeholder="Add more details…"
           className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
         />
+
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div>
+            <label
+              htmlFor="task-status"
+              className="mb-1 block text-xs font-medium tracking-wide text-slate-400 uppercase"
+            >
+              Status
+            </label>
+            <select
+              id="task-status"
+              value={columnId}
+              onChange={(e) => setColumnId(e.target.value)}
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+            >
+              {sortedColumns.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="task-priority"
+              className="mb-1 block text-xs font-medium tracking-wide text-slate-400 uppercase"
+            >
+              Priority
+            </label>
+            <select
+              id="task-priority"
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
+            >
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+        </div>
 
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div>

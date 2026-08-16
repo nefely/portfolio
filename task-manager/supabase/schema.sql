@@ -83,6 +83,11 @@ on conflict (id) do nothing;
 alter table public.tasks
   add column if not exists assigned_to uuid references public.profiles (id) on delete set null;
 
+-- How urgent a task is. Kept as free text (like `columns.color`) rather than
+-- a DB-level enum/check — the fixed low/medium/high options live in the UI.
+alter table public.tasks
+  add column if not exists priority text not null default 'medium';
+
 -- ---------------------------------------------------------------------------
 -- Row Level Security — this is a shared board: every signed-in user can see
 -- and manage every column/task. `user_id` on both tables is kept and now
