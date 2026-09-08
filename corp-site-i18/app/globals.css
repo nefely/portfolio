@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+/* The theme provider toggles `dark`/`light` classes on <html>; make Tailwind's
+   `dark:` variant respond to that class instead of only `prefers-color-scheme`. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+	--background: #ffffff;
+	--foreground: #0f172a;
+	--surface: #f8fafc;
+	--surface-hover: #f1f5f9;
+	--border: #e2e8f0;
+	--muted: #64748b;
+
+	/* Brand color: a single Vue-like green-blue (teal), used throughout. */
+	--primary: #0d9488;
+	--primary-hover: #0f766e;
+	--primary-foreground: #f0fdfa;
+}
+
+/* Falls back to the OS preference for the rare case JS never runs (the
+   `beforeInteractive` init script normally applies `dark`/`light` explicitly
+   before first paint, which is what actually avoids the flash). `:not(.light)`
+   is what makes this inert once an explicit class is applied either way. */
+@media (prefers-color-scheme: dark) {
+	:root:not(.light) {
+		--background: #08111a;
+		--foreground: #e7edf3;
+		--surface: #0f1e2b;
+		--surface-hover: #142838;
+		--border: #1e3548;
+		--muted: #93a5b8;
+
+		--primary: #2dd4bf;
+		--primary-hover: #5eead4;
+		--primary-foreground: #06231f;
+	}
+}
+
+:root.dark {
+	--background: #08111a;
+	--foreground: #e7edf3;
+	--surface: #0f1e2b;
+	--surface-hover: #142838;
+	--border: #1e3548;
+	--muted: #93a5b8;
+
+	--primary: #2dd4bf;
+	--primary-hover: #5eead4;
+	--primary-foreground: #06231f;
+}
+
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-surface: var(--surface);
+	--color-surface-hover: var(--surface-hover);
+	--color-border: var(--border);
+	--color-muted: var(--muted);
+	--color-primary: var(--primary);
+	--color-primary-hover: var(--primary-hover);
+	--color-primary-foreground: var(--primary-foreground);
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
+}
+
+html {
+	scroll-behavior: smooth;
+	color-scheme: light;
+}
+
+html.dark {
+	color-scheme: dark;
+}
+
+body {
+	background: var(--background);
+	color: var(--foreground);
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
+}
+
+::selection {
+	background: var(--primary);
+	color: var(--primary-foreground);
+}
+
+/* A fine dot-grid texture used behind hero/CTA sections instead of a blurred
+   gradient glow — pairs with the bordered, spec-sheet card style used
+   throughout the site. */
+.bg-dot-grid {
+	background-image: radial-gradient(
+		color-mix(in srgb, var(--color-border) 90%, transparent) 1px,
+		transparent 1px
+	);
+	background-size: 22px 22px;
+}
+
+/* Small corner-bracket decoration, positioned by the parent (which needs
+   `relative`). Mirrors the bracketed `[ label ]` motif used for eyebrows. */
+.bracket-corner {
+	position: absolute;
+	width: 1.25rem;
+	height: 1.25rem;
+	border-color: var(--color-primary);
+}
+.bracket-corner--tl {
+	top: -1px;
+	left: -1px;
+	border-top: 2px solid;
+	border-left: 2px solid;
+}
+.bracket-corner--tr {
+	top: -1px;
+	right: -1px;
+	border-top: 2px solid;
+	border-right: 2px solid;
+}
+.bracket-corner--bl {
+	bottom: -1px;
+	left: -1px;
+	border-bottom: 2px solid;
+	border-left: 2px solid;
+}
+.bracket-corner--br {
+	bottom: -1px;
+	right: -1px;
+	border-bottom: 2px solid;
+	border-right: 2px solid;
+}
+/* Used when the bracket sits on a primary-colored panel (e.g. the CTA band),
+   where the default primary-colored border would blend into the background. */
+.bracket-corner--on-primary {
+	border-color: var(--color-primary-foreground);
+}

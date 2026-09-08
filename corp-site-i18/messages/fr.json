@@ -1,0 +1,261 @@
+{
+	"meta": {
+		"title": "Nexora — Des produits numériques qui font avancer votre entreprise",
+		"description": "Nexora est une entreprise technologique qui aide des entreprises ambitieuses à concevoir, développer et faire évoluer des produits numériques."
+	},
+	"nav": {
+		"home": "Accueil",
+		"team": "Équipe",
+		"careers": "Carrières",
+		"cta": "Nous contacter",
+		"menu": "Menu",
+		"close": "Fermer le menu"
+	},
+	"theme": {
+		"light": "Clair",
+		"dark": "Sombre",
+		"toggle": "Changer de thème"
+	},
+	"language": {
+		"label": "Langue"
+	},
+	"footer": {
+		"tagline": "Des produits numériques conçus avec soin.",
+		"rights": "Tous droits réservés.",
+		"company": "Entreprise",
+		"connect": "Contact"
+	},
+	"notFound": {
+		"title": "Page introuvable",
+		"body": "La page que vous cherchez n'existe pas ou a été déplacée.",
+		"backHome": "Retour à l'accueil"
+	},
+	"home": {
+		"hero": {
+			"eyebrow": "Depuis 2014",
+			"title": "Nous transformons des idées audacieuses en produits que les gens adorent",
+			"subtitle": "Nexora accompagne des entreprises ambitieuses pour concevoir, développer et faire évoluer des logiciels qui font avancer leur activité.",
+			"primaryCta": "Voir les postes ouverts",
+			"secondaryCta": "Découvrir l'équipe"
+		},
+		"stats": {
+			"title": "Des chiffres qui parlent d'eux-mêmes",
+			"years": { "value": "10+", "label": "Années d'existence" },
+			"projects": { "value": "180+", "label": "Produits livrés" },
+			"clients": { "value": "60+", "label": "Clients satisfaits" },
+			"countries": { "value": "14", "label": "Pays desservis" }
+		},
+		"values": {
+			"title": "Pourquoi les équipes nous choisissent",
+			"subtitle": "Nous allions une expertise technique poussée à une attention sincère envers les personnes qui utilisent ce que nous construisons.",
+			"craft": {
+				"title": "Obsédés par la qualité",
+				"description": "Chaque interface et chaque ligne de code répond à un niveau d'exigence dont nous sommes fiers."
+			},
+			"speed": {
+				"title": "De l'élan dès le premier jour",
+				"description": "Nous livrons en quelques semaines, pas en trimestres, sans jamais rogner sur la qualité ou la sécurité."
+			},
+			"partnership": {
+				"title": "Un véritable partenariat",
+				"description": "Nous nous intégrons à votre équipe, partageons le contexte en toute transparence et mesurons notre succès au vôtre."
+			},
+			"scale": {
+				"title": "Conçu pour grandir",
+				"description": "Du premier prototype à des millions d'utilisateurs, nos choix d'architecture résistent au temps."
+			}
+		},
+		"services": {
+			"title": "Ce que nous faisons",
+			"subtitle": "Un développement produit de bout en bout, du premier croquis au support à long terme.",
+			"product": {
+				"title": "Stratégie produit",
+				"description": "Découverte, recherche et feuilles de route qui transforment le flou en un plan concret."
+			},
+			"design": {
+				"title": "Design",
+				"description": "Des interfaces aussi claires et rapides que soignées."
+			},
+			"engineering": {
+				"title": "Ingénierie",
+				"description": "Des plateformes web, mobiles et cloud conçues pour la fiabilité et la montée en charge."
+			},
+			"growth": {
+				"title": "Croissance et support",
+				"description": "Analytique, expérimentation et support qui continuent d'améliorer le produit après son lancement."
+			}
+		},
+		"cta": {
+			"title": "Construisons ensemble quelque chose de grand",
+			"subtitle": "Que vous ayez un cahier des charges précis ou juste une idée, nous serions ravis d'en discuter.",
+			"button": "Parlez-nous de votre projet"
+		}
+	},
+	"careers": {
+		"hero": {
+			"eyebrow": "Carrières",
+			"title": "Construisez avec nous",
+			"subtitle": "Nous sommes une petite équipe expérimentée qui tient à la qualité du travail, à l'autonomie et au respect mutuel. Voici ce que nous recherchons en ce moment."
+		},
+		"listTitle": "Postes ouverts",
+		"viewRole": "Voir le poste",
+		"apply": "Postuler",
+		"backToList": "Retour aux postes ouverts",
+		"jobMeta": {
+			"department": "Département",
+			"location": "Lieu",
+			"type": "Type"
+		},
+		"requirementsTitle": "Ce que nous recherchons",
+		"form": {
+			"title": "Nous contacter",
+			"subtitle": "Parlez-nous un peu de vous, nous vous répondrons sous quelques jours.",
+			"name": "Nom complet",
+			"email": "Adresse e-mail",
+			"position": "Poste qui vous intéresse",
+			"positionGeneral": "Candidature spontanée",
+			"message": "Message",
+			"messagePlaceholder": "Parlez-nous de votre expérience et de ce qui vous motive à nous rejoindre",
+			"submit": "Envoyer la candidature",
+			"submitting": "Envoi en cours…",
+			"successTitle": "Merci !",
+			"successBody": "Nous avons bien reçu votre message et reviendrons vers vous rapidement.",
+			"sendAnother": "Envoyer un autre message",
+			"errorRequired": "Ce champ est obligatoire",
+			"errorEmail": "Veuillez saisir une adresse e-mail valide"
+		},
+		"jobs": {
+			"frontend-engineer": {
+				"title": "Senior Frontend Engineer",
+				"department": "Ingénierie",
+				"location": "Télétravail (UE)",
+				"type": "Temps plein",
+				"summary": "Concevez des interfaces rapides et accessibles utilisées par des centaines de milliers de personnes.",
+				"description": "Vous prendrez en charge l'architecture frontend de notre produit phare, en étroite collaboration avec le design et le backend pour livrer des fonctionnalités de bout en bout.",
+				"requirements": [
+					"5 ans ou plus d'expérience sur des applications React en production",
+					"Un vrai souci du détail sur l'interface et la performance",
+					"À l'aise pour échanger directement avec les clients et les parties prenantes"
+				]
+			},
+			"backend-engineer": {
+				"title": "Backend Engineer",
+				"department": "Ingénierie",
+				"location": "Berlin ou télétravail",
+				"type": "Temps plein",
+				"summary": "Concevez des API et des services qui font tourner des produits utilisés dans une douzaine de pays.",
+				"description": "Vous concevrez et maintiendrez les services derrière les produits de nos clients, avec un accent sur la fiabilité, l'intégrité des données et des API propres.",
+				"requirements": [
+					"3 ans ou plus avec Node.js, Go ou une stack backend similaire",
+					"Expérience de conception de modèles de données relationnels",
+					"Une approche pragmatique des tests et de l'observabilité"
+				]
+			},
+			"product-designer": {
+				"title": "Product Designer",
+				"department": "Design",
+				"location": "Télétravail (UE)",
+				"type": "Temps plein",
+				"summary": "Façonnez l'expérience de bout en bout des produits les plus importants de nos clients.",
+				"description": "Vous interviendrez de la découverte initiale jusqu'à l'UI finalisée, aux côtés des ingénieurs, pour que rien ne se perde en route.",
+				"requirements": [
+					"Un portfolio démontrant une vision produit de bout en bout",
+					"Maîtrise de Figma et des design systems modernes",
+					"Expérience de présentation de son travail directement aux clients"
+				]
+			},
+			"account-manager": {
+				"title": "Client Account Manager",
+				"department": "Opérations",
+				"location": "Varsovie ou télétravail",
+				"type": "Temps plein",
+				"summary": "Soyez la voix de nos clients chez Nexora et gardez chaque projet sur les rails.",
+				"description": "Vous gérerez un portefeuille de relations clients, en traduisant leurs objectifs en priorités claires pour les équipes de livraison.",
+				"requirements": [
+					"2 ans ou plus en gestion de comptes ou de projets, idéalement en agence",
+					"Excellente communication écrite et orale",
+					"À l'aise pour jongler avec plusieurs projets à la fois"
+				]
+			}
+		}
+	},
+	"team": {
+		"hero": {
+			"eyebrow": "Équipe",
+			"title": "Les personnes derrière Nexora",
+			"subtitle": "Une petite équipe de designers, d'ingénieurs et de stratèges qui ont consacré leur carrière à construire des produits réellement utilisés."
+		},
+		"viewProfile": "Voir le profil",
+		"backToTeam": "Retour à l'équipe",
+		"focusTitle": "Domaines d'expertise",
+		"contactCta": "Parlez-nous de votre projet",
+		"members": {
+			"olena-kravchenko": {
+				"role": "Cofondatrice & CEO",
+				"location": "Kyiv, Ukraine",
+				"bio": "Olena a cofondé Nexora après dix ans passés à diriger des équipes produit dans des startups en forte croissance.",
+				"longBio": [
+					"Olena fixe la direction de Nexora et travaille en étroite collaboration avec les clients sur la stratégie, de la première conversation jusqu'au partenariat de long terme.",
+					"Avant Nexora, elle a dirigé pendant dix ans des équipes produit dans des startups à forte croissance à travers l'Europe, livrant des logiciels utilisés par des millions de personnes."
+				],
+				"quote": "Les grands produits ne sont jamais le fruit du hasard : ils sont le résultat d'une équipe qui s'investit vraiment.",
+				"focusAreas": ["Stratégie", "Leadership", "Relations clients"]
+			},
+			"james-carter": {
+				"role": "Cofondateur & CTO",
+				"location": "Londres, Royaume-Uni",
+				"bio": "James dirige l'ingénierie chez Nexora, fixant le niveau d'exigence technique de chaque produit livré par l'équipe.",
+				"longBio": [
+					"James s'assure que nos choix d'architecture tiennent la route des années après le lancement, et que chaque ingénieur de l'équipe a ce qu'il faut pour donner le meilleur de lui-même.",
+					"Il a d'abord construit des infrastructures pour des plateformes fintech, avant de cofonder Nexora avec Olena en 2014."
+				],
+				"quote": "La meilleure architecture est celle que personne ne remarque, parce qu'elle fonctionne, tout simplement.",
+				"focusAreas": ["Architecture", "Culture d'ingénierie", "Infrastructure cloud"]
+			},
+			"sophie-bauer": {
+				"role": "Head of Design",
+				"location": "Berlin, Allemagne",
+				"bio": "Sophie dirige la pratique design de Nexora, des premiers ateliers de découverte jusqu'aux interfaces finalisées et livrées.",
+				"longBio": [
+					"Sophie construit les design systems et les processus qui permettent à nos équipes d'avancer vite sans sacrifier la qualité ni la cohérence.",
+					"Elle a auparavant dirigé des équipes design dans deux scale-ups européennes et est diplômée en Interaction Design de l'UdK Berlin."
+				],
+				"quote": "Un bon design est invisible : on ne le remarque que lorsqu'il manque.",
+				"focusAreas": ["Design systems", "Recherche UX", "Leadership design"]
+			},
+			"marco-rossi": {
+				"role": "Senior Backend Engineer",
+				"location": "Milan, Italie",
+				"bio": "Marco conçoit et développe les services backend derrière les produits les plus exigeants de nos clients.",
+				"longBio": [
+					"Marco est spécialisé dans les systèmes à forte intensité de données, du traitement des paiements à l'analytique en temps réel, et accompagne les autres ingénieurs de l'équipe.",
+					"Il a contribué à plusieurs projets open source de l'écosystème Node.js et intervient régulièrement dans des meetups d'ingénierie backend."
+				],
+				"quote": "Les systèmes fiables se construisent décision après décision, discrètes mais bien testées.",
+				"focusAreas": ["Architecture backend", "Bases de données", "Performance"]
+			},
+			"claire-dubois": {
+				"role": "Senior Frontend Engineer",
+				"location": "Lyon, France",
+				"bio": "Claire conçoit des interfaces rapides et accessibles, et contribue à définir les standards frontend sur tous les projets Nexora.",
+				"longBio": [
+					"Claire accorde une grande importance à la performance et à l'accessibilité, et audite régulièrement les produits clients pour s'assurer qu'ils fonctionnent pour tout le monde.",
+					"Elle a auparavant travaillé dans une agence de design parisienne, concevant des interfaces pour des clients du retail et des médias."
+				],
+				"quote": "Une interface n'est terminée que lorsqu'elle fonctionne pour chaque utilisateur.",
+				"focusAreas": ["Ingénierie frontend", "Accessibilité", "Performance"]
+			},
+			"daniel-garcia": {
+				"role": "Client Account Manager",
+				"location": "Madrid, Espagne",
+				"bio": "Daniel est le premier point de contact de nos clients, veillant à ce que chaque projet reste sur les rails du lancement à la livraison.",
+				"longBio": [
+					"Daniel traduit les objectifs des clients en priorités claires pour les équipes de livraison, et veille à ce que rien ne soit oublié.",
+					"Il gère des relations clients dans le monde des agences depuis plus de huit ans, dans des secteurs allant du retail à la santé."
+				],
+				"quote": "Les meilleurs partenariats reposent sur une communication claire, pas seulement sur du bon travail.",
+				"focusAreas": ["Gestion de comptes", "Stratégie client", "Livraison"]
+			}
+		}
+	}
+}
