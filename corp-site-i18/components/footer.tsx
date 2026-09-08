@@ -1,6 +1,11 @@
+"use client";
+
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { SITE_NAME } from "@/lib/site";
+import { useMounted } from "@/lib/use-mounted";
+import { useTheme } from "@/components/theme-provider";
 
 const COMPANY_LINKS = [
 	{ href: "/", key: "home" },
@@ -11,27 +16,21 @@ const COMPANY_LINKS = [
 export function Footer() {
 	const t = useTranslations();
 	const year = new Date().getFullYear();
+	const mounted = useMounted();
+	const { resolvedTheme } = useTheme();
+	const isDark = mounted && resolvedTheme === "dark";
 
 	return (
 		<footer className="border-border border-t">
 			<div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
 				<div className="sm:col-span-2 lg:col-span-2">
-					<div className="text-foreground flex items-center gap-2 text-lg font-bold tracking-tight">
-						<span className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-lg">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2.2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								className="size-4.5"
-							>
-								<path d="M13 2 3 14h7l-1 8 11-14h-7l1-6Z" />
-							</svg>
-						</span>
-						{SITE_NAME}
+					<div className="text-foreground flex items-center text-lg font-bold tracking-tight">
+						<Image
+							src={isDark ? "/nexora_logo.svg" : "/nexora_logo-dark.svg"}
+							alt={SITE_NAME}
+							width={115.5}
+							height={45}
+						/>
 					</div>
 					<p className="text-muted mt-3 max-w-xs text-sm">{t("footer.tagline")}</p>
 				</div>

@@ -1,12 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
-	<style>
-		.bg { fill: #0d9488; }
-		.mark { fill: #f0fdfa; }
-		@media (prefers-color-scheme: dark) {
-			.bg { fill: #2dd4bf; }
-			.mark { fill: #06231f; }
-		}
-	</style>
-	<rect class="bg" width="24" height="24" rx="6" />
-	<path class="mark" d="M13 2 3 14h7l-1 8 11-14h-7l1-6Z" />
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 44 44" fill="none">
+  <defs>
+    <linearGradient id="iconGrad" x1="4" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6FFFE9"/>
+      <stop offset="0.55" stop-color="#24D6C8"/>
+      <stop offset="1" stop-color="#12BFB6"/>
+    </linearGradient>
+    <linearGradient id="boltGrad" x1="14" y1="8" x2="30" y2="36" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#07121C"/>
+      <stop offset="1" stop-color="#0B2230"/>
+    </linearGradient>
+  </defs>
+  <rect width="44" height="44" rx="11" fill="url(#iconGrad)"/>
+  <path d="M23.4 8L9.4 24.8H22L20.6 36L34.6 19.2H22Z" fill="url(#boltGrad)"/>
 </svg>

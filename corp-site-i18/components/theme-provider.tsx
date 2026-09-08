@@ -16,14 +16,6 @@ type ResolvedTheme = "light" | "dark";
 
 const STORAGE_KEY = "theme";
 
-// Runs before hydration and mirrors the logic below: applies the stored
-// preference (or system default) immediately, so there's no flash of the
-// wrong theme. Injected via `useServerInsertedHTML` (below) rather than an
-// inline `<Script>` element — a raw `<script>` rendered as part of the React
-// tree gets recreated (and warned about by React 19) whenever that tree
-// re-renders on the client, e.g. on a locale switch. `useServerInsertedHTML`
-// writes straight into the HTML stream during SSR and is a documented no-op
-// on the client, so it never becomes a client-rendered node in the first place.
 const THEME_INIT_SCRIPT = `
 (function () {
   try {
@@ -37,10 +29,6 @@ const THEME_INIT_SCRIPT = `
   } catch (e) {}
 })();
 `;
-
-// --- Stored theme preference, exposed as an external store -----------------
-// Modeled as a store (rather than effect + setState) so reading it never
-// needs an extra render pass just to sync from localStorage on mount.
 
 type Listener = () => void;
 const listeners = new Set<Listener>();
@@ -78,8 +66,6 @@ function writeStoredTheme(next: Theme) {
 	} catch {}
 	listeners.forEach((listener) => listener());
 }
-
-// --- OS-level color scheme, also exposed as an external store --------------
 
 function subscribeSystemTheme(onChange: Listener) {
 	const media = window.matchMedia("(prefers-color-scheme: dark)");
@@ -120,9 +106,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 	);
 	const resolvedTheme = theme === "system" ? systemTheme : theme;
 
-	// Syncing the resolved theme to the DOM is exactly what effects are for:
-	// keeping an external system (the `dark` class / color-scheme) in step
-	// with React state, with no setState involved.
 	useEffect(() => {
 		document.documentElement.classList.toggle("dark", resolvedTheme === "dark");
 		document.documentElement.classList.toggle("light", resolvedTheme === "light");

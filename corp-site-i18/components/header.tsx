@@ -7,8 +7,10 @@ import { AnimatePresence, motion } from "motion/react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { SITE_NAME } from "@/lib/site";
 import { useMounted } from "@/lib/use-mounted";
+import { useTheme } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import Image from "next/image";
 
 const NAV_ITEMS = [
 	{ href: "/", key: "home" },
@@ -21,6 +23,8 @@ export function Header() {
 	const pathname = usePathname();
 	const [open, setOpen] = useState(false);
 	const mounted = useMounted();
+	const { resolvedTheme } = useTheme();
+	const isDark = mounted && resolvedTheme === "dark";
 
 	useEffect(() => {
 		document.body.style.overflow = open ? "hidden" : "";
@@ -34,13 +38,6 @@ export function Header() {
 		return pathname === href || pathname.startsWith(`${href}/`);
 	}
 
-	// The mobile drawer is a `position: fixed` overlay meant to cover the
-	// viewport, but `<header>` below sets `backdrop-blur-md` (a
-	// `backdrop-filter`), which — like `transform`/`filter` — makes an element
-	// the containing block for its `fixed` descendants. That silently clips
-	// the overlay to the header's own 64px height instead of the viewport,
-	// leaving the rest of the page uncovered underneath it. Portaling the
-	// overlay to `document.body` sidesteps that entirely.
 	const overlay = (
 		<AnimatePresence>
 			{open && (
@@ -124,21 +121,12 @@ export function Header() {
 					onClick={() => setOpen(false)}
 					className="text-foreground flex items-center gap-2 text-lg font-bold tracking-tight"
 				>
-					<span className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2.2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							className="size-4.5"
-						>
-							<path d="M13 2 3 14h7l-1 8 11-14h-7l1-6Z" />
-						</svg>
-					</span>
-					{SITE_NAME}
+					<Image
+						src={isDark ? "/nexora_logo.svg" : "/nexora_logo-dark.svg"}
+						alt={SITE_NAME}
+						width={115.5}
+						height={45}
+					/>
 				</Link>
 
 				<nav className="hidden items-center gap-1 md:flex">
