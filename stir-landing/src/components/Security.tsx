@@ -1,4 +1,5 @@
 import { CheckIcon } from './icons'
+import { Reveal, RevealGroup, RevealItem } from './Reveal'
 import securityBg from '../assets/figma/security-matrix-bg.png'
 
 const points = [
@@ -18,18 +19,24 @@ export function Security() {
       />
       <div className="relative mx-auto flex w-full max-w-[1199px] justify-end px-6 lg:px-0">
         <div className="max-w-lg text-left">
-          <p className="text-lg text-coral lg:text-xl">Serious about security</p>
-          <h2 className="mt-4 text-2xl text-white lg:text-[40px] lg:leading-tight">
-            Our top priority is keeping your data safe and secure.
-          </h2>
-          <ul className="mt-10 flex flex-col gap-5">
+          <Reveal>
+            <p className="text-lg text-coral lg:text-xl">Serious about security</p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <h2 className="mt-4 text-2xl text-white lg:text-[40px] lg:leading-tight">
+              Our top priority is keeping your data safe and secure.
+            </h2>
+          </Reveal>
+          <RevealGroup className="mt-10 flex flex-col gap-5">
             {points.map((point) => (
-              <li key={point} className="flex items-center gap-3 text-base text-white lg:text-xl">
-                <CheckIcon className="h-4 w-4 shrink-0 text-coral" />
-                {point}
-              </li>
+              <RevealItem key={point}>
+                <div className="flex items-center gap-3 text-base text-white transition-transform duration-300 hover:translate-x-1 lg:text-xl">
+                  <CheckIcon className="h-4 w-4 shrink-0 text-coral" />
+                  {point}
+                </div>
+              </RevealItem>
             ))}
-          </ul>
+          </RevealGroup>
         </div>
       </div>
     </section>
