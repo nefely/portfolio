@@ -43,7 +43,6 @@ export default function Footer() {
             <div className="border-t-[3px] border-white/20">
                 <div className="container mx-auto px-4 py-4 text-sm text-gray-400 flex flex-col sm:flex-row justify-between gap-2">
                     <span>© {year} NewsHub. All rights reserved.</span>
-                    <span>Built with React &amp; Tailwind CSS</span>
                 </div>
             </div>
         </footer>
