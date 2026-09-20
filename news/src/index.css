@@ -1,1 +1,44 @@
 @import "tailwindcss";
+
+@theme {
+    --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Archivo", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+    background-color: #f5f1e8;
+    font-family: var(--font-body);
+}
+
+h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+}
+
+@layer components {
+    .brutal-border {
+        border-width: 3px;
+        border-color: #000;
+    }
+
+    .brutal-shadow {
+        box-shadow: 6px 6px 0 0 #000;
+    }
+
+    .brutal-shadow-sm {
+        box-shadow: 4px 4px 0 0 #000;
+    }
+
+    .brutal-press {
+        transition: transform 100ms ease, box-shadow 100ms ease;
+    }
+
+    .brutal-press:hover {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 0 #000;
+    }
+
+    .brutal-press:active {
+        transform: translate(4px, 4px);
+        box-shadow: 0 0 0 0 #000;
+    }
+}

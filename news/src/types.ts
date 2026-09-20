@@ -1,11 +1,12 @@
 export interface Article {
-  id: number
+  id: string
   slug: string
   title: string
   excerpt: string
-  content: string[]
   category: string
   date: string
   image?: string
+  link: string
+  source: string
   isHot?: boolean
 }

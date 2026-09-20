@@ -1,30 +1,29 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
-import { CATEGORIES } from '../data/categories'
+import { CATEGORIES } from '../lib/feeds'
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     return (
-        <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-200">
+        <header className="sticky top-0 z-50 bg-[#f5f1e8] border-b-[3px] border-black">
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
                     <Link
                         to="/"
                         onClick={() => setIsMenuOpen(false)}
-                        className="flex items-center gap-2 text-xl font-bold text-gray-900"
+                        className="font-display flex items-center gap-2 text-2xl font-extrabold uppercase tracking-tight text-black"
                     >
-                        <span>
-                            News<span className="text-blue-600">Hub</span>
-                        </span>
+                        <span className="bg-yellow-300 brutal-border px-2 py-0.5">News</span>
+                        <span>Hub</span>
                     </Link>
 
-                    <nav className="hidden md:flex items-center gap-6">
+                    <nav className="hidden md:flex items-center gap-2">
                         {CATEGORIES.map((category) => (
                             <Link
                                 key={category}
                                 to={`/category/${category}`}
-                                className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
+                                className="text-sm font-bold uppercase px-3 py-1.5 border-[2px] border-transparent hover:border-black hover:bg-white transition-colors"
                             >
                                 {category}
                             </Link>
@@ -34,7 +33,7 @@ export default function Header() {
                     <button
                         type="button"
                         onClick={() => setIsMenuOpen((open) => !open)}
-                        className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+                        className="md:hidden inline-flex items-center justify-center w-10 h-10 brutal-border bg-white brutal-press"
                         aria-label="Toggle menu"
                         aria-expanded={isMenuOpen}
                     >
@@ -49,13 +48,13 @@ export default function Header() {
                 </div>
 
                 {isMenuOpen && (
-                    <nav className="md:hidden flex flex-col gap-1 pb-4">
+                    <nav className="md:hidden flex flex-col gap-2 pb-4">
                         {CATEGORIES.map((category) => (
                             <Link
                                 key={category}
                                 to={`/category/${category}`}
                                 onClick={() => setIsMenuOpen(false)}
-                                className="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-blue-600 transition-colors"
+                                className="px-3 py-2 brutal-border bg-white text-sm font-bold uppercase"
                             >
                                 {category}
                             </Link>

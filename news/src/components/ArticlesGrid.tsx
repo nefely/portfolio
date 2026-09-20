@@ -2,17 +2,19 @@ import { Link, useNavigate } from 'react-router'
 import type { Article } from '../types'
 
 const CATEGORY_COLORS: Record<string, string> = {
-    Technology: 'bg-blue-100 text-blue-700',
-    Development: 'bg-purple-100 text-purple-700',
-    Education: 'bg-amber-100 text-amber-700',
-    Community: 'bg-pink-100 text-pink-700',
-    Cybersecurity: 'bg-red-100 text-red-700',
-    Science: 'bg-cyan-100 text-cyan-700',
-    Medicine: 'bg-emerald-100 text-emerald-700',
-    Energy: 'bg-orange-100 text-orange-700',
+    Technology: 'bg-yellow-300',
+    Development: 'bg-lime-300',
+    Cybersecurity: 'bg-red-400',
+    Science: 'bg-cyan-300',
+    Design: 'bg-pink-400',
 }
 
-const DEFAULT_CATEGORY_COLOR = 'bg-gray-100 text-gray-700'
+const DEFAULT_CATEGORY_COLOR = 'bg-gray-300'
+const CARD_EXCERPT_LENGTH = 100
+
+function truncate(text: string, length: number): string {
+    return text.length > length ? `${text.slice(0, length).trimEnd()}…` : text
+}
 
 export default function ArticlesGrid({ article }: { article: Article }) {
     const navigate = useNavigate()
@@ -25,22 +27,29 @@ export default function ArticlesGrid({ article }: { article: Article }) {
     }
 
     return (
-        <Link to={`/article/${article.slug}`} key={article.id} className="bg-white flex flex-col rounded-lg shadow-md overflow-hidden">
-            {article.image && (
-            <img src={article.image} alt={article.title} className="w-full h-48 object-cover" />
+        <Link
+            to={`/article/${article.slug}`}
+            state={article}
+            key={article.id}
+            className="bg-white flex flex-col brutal-border brutal-shadow brutal-press overflow-hidden"
+        >
+            {article.image ? (
+                <img src={article.image} alt={article.title} className="w-full h-48 object-cover border-b-[3px] border-black" />
+            ) : (
+                <div className="w-full h-48 border-b-[3px] border-black bg-[repeating-linear-gradient(45deg,#000,#000_2px,transparent_2px,transparent_10px)] opacity-10" />
             )}
-            <div className="p-4 flex flex-col h-full">
-            <h2 className="text-xl font-semibold mb-2">{article.title}</h2>
-            <p className="text-gray-600 mb-4 ">{article.excerpt}</p>
-            <div className="flex mt-auto justify-between items-center text-sm text-gray-500">
-                <span
-                    onClick={handleCategoryClick}
-                    className={`px-2 py-0.5 rounded-full text-xs font-medium cursor-pointer ${categoryColor}`}
-                >
-                    {article.category}
-                </span>
-                <span>{article.date}</span>
-            </div>
+            <div className="p-5 pb-6 flex flex-col h-full">
+                <h2 className="font-display text-xl font-bold mb-2 leading-snug">{article.title}</h2>
+                <p className="text-gray-700 mb-4 text-sm">{truncate(article.excerpt, CARD_EXCERPT_LENGTH)}</p>
+                <div className="flex mt-auto justify-between items-center gap-3 text-xs">
+                    <span
+                        onClick={handleCategoryClick}
+                        className={`px-2 py-1 brutal-border font-extrabold uppercase cursor-pointer ${categoryColor}`}
+                    >
+                        {article.category}
+                    </span>
+                    <span className="font-bold text-gray-600 text-right">{article.source} · {article.date}</span>
+                </div>
             </div>
         </Link>
     )

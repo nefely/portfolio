@@ -1,77 +1,30 @@
-# React + TypeScript + Vite
+# NewsHub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A news portfolio site — React 19 + TypeScript + Vite + Tailwind CSS 4 + React Router. Content is pulled live from real RSS feeds (via [rss2json.com](https://rss2json.com), which handles the CORS/XML-parsing so no backend is needed), one feed per category.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Vite 8 + React 19 (React Compiler enabled)
+- React Router 8 (`createBrowserRouter`, data loaders)
+- Tailwind CSS 4
+- RSS feeds as the content source — see [`src/lib/feeds.ts`](src/lib/feeds.ts) for the source list and [`src/lib/rss.ts`](src/lib/rss.ts) for the fetching/parsing
 
-## React Compiler
+## Setup
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+1. `npm install`
+2. `npm run dev`
 
-Note: This will impact Vite dev & build performances.
+That's it — no database or API key required. rss2json's free, unauthenticated tier is used by default. If you hit its shared rate limit, get a free key at [rss2json.com](https://rss2json.com) and set `VITE_RSS2JSON_API_KEY` in a `.env.local` file.
 
-## Expanding the ESLint configuration
+## Scripts
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- `npm run dev` — start the dev server
+- `npm run build` — typecheck and build for production
+- `npm run lint` — run ESLint
+- `npm run preview` — preview the production build locally
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## How articles work
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+RSS only gives a title and a short excerpt, not full article bodies, so article pages show the excerpt and a "Read full article on {source}" link out to the original site — nothing is scraped or republished. The excerpt/image/list data is passed to the article page via router state when you click a card; if you land on an article URL directly (e.g. a page refresh), there's nothing to re-fetch by, so the page falls back to a plain link to the original source instead.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+Add or change feeds by editing the `FEEDS` array in [`src/lib/feeds.ts`](src/lib/feeds.ts) — each entry maps one RSS feed to one category.
