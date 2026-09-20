@@ -71,20 +71,24 @@ async function fetchFeed(feed: FeedSource): Promise<Article[]> {
     return data.items.map((item) => toArticle(item, feed))
 }
 
+function byDateDesc(a: Article, b: Article): number {
+    return new Date(b.date).getTime() - new Date(a.date).getTime()
+}
+
 function withHotFlag(articles: Article[]): Article[] {
-    const sorted = [...articles].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    const hotIds = new Set(sorted.slice(0, HOT_COUNT).map((a) => a.id))
+    const hotIds = new Set(articles.slice(0, HOT_COUNT).map((a) => a.id))
     return articles.map((article) => ({ ...article, isHot: hotIds.has(article.id) }))
 }
 
 export async function getAllArticles(): Promise<Article[]> {
     const results = await Promise.allSettled(FEEDS.map(fetchFeed))
     const articles = results.flatMap((result) => (result.status === 'fulfilled' ? result.value : []))
-    return withHotFlag(articles)
+    return withHotFlag(articles.sort(byDateDesc))
 }
 
 export async function getArticlesByCategory(category: string): Promise<Article[]> {
     const feed = FEEDS.find((f) => f.category === category)
     if (!feed) return []
-    return fetchFeed(feed)
+    const articles = await fetchFeed(feed)
+    return articles.sort(byDateDesc)
 }
