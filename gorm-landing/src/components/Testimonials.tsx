@@ -3,6 +3,7 @@ import { Pagination } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/pagination"
 import ImagePlaceholder from "./ui/ImagePlaceholder"
+import Reveal from "./ui/Reveal"
 import avatarJohn from "../assets/images/testemonial-1.png"
 
 const testimonials = [
@@ -30,9 +31,11 @@ function Testimonials() {
   return (
     <section className="border-b border-white/15 py-20 lg:py-28">
       <div className="mx-auto max-w-[1600px] px-6 lg:px-12">
-        <h2 className="mb-16 text-center text-5xl font-semibold uppercase leading-[0.95] tracking-tight text-white lg:text-7xl">
-          Testimonials
-        </h2>
+        <Reveal>
+          <h2 className="mb-16 text-center text-5xl font-semibold uppercase leading-[0.95] tracking-tight text-white lg:text-7xl">
+            Testimonials
+          </h2>
+        </Reveal>
 
         <Swiper
           modules={[Pagination]}

@@ -6,6 +6,7 @@ import "swiper/css/pagination"
 import work1 from "../assets/images/our-work-1.png"
 import work2 from "../assets/images/our-work-2.png"
 import work3 from "../assets/images/our-work-3.png"
+import Reveal from "./ui/Reveal"
 
 const projects = [
   { title: "Social distancing awareness app", image: work1 },
@@ -16,11 +17,11 @@ const projects = [
 function OurWork() {
   return (
     <section id="work" className="border-b border-white/15 py-20 lg:py-28">
-      <div className="mx-auto max-w-[1600px] px-6 lg:px-12">
+      <Reveal className="mx-auto max-w-[1600px] px-6 lg:px-12">
         <h2 className="mb-14 text-center text-5xl font-semibold uppercase leading-[0.95] tracking-tight text-white lg:text-7xl">
           Our work
         </h2>
-      </div>
+      </Reveal>
 
       <Swiper
         modules={[Navigation, Pagination]}
@@ -34,11 +35,11 @@ function OurWork() {
         }}
       >
         {projects.map((project) => (
-          <SwiperSlide key={project.title}>
+          <SwiperSlide key={project.title} className="overflow-hidden">
             <img
               src={project.image}
               alt={project.title}
-              className="aspect-3/4 w-full object-cover"
+              className="aspect-3/4 w-full object-cover transition-transform duration-500 hover:scale-105"
             />
           </SwiperSlide>
         ))}

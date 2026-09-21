@@ -1,16 +1,20 @@
+import { motion } from "framer-motion"
 import contactImage from "../assets/images/contact.jpg"
+import Reveal from "./ui/Reveal"
 
 function ContactSection() {
   return (
     <section id="contact" className="border-b border-white/15">
       <div className="mx-auto grid max-w-[1600px] grid-cols-1 lg:grid-cols-2">
-        <img
-          src={contactImage}
-          alt="Görm team member at a desk"
-          className="aspect-square w-full object-cover lg:aspect-auto lg:min-h-150"
-        />
+        <div className="overflow-hidden">
+          <img
+            src={contactImage}
+            alt="Görm team member at a desk"
+            className="aspect-square w-full object-cover transition-transform duration-500 hover:scale-105 lg:aspect-auto lg:min-h-150"
+          />
+        </div>
 
-        <div className="flex flex-col justify-center gap-8 px-6 py-20 lg:px-16">
+        <Reveal delay={0.1} className="flex flex-col justify-center gap-8 px-6 py-20 lg:px-16">
           <h2 className="text-5xl font-semibold uppercase leading-[0.95] tracking-tight text-white lg:text-6xl">
             Contact us
           </h2>
@@ -21,37 +25,39 @@ function ContactSection() {
               name="name"
               placeholder="Name*"
               required
-              className="border border-white/20 bg-card px-5 py-4 text-sm text-white placeholder:text-body focus:border-red focus:outline-none"
+              className="border border-white/20 bg-card px-5 py-4 text-sm text-white placeholder:text-body transition-colors focus:border-red focus:outline-none"
             />
             <input
               type="email"
               name="email"
               placeholder="Email*"
               required
-              className="border border-white/20 bg-card px-5 py-4 text-sm text-white placeholder:text-body focus:border-red focus:outline-none"
+              className="border border-white/20 bg-card px-5 py-4 text-sm text-white placeholder:text-body transition-colors focus:border-red focus:outline-none"
             />
             <input
               type="url"
               name="website"
               placeholder="Website URL*"
               required
-              className="border border-white/20 bg-card px-5 py-4 text-sm text-white placeholder:text-body focus:border-red focus:outline-none"
+              className="border border-white/20 bg-card px-5 py-4 text-sm text-white placeholder:text-body transition-colors focus:border-red focus:outline-none"
             />
             <textarea
               name="details"
               placeholder="Project Details*"
               required
               rows={4}
-              className="resize-none border border-white/20 bg-card px-5 py-4 text-sm text-white placeholder:text-body focus:border-red focus:outline-none"
+              className="resize-none border border-white/20 bg-card px-5 py-4 text-sm text-white placeholder:text-body transition-colors focus:border-red focus:outline-none"
             />
-            <button
+            <motion.button
               type="submit"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
               className="mt-2 w-fit rounded bg-red px-6 py-4 text-xs font-semibold uppercase tracking-wide text-white transition-colors hover:bg-red-dark"
             >
               Send proposal
-            </button>
+            </motion.button>
           </form>
-        </div>
+        </Reveal>
       </div>
     </section>
   )
