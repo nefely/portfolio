@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #000000;
+  --color-red: #c6100f;
+  --color-red-dark: #a30d0c;
+  --color-card: #171924;
+  --color-body: #cccccc;
+  --color-muted: #8a8a92;
+}
+
+body {
+  margin: 0;
+  background: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Swiper pagination bullets styled to match the mockup's dot indicators */
+:root {
+  --swiper-pagination-color: var(--color-red);
+  --swiper-pagination-bullet-inactive-color: var(--color-muted);
+  --swiper-pagination-bullet-inactive-opacity: 1;
+}
+.swiper-pagination-bullet {
+  border-radius: 2px !important;
+}
