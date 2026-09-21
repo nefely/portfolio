@@ -1,0 +1,241 @@
+{
+  "meta": {
+    "title": "VV Work — Find a job. Find an employee.",
+    "description": "VV Work — a platform for finding jobs and workers across Europe."
+  },
+  "nav": {
+    "logo": "VV Work",
+    "findJob": "Find a job",
+    "findEmployee": "Find an employee",
+    "about": "About us",
+    "partners": "Partners",
+    "languageLabel": "Language"
+  },
+  "theme": {
+    "light": "Light theme",
+    "dark": "Dark theme",
+    "toggle": "Toggle theme"
+  },
+  "hero": {
+    "title": "Find a job. Find an employee. Work in Europe.",
+    "subtitle": "VV Work connects candidates and employers across Europe — fast, transparent, with no middlemen.",
+    "ctaFindJob": "Find a job",
+    "ctaFindEmployee": "Find an employee"
+  },
+  "categories": {
+    "construction": "Construction",
+    "manufacturing": "Manufacturing",
+    "logistics": "Logistics",
+    "hospitality": "Hospitality",
+    "it": "IT",
+    "drivers": "Drivers",
+    "other": "Other"
+  },
+  "categoryDescriptions": {
+    "construction": "Building sites, renovation, installation — across Europe.",
+    "manufacturing": "Production lines, assembly, quality control.",
+    "logistics": "Warehouse, order picking, delivery drivers.",
+    "hospitality": "Hotels, restaurants, guest service.",
+    "it": "Development, support, remote IT teams.",
+    "drivers": "Categories B/C/CE — local and international routes.",
+    "other": "Everything else — from security to cleaning."
+  },
+  "locations": {
+    "warsaw": "Warsaw, Poland",
+    "poznan": "Poznań, Poland",
+    "gdansk": "Gdańsk, Poland",
+    "wroclaw": "Wrocław, Poland",
+    "krakow": "Kraków, Poland",
+    "munich": "Munich, Germany",
+    "berlin": "Berlin, Germany",
+    "salzburg": "Salzburg, Austria",
+    "prague": "Prague, Czechia"
+  },
+  "employmentType": {
+    "full-time": "Full-time",
+    "part-time": "Part-time",
+    "seasonal": "Seasonal",
+    "project": "Project-based"
+  },
+  "workFormat": {
+    "onsite": "On-site",
+    "remote": "Remote",
+    "hybrid": "Hybrid"
+  },
+  "experienceLevel": {
+    "0-1": "0–1 year",
+    "1-3": "1–3 years",
+    "3-5": "3–5 years",
+    "5+": "5+ years"
+  },
+  "languages": {
+    "uk": "Ukrainian",
+    "en": "English",
+    "pl": "Polish"
+  },
+  "languageLevels": {
+    "basic": "Basic",
+    "intermediate": "Intermediate",
+    "fluent": "Fluent",
+    "native": "Native"
+  },
+  "home": {
+    "categoriesTitle": "Popular categories",
+    "categoriesSubtitle": "Pick a field to see matching vacancies",
+    "partnersTitle": "Our partners",
+    "partnersSubtitle": "Companies already hiring through VV Work",
+    "employerTitle": "Need employees?",
+    "employerText": "List your vacancy on VV Work and reach vetted candidates across Europe — no agency fees, no red tape.",
+    "employerCta": "Find an employee",
+    "aboutTitle": "About us",
+    "aboutText": "VV Work is a platform connecting candidates and employers across Europe. We simplify job search and hiring for hundreds of companies.",
+    "aboutText2": "Candidates search for vacancies by job title or category with no sign-up and no hidden fees for applying. Employers post vacancies either through vetted staffing partners or directly — not every company works through an agency, and the platform supports both.",
+    "aboutText3": "We operate in nine cities across Europe — from Warsaw to Prague — and keep expanding our network of partners and direct employers. The goal is simple: make working abroad as easy to arrange as finding an apartment or a flight.",
+    "viewAllPartners": "All partners →"
+  },
+  "premium": {
+    "title": "Hire faster and more effectively",
+    "subtitle": "VV Work Premium for employers — priority where it counts, no agency fees.",
+    "benefit1": "Priority job placement — top of the list, a \"Recommended\" badge",
+    "benefit2": "Unlimited active job postings at once",
+    "benefit3": "Advanced candidate search — precise filters by budget and availability",
+    "benefit4": "Branded company page — logo, gallery, no text limits",
+    "benefit5": "\"Verified employer\" badge",
+    "formTitle": "Leave a request — we'll share the details",
+    "formSubtitle": "No obligations. We'll get in touch and find a plan for your needs."
+  },
+  "partnersIndex": {
+    "title": "Partners",
+    "subtitle": "Companies hiring through VV Work.",
+    "emptyState": "No partners in this category yet.",
+    "errorTitle": "Couldn't load partners"
+  },
+  "partner": {
+    "jobsTitle": "Partner's vacancies",
+    "backLink": "← Back to home"
+  },
+  "jobs": {
+    "pageTitle": "Find a job",
+    "pageSubtitle": "Every vacancy from our partners across Europe, in one place.",
+    "listHeading": "Job listings",
+    "resultsCount": "Vacancies found: {count}",
+    "searchLabel": "Search vacancies",
+    "searchPlaceholder": "Search by job title…",
+    "categoryFilterLabel": "Category",
+    "allCategories": "All categories",
+    "emptyState": "Nothing matches your search. Try a different query or category.",
+    "loading": "Loading vacancies…",
+    "errorTitle": "Couldn't load vacancies",
+    "salaryLabel": "Salary",
+    "salaryNotSpecified": "Negotiable",
+    "locationLabel": "Location",
+    "employmentTypeLabel": "Employment type",
+    "postedLabel": "Posted",
+    "backLink": "← All vacancies",
+    "applyTitle": "Interested in this role?",
+    "applySubtitle": "Leave a request — we'll get in touch with the details.",
+    "workFormatLabel": "Work format",
+    "experienceLabel": "Experience",
+    "languagesLabel": "Languages",
+    "languageFilterLabel": "Language",
+    "minSalaryLabel": "Salary from",
+    "minSalaryPlaceholder": "e.g. 1500",
+    "filtersToggle": "Filters",
+    "resetFilters": "Reset all",
+    "postedWithinLabel": "Date posted",
+    "postedWithinAny": "Any time",
+    "postedWithin1": "Last 24 hours",
+    "postedWithin7": "Last 7 days",
+    "postedWithin30": "Last 30 days",
+    "paginationLabel": "Job list pages",
+    "paginationPrev": "Previous",
+    "paginationNext": "Next",
+    "paginationStatus": "Page {page} of {total}"
+  },
+  "candidates": {
+    "pageTitle": "Find an employee",
+    "pageSubtitle": "Candidate profiles ready to start work in Europe — filter by field, location and experience.",
+    "listHeading": "Candidate listings",
+    "resultsCount": "Candidates found: {count}",
+    "searchLabel": "Search candidates",
+    "searchPlaceholder": "Search by name or job title…",
+    "categoryFilterLabel": "Field",
+    "locationFilterLabel": "Location",
+    "emptyState": "Nothing matches your search. Try a different query or filters.",
+    "errorTitle": "Couldn't load candidates",
+    "employmentTypeLabel": "Desired employment",
+    "workFormatLabel": "Desired work format",
+    "experienceLabel": "Experience",
+    "languageFilterLabel": "Language",
+    "languagesLabel": "Languages",
+    "skillsLabel": "Skills",
+    "maxSalaryLabel": "Budget up to",
+    "maxSalaryPlaceholder": "e.g. 2000",
+    "availableWithinLabel": "Availability",
+    "availableWithinAny": "Any time",
+    "availableWithin7": "Within a week",
+    "availableWithin14": "Within 2 weeks",
+    "availableWithin30": "Within a month",
+    "filtersToggle": "Filters",
+    "resetFilters": "Reset all",
+    "salaryExpectationLabel": "Expects",
+    "salaryNotSpecified": "Negotiable",
+    "availableFromLabel": "Available from",
+    "backLink": "← All candidates",
+    "contactTitle": "Interested in this candidate?",
+    "contactSubtitle": "Leave a request — we'll get in touch and pass your contact details to the candidate.",
+    "paginationLabel": "Candidate list pages",
+    "paginationPrev": "Previous",
+    "paginationNext": "Next",
+    "paginationStatus": "Page {page} of {total}"
+  },
+  "contact": {
+    "title": "Get in touch",
+    "subtitle": "Leave a request — we'll get back to you within a day.",
+    "nameLabel": "Name",
+    "namePlaceholder": "What should we call you?",
+    "contactLabel": "Phone or Telegram",
+    "contactPlaceholder": "+380991234567 or @username",
+    "messageLabel": "Message",
+    "messageOptionalHint": "Optional, up to 500 characters",
+    "submit": "Send request",
+    "submitting": "Sending…",
+    "successTitle": "Thank you!",
+    "successText": "Your request has been sent. We'll contact you soon.",
+    "errorBanner": "Couldn't send your request. Check the details and try again.",
+    "errors": {
+      "nameTooShort": "Name must be at least 2 characters",
+      "contactInvalid": "Enter a phone number (+380991234567) or Telegram (@username)",
+      "messageTooLong": "Message is too long (max 500 characters)"
+    }
+  },
+  "footer": {
+    "tagline": "A platform to find jobs and employees across Europe.",
+    "aboutTitle": "About",
+    "aboutLink": "About us",
+    "candidatesTitle": "For candidates",
+    "findJobLink": "Find a job",
+    "employersTitle": "For employers",
+    "findEmployeeLink": "Find an employee",
+    "socialsTitle": "Social media",
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "rights": "© {year} VV Work. All rights reserved."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "This page doesn't exist or the link is outdated.",
+    "backHome": "Back to home"
+  },
+  "pageError": {
+    "title": "Something went wrong",
+    "text": "We couldn't open this page. Please try again.",
+    "backHome": "Back to home"
+  },
+  "common": {
+    "retry": "Try again",
+    "loading": "Loading…",
+    "simulatedErrorMessage": "Couldn't complete the request. Please try again.",
+    "unknownErrorMessage": "An unknown error occurred. Please try again."
+  }
+}

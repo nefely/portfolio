@@ -1,0 +1,60 @@
+"use client";
+
+import { useCallback } from "react";
+import { useTranslations } from "next-intl";
+import { fetchPartners } from "@/lib/mockApi/partners";
+import { useAsync } from "@/hooks/useAsync";
+import { Link } from "@/i18n/navigation";
+import { resolveErrorMessage } from "@/lib/mockApi/resolveErrorMessage";
+import { RetryBlock } from "@/components/shared/RetryBlock";
+import { PartnerCard } from "@/components/partners/PartnerCard";
+import { StaggerContainer, StaggerItem } from "@/components/motion/Stagger";
+import { FeaturedPartnersSkeleton } from "./FeaturedPartnersSkeleton";
+
+export function FeaturedPartnersSection() {
+  const t = useTranslations("home");
+  const tIndex = useTranslations("partnersIndex");
+  const tCommon = useTranslations("common");
+
+  const fetchFn = useCallback((signal: AbortSignal) => fetchPartners({ signal }), []);
+  const { state, retry } = useAsync(fetchFn, []);
+
+  return (
+    <section id="partners" className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <div className="flex items-baseline justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">{t("partnersTitle")}</h2>
+          <p className="mt-1 text-gray-600 dark:text-gray-300">{t("partnersSubtitle")}</p>
+        </div>
+        <Link
+          href="/partners"
+          className="shrink-0 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+        >
+          {t("viewAllPartners")}
+        </Link>
+      </div>
+
+      <div className="mt-6">
+        {state.status === "loading" && <FeaturedPartnersSkeleton />}
+
+        {state.status === "error" && (
+          <RetryBlock
+            title={tIndex("errorTitle")}
+            message={resolveErrorMessage(state.error, tCommon)}
+            onRetry={retry}
+          />
+        )}
+
+        {state.status === "success" && (
+          <StaggerContainer className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {state.data.map((partner) => (
+              <StaggerItem key={partner.id}>
+                <PartnerCard partner={partner} />
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        )}
+      </div>
+    </section>
+  );
+}
