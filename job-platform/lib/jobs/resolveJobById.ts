@@ -1,5 +1,6 @@
 import "server-only";
 
+import { isUuid } from "@/lib/isUuid";
 import { createClient } from "@/lib/supabase/server";
 import type { CategoryId } from "@/types/category";
 import type { Currency, EmploymentType, ExperienceLevel, Job, WorkFormat } from "@/types/job";
@@ -11,13 +12,8 @@ import type { LocationCode } from "@/types/location";
 // Supabase call, no artificial delay/failure — mirrors
 // lib/partners/resolvePartnerBySlug.ts (server-side route resolution, not
 // the async-handling feature the brief grades).
-const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
 export async function resolveJobById(id: string): Promise<Job | null> {
-  // `id` is a Postgres `uuid` column — a malformed id (e.g. someone typing
-  // /jobs/abc) would otherwise make the query itself throw ("invalid input
-  // syntax for type uuid") instead of resolving to a graceful notFound().
-  if (!UUID_PATTERN.test(id)) {
+  if (!isUuid(id)) {
     return null;
   }
 

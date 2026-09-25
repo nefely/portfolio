@@ -1,10 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-// Supabase client for use in Server Components (e.g. resolving a partner by
-// slug before notFound()). This app has no auth, so cookie writes are just
-// harmless no-ops here — kept only to mirror the shared-project convention
-// from portfolio/task-manager/src/lib/supabase/server.js.
+// Supabase client for Server Components, Server Actions and Route Handlers.
+// Reads the auth session from cookies, so RLS sees the signed-in user
+// (auth.uid()). Same convention as portfolio/task-manager/src/lib/supabase/server.js.
 export async function createClient() {
   const cookieStore = await cookies();
 
@@ -23,8 +22,8 @@ export async function createClient() {
             );
           } catch {
             // `setAll` is called from a Server Component during rendering,
-            // where cookies can't be written. Safe to ignore — this app has
-            // no session to keep in sync.
+            // where cookies can't be written. Safe to ignore — proxy.ts
+            // already refreshes the session on every request.
           }
         },
       },

@@ -15,12 +15,20 @@ export async function EmployerCtaSection() {
         <div className="relative">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("employerTitle")}</h2>
           <p className="mt-3 max-w-2xl text-gray-600 dark:text-gray-300">{t("employerText")}</p>
-          <Link
-            href="/candidates"
-            className="mt-6 inline-block rounded-full bg-gray-900 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
-          >
-            {t("employerCta")}
-          </Link>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/candidates"
+              className="rounded-full bg-gray-900 px-6 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+            >
+              {t("employerCta")}
+            </Link>
+            <Link
+              href={{ pathname: "/signup", query: { role: "employer" } }}
+              className="rounded-full border border-gray-300 px-6 py-3 text-center text-sm font-semibold transition-colors hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-900"
+            >
+              {t("employerSignupCta")}
+            </Link>
+          </div>
         </div>
       </div>
     </section>

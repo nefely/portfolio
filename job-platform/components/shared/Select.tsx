@@ -6,7 +6,9 @@ export interface SelectOption<T extends string> {
 }
 
 interface SelectProps<T extends string> {
-  label: string; // sr-only — доступний label для скрінрідерів
+  label: string; // за замовчуванням sr-only — доступний label для скрінрідерів
+  /** Показати label над полем (форми кабінету), а не лише для скрінрідерів (фільтри). */
+  showLabel?: boolean;
   value: T;
   onChange: (value: T) => void;
   options: SelectOption<T>[];
@@ -19,6 +21,7 @@ interface SelectProps<T extends string> {
 // тонкі обгортки над цим компонентом з власними options/переклад.
 export function Select<T extends string>({
   label,
+  showLabel = false,
   value,
   onChange,
   options,
@@ -26,7 +29,7 @@ export function Select<T extends string>({
 }: SelectProps<T>) {
   return (
     <label className={`flex flex-col gap-1 text-sm font-medium ${className ?? ""}`}>
-      <span className="sr-only">{label}</span>
+      <span className={showLabel ? undefined : "sr-only"}>{label}</span>
       <div className="relative">
         <select
           value={value}

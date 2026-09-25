@@ -45,13 +45,16 @@ npm install
    ```
    NEXT_PUBLIC_SUPABASE_URL=...
    NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+   NEXT_PUBLIC_SITE_URL=...   # лише для проду; локально береться Origin запиту
    ```
    (Project Settings → API у Supabase Dashboard.)
 2. У Supabase SQL Editor цього проєкту виконайте **по черзі**:
    - [`supabase/schema.sql`](supabase/schema.sql) — таблиці `job_platform_partners`,
      `job_platform_employers`, `job_platform_jobs`, `job_platform_candidates`,
-     `job_platform_contact_submissions` + RLS-політики (публічний `select` на
-     partners/employers/jobs/candidates, публічний `insert`-без-`select` на заявки).
+     `job_platform_contact_submissions`, `job_platform_profiles` (ролі акаунтів) +
+     RLS-політики (публічний `select` на partners/employers/jobs/публічних
+     кандидатів, публічний `insert`-без-`select` на заявки, запис профілю — лише
+     власником із відповідною роллю; див. [Акаунти та ролі](#акаунти-та-ролі)).
      Ідемпотентний, можна перезапускати (безпечно і для вже заповненої бази —
      нові колонки/constraint'и додаються через `alter table ... add column if
      not exists` / `drop constraint if exists`). **Якщо база вже має старішу
@@ -82,6 +85,20 @@ npm install
 на Головній коректно покажуть **retry-блок** ("не вдалося завантажити") —
 це очікувана поведінка асинхронного шару, а не помилка коду.
 
+3. Для акаунтів (Supabase Dashboard → Authentication):
+   - **URL Configuration → Redirect URLs:** додайте `http://localhost:3000/**`
+     і прод-домен. Site URL не чіпайте — він спільний із task-manager, тому
+     застосунок завжди явно передає `redirectTo`.
+   - **Providers → Google (необов'язково, вимкнено за замовчуванням):** OAuth
+     Client у Google Cloud Console (тип "Web application", Authorized redirect
+     URI — `https://<project-ref>.supabase.co/auth/v1/callback`), Client
+     ID/Secret → у налаштування провайдера, потім
+     `NEXT_PUBLIC_GOOGLE_AUTH_ENABLED=true` у `.env.local` — з'явиться кнопка
+     "Продовжити з Google".
+   - Вбудована пошта Supabase надсилає лише кілька листів на годину. Для демо
+     можна вимкнути **Email → Confirm email** — тоді реєстрація одразу
+     відкриває сесію (код обробляє обидва варіанти).
+
 ### 3. Розробка
 
 ```bash
@@ -106,13 +123,22 @@ app/[locale]/                 # усі сторінки під локаллю (u
   partners/[slug]/page.tsx     # сторінка одного партнера (динамічна)
   candidates/page.tsx          # /candidates — пошук кандидатів (той самий шлях у всіх локалях)
   candidates/[slug]/page.tsx   # сторінка одного кандидата (динамічна)
+  login/, signup/              # вхід / реєстрація з вибором ролі (email+пароль, Google)
+  auth/callback/route.ts       # повернення з листа підтвердження / Google OAuth
+  account/page.tsx             # кабінет: профіль кандидата або компанії + "Мої вакансії" (за роллю)
+  account/jobs/new, account/jobs/[id]/edit  # публікація / редагування вакансії роботодавцем
+  account/role/page.tsx        # вибір ролі для акаунта без неї
 app/global-error.tsx          # крайній фолбек (падіння самого layout.tsx) — без next-intl/Tailwind
 
 components/
-  layout/     Header, Footer, LocaleSwitcher, MobileNav
+  layout/     Header, Footer, LocaleSwitcher, MobileNav, AuthNav ("Увійти"/"Кабінет")
   theme/      ThemeProvider, ThemeToggle
   home/       Hero, DotBackground, GlowDots, CategoryGrid, FeaturedPartnersSection(+Skeleton),
-              EmployerCtaSection
+              EmployerCtaSection, PremiumCtaSection
+  auth/       LoginForm, SignupForm, ChooseRoleForm, RolePicker, GoogleButton,
+              AuthPageShell, OrDivider
+  account/    CandidateProfileForm, EmployerProfileForm, JobPostingForm, OwnJobsList,
+              LanguagesField, SaveBar, SignOutButton
   motion/     FadeIn, Stagger (StaggerContainer/StaggerItem) — hand-rolled framer-motion обгортки
   partners/   PartnerCard, PartnerHeader, PartnersIndexBoard, AllJobsBoard,
               PartnerJobsBoard, JobSearchInput, JobFiltersPanel,
@@ -123,33 +149,80 @@ components/
   shared/     Skeleton, RetryBlock, Select, Pagination, FilterChipGroup,
               FiltersPanel (generic config-driven панель — JobFiltersPanel і
               CandidateFiltersPanel лише будують масив вимірів (chips/number/
-              select) під свій тип фільтрів, решта UI/логіки спільна)
+              select) під свій тип фільтрів, решта UI/логіки спільна),
+              FormField + formStyles (спільні поля форм)
 
 lib/
-  supabase/       client.ts (браузер) / server.ts (Server Components)
-  mockApi/        simulateRequest.ts + partners.ts / jobs.ts / candidates.ts / contact.ts
-  resolveErrorMessage.ts — мапить стабільні (не локалізовані) маркери
-                   помилок simulateRequest/useAsync у переклад під поточну локаль
+  supabase/       client.ts (браузер) / server.ts (Server Components, actions) /
+                  proxy.ts (оновлення сесії в proxy.ts)
+  mockApi/        simulateRequest.ts + partners.ts / jobs.ts / candidates.ts / contact.ts,
+                  resolveErrorMessage.ts — мапить стабільні (не локалізовані) маркери
+                  помилок simulateRequest/useAsync у переклад під поточну локаль
+  auth/           actions.ts (signUp/signIn/Google/chooseRole/signOut), dal.ts
+                  (getCurrentUser/requireProfile), ensureProfile.ts, roles.ts,
+                  safeNextPath.ts, siteUrl.ts
+  account/        actions.ts (збереження профілів), jobActions.ts (create/update/delete
+                  вакансій), queries.ts (власний профіль і вакансії)
+  slugify.ts       транслітерація uk/pl → ASCII-slug + унікальний суфікс
   filterJobs.ts    чиста функція пошук+категорія+додаткові фільтри (для вакансій)
   filterPartners.ts чиста функція фільтр партнерів за категорією
   filterCandidates.ts чиста функція пошук+фільтри для кандидатів (пошук працівника)
-  validation/      contactForm.ts — чисті валідатори
+  validation/      contactForm.ts, auth.ts, candidateProfile.ts, employerProfile.ts,
+                   jobPosting.ts — чисті валідатори
   i18n/            pickLocalized.ts
   partners/        resolvePartnerBySlug.ts (server-side lookup для notFound())
   jobs/            resolveJobById.ts (server-side lookup для notFound())
+  candidates/      resolveCandidateBySlug.ts (server-side lookup для notFound())
 
 hooks/       useDebouncedValue.ts, useAsync.ts, useMounted.ts
 data/        categories.ts, locations.ts, employmentTypes.ts, workFormats.ts,
              experienceLevels.ts, languages.ts, languageLevels.ts (фіксовані таксономії),
              categoryColors.ts (кольори категорій, спільні для бейджів і чіпів),
              categoryIcons.tsx (inline SVG-іконки категорій, без бібліотеки іконок)
-types/       category, location, job, partner, employer, candidate, contact, i18n, language
+types/       category, location, job, partner, employer, candidate, contact, i18n, language, account
 i18n/        routing.ts, navigation.ts, request.ts (next-intl)
 messages/    uk.json, en.json, pl.json
 supabase/    schema.sql, seed-data.mjs + candidates-seed-data.mjs (джерела),
              generate-seed.mjs → seed.sql (згенеровано)
-proxy.ts     next-intl middleware (Next.js 16 перейменував middleware → proxy)
+proxy.ts     next-intl middleware + оновлення Supabase-сесії й оптимістичні
+             редіректи /account ↔ /login (Next.js 16 перейменував middleware → proxy)
 ```
+
+## Акаунти та ролі
+
+Два типи акаунтів: **шукач роботи** (`seeker`) і **роботодавець** (`employer`).
+Вхід — email + пароль (Google — за прапорцем `NEXT_PUBLIC_GOOGLE_AUTH_ENABLED`,
+код готовий, потрібне лише налаштування провайдера). Роль обирається один раз
+при реєстрації й більше не змінюється.
+
+- **Роль — окрема таблиця, а не `user_metadata`.** `auth.users` спільна для
+  всіх застосунків цього Supabase-інстансу (див. task-manager), тож роль,
+  що стосується лише VV Work, живе в `job_platform_profiles`. Акаунт без
+  рядка там (напр. створений у task-manager) після входу потрапляє на
+  `/account/role`.
+- **Профіль = наявні сутності, а не нові таблиці.** Шукач заповнює рядок
+  `job_platform_candidates` (з'являється в `/candidates`; перемикач
+  `is_public` ховає його з каталогу), роботодавець — `job_platform_employers`
+  (+ `about`, `website`). Seed-рядки лишаються з `user_id = null`.
+- **Вакансії від роботодавця** (`/account/jobs/new`, `/account/jobs/[id]/edit`,
+  список із видаленням у кабінеті) — звичайні рядки `job_platform_jobs` з
+  `employer_id` його компанії, тож `/jobs`, пошук, фільтри й сторінка
+  вакансії підхоплюють їх без змін. Роботодавець пише одною мовою — той самий
+  текст іде в усі ключі jsonb `{ uk, en, pl }`. Публікувати можна лише після
+  збереження профілю компанії.
+- **Демо-акаунти:** [`supabase/demo-accounts.sql`](supabase/demo-accounts.sql)
+  створює підтвердженого роботодавця (з компанією і 2 вакансіями) і шукача
+  (з профілем кандидата) — дані для входу в шапці файлу.
+- **Три рубежі захисту:** `proxy.ts` — оптимістичні редіректи (гість на
+  `/account` → `/login?next=…`); `lib/auth/dal.ts` (`requireProfile`) —
+  перевірка на сервері в кожній сторінці/дії кабінету; RLS — insert/update
+  лише свого рядка і лише з відповідною роллю (`job_platform_has_role()`),
+  без update-політики на ролі.
+- **Публічні сторінки лишаються статичними.** Header не читає сесію на
+  сервері — `AuthNav` визначає "Увійти"/"Кабінет" на клієнті, інакше cookies
+  в layout зробили б динамічним увесь сайт.
+- **`?next=` проходить через `safeNextPath`** — лише внутрішні шляхи, без
+  open redirect (`//evil.com`, `https://…`).
 
 **Server/Client межа:** усе, що не тримає стан (Header, Footer, Hero,
 CategoryGrid, PartnerHeader, сторінки) — Server Component. Інтерактивне
@@ -268,7 +341,7 @@ legend, selected/value, onChange, options}`) під свій тип фільтр
 
 ## Unit-тести
 
-`npm run test:coverage` — 83 тести, **~96% покриття** логіки, яку оцінює
+`npm run test:coverage` — 124 тести, **~96% покриття** логіки, яку оцінює
 бриф (debounce, комбінація фільтрів, валідація форми, retry/abort-guard):
 
 - `lib/mockApi/simulateRequest.test.ts` — затримка 300–800мс, ~20% помилка, `ApiError`
@@ -288,6 +361,14 @@ legend, selected/value, onChange, options}`) під свій тип фільтр
 - `hooks/useDebouncedValue.test.ts` — не оновлюється до завершення delay, проміжні значення не просочуються
 - `hooks/useAsync.test.ts` — loading→success/error, `retry()`, застарілий (aborted) виклик не перезаписує новіший стан
 - `lib/validation/contactForm.test.ts` — межі імені/телефону/telegram/довжини повідомлення
+- `lib/validation/auth.test.ts` — email/пароль, мапінг помилок Supabase на ключі перекладу
+- `lib/validation/candidateProfile.test.ts`, `employerProfile.test.ts` — правила
+  профілів, відсікання підроблених значень поза таксономіями, перевірка форми
+  JSON для server actions, нормалізація в рядок БД
+- `lib/validation/jobPosting.test.ts` — правила вакансії, діапазон зарплати,
+  копіювання тексту в усі мовні ключі
+- `lib/auth/safeNextPath.test.ts` — захист від open redirect
+- `lib/slugify.test.ts` — транслітерація uk/pl і унікальний суфікс
 - `components/contact/ContactForm.test.tsx` — інлайн-помилки без мережевого виклику й без `alert()`; optimistic UI + rollback при помилці
 - `components/partners/JobSearchInput.test.tsx` — `onDebouncedChange` викликається раз, не на кожен символ
 - `components/shared/RetryBlock.test.tsx` — рендер + клік → `onRetry`
@@ -461,8 +542,8 @@ legend, selected/value, onChange, options}`) під свій тип фільтр
   гроші за швидший пошук роботи етично сумнівно й підриває довіру. Роботодавці
   вже платять грошима за найм — платити ще й за пріоритетний доступ вписується
   в звичну B2B-модель (LinkedIn Recruiter, Indeed Sponsored). **Це тизер, не
-  робочий пейвол** — акаунтів/оплати ще немає (заплановано, див.
-  [[next-feature-accounts-applications]]), тож CTA веде не в нікуди й не на
+  робочий пейвол** — акаунти вже є (див. [Акаунти та ролі](#акаунти-та-ролі)),
+  але оплати ще немає, тож CTA веде не в нікуди й не на
   неіснуючу сторінку "Premium", а на ту саму контекстно вбудовану
   `ContactForm`, що й на `/jobs/[id]`/`/candidates/[slug]` — "залиште заявку,
   розповімо деталі".

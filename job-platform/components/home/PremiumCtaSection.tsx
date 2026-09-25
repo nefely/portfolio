@@ -3,10 +3,9 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { DotBackground } from "./DotBackground";
 import { GlowDots } from "./GlowDots";
 
-// Тизер-CTA без реального пейволу/акаунтів за ним (тих ще немає — див.
-// [[next-feature-accounts-applications]]) — переваги нижче або вже
-// реалізовані як окрема "звичайна" функціональність (пошук кандидатів),
-// або описують, що з'явиться разом із фічею акаунтів. Дія на CTA — та сама
+// Тизер-CTA без реального пейволу за ним (акаунти вже є, оплати ще немає) —
+// переваги нижче або вже реалізовані як окрема "звичайна" функціональність
+// (пошук кандидатів), або описують, що з'явиться разом з оплатою. Дія на CTA — та сама
 // контекстно вбудована ContactForm, що й на /jobs/[id] і /candidates/[slug],
 // а не посилання на неіснуючу сторінку "Premium".
 export async function PremiumCtaSection() {

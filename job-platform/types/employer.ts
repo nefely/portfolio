@@ -6,10 +6,13 @@ import type { LocationCode } from "./location";
 // сторінки, без categories/summary — лише те, що потрібно показати на
 // картці вакансії. Job.partnerId і Job.employerId взаємовиключні: вакансія
 // належить АБО партнеру, АБО прямому роботодавцю, ніколи обом і ніколи
-// жодному (див. CHECK-constraint у schema.sql).
+// жодному (див. CHECK-constraint у schema.sql). about/website заповнює
+// роботодавець зі своїм акаунтом у кабінеті (/account).
 export interface Employer {
   id: string;
   slug: string;
   name: string;
   locationCode: LocationCode;
+  about?: string;
+  website?: string;
 }

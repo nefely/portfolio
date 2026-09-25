@@ -37,6 +37,15 @@ export async function Hero() {
               {t("ctaFindEmployee")}
             </Link>
           </div>
+          <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+            {t("signupPrompt")}{" "}
+            <Link
+              href={{ pathname: "/signup", query: { role: "seeker" } }}
+              className="font-semibold text-gray-900 underline underline-offset-4 dark:text-white"
+            >
+              {t("signupLink")}
+            </Link>
+          </p>
         </FadeIn>
       </div>
     </section>

@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { AuthNav } from "./AuthNav";
 import { HashScrollLink } from "./HashScrollLink";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { Logo } from "./Logo";
@@ -46,6 +47,7 @@ export async function Header() {
           <div className="hidden items-center gap-3 md:flex">
             <LocaleSwitcher />
             <ThemeToggle />
+            <AuthNav />
           </div>
           <MobileNav toggleLabel={t("logo")}>
             <div className="flex flex-col items-center gap-3">{navLinks}</div>
@@ -53,6 +55,7 @@ export async function Header() {
               <LocaleSwitcher />
               <ThemeToggle />
             </div>
+            <AuthNav />
           </MobileNav>
         </div>
       </div>

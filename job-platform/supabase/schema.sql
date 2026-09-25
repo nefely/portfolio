@@ -168,6 +168,47 @@ create table if not exists public.job_platform_contact_submissions (
 );
 
 -- ---------------------------------------------------------------------------
+-- Акаунти: job_platform_profiles + прив'язка candidates/employers до auth.users
+-- ---------------------------------------------------------------------------
+-- auth.users спільна для всіх проєктів цього Supabase-інстансу (див. шапку
+-- файлу), тож роль НЕ зберігаємо в user_metadata — вона стосується лише
+-- цього застосунку. Відсутність рядка тут = користувач ще не обрав роль
+-- (напр. акаунт створено в task-manager) → застосунок веде на /account/role.
+-- Одна роль на акаунт: update-політики немає, тож змінити роль не можна.
+create table if not exists public.job_platform_profiles (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  role text not null check (role in ('seeker', 'employer')),
+  created_at timestamptz not null default now()
+);
+
+-- Seed-рядки лишаються з user_id = null (демо-каталог); профіль, створений
+-- через кабінет, належить рівно одному користувачу (unique).
+alter table public.job_platform_candidates
+  add column if not exists user_id uuid unique references auth.users (id) on delete cascade,
+  add column if not exists is_public boolean not null default true;
+
+alter table public.job_platform_employers
+  add column if not exists user_id uuid unique references auth.users (id) on delete cascade,
+  add column if not exists about text,
+  add column if not exists website text;
+
+-- security definer: політики інших таблиць викликають це під anon/
+-- authenticated, а RLS на job_platform_profiles інакше обмежувала б і сам
+-- підзапит. stable — Postgres може кешувати результат у межах запиту.
+create or replace function public.job_platform_has_role(required_role text)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (
+    select 1 from public.job_platform_profiles
+    where user_id = auth.uid() and role = required_role
+  );
+$$;
+
+-- ---------------------------------------------------------------------------
 -- Row Level Security
 -- ---------------------------------------------------------------------------
 alter table public.job_platform_partners enable row level security;
@@ -175,6 +216,15 @@ alter table public.job_platform_employers enable row level security;
 alter table public.job_platform_jobs enable row level security;
 alter table public.job_platform_candidates enable row level security;
 alter table public.job_platform_contact_submissions enable row level security;
+alter table public.job_platform_profiles enable row level security;
+
+drop policy if exists "own profile read" on public.job_platform_profiles;
+create policy "own profile read" on public.job_platform_profiles
+  for select to authenticated using (user_id = auth.uid());
+
+drop policy if exists "own profile insert" on public.job_platform_profiles;
+create policy "own profile insert" on public.job_platform_profiles
+  for insert to authenticated with check (user_id = auth.uid());
 
 drop policy if exists "public read partners" on public.job_platform_partners;
 create policy "public read partners" on public.job_platform_partners
@@ -184,16 +234,72 @@ drop policy if exists "public read employers" on public.job_platform_employers;
 create policy "public read employers" on public.job_platform_employers
   for select using (true);
 
+drop policy if exists "own employer insert" on public.job_platform_employers;
+create policy "own employer insert" on public.job_platform_employers
+  for insert to authenticated
+  with check (user_id = auth.uid() and public.job_platform_has_role('employer'));
+
+drop policy if exists "own employer update" on public.job_platform_employers;
+create policy "own employer update" on public.job_platform_employers
+  for update to authenticated
+  using (user_id = auth.uid())
+  with check (user_id = auth.uid() and public.job_platform_has_role('employer'));
+
 drop policy if exists "public read jobs" on public.job_platform_jobs;
 create policy "public read jobs" on public.job_platform_jobs
   for select using (true);
 
--- Кандидати поки без реєстрації/акаунтів (див. заплановану фічу
--- accounts+applications) — це демо-каталог профілів для сторінки пошуку
--- працівників, тому лише публічне читання, без insert-політики.
+-- Роботодавець з акаунтом публікує вакансії лише від імені СВОЄЇ компанії
+-- (job_platform_employers.user_id = він), ніколи від партнера. posted_at не
+-- можна поставити в майбутнє — інакше вакансія назавжди "висіла б" першою в
+-- сортуванні за датою.
+drop policy if exists "own employer jobs insert" on public.job_platform_jobs;
+create policy "own employer jobs insert" on public.job_platform_jobs
+  for insert to authenticated
+  with check (
+    partner_id is null
+    and employer_id in (select id from public.job_platform_employers where user_id = auth.uid())
+    and public.job_platform_has_role('employer')
+    and posted_at <= now()
+  );
+
+drop policy if exists "own employer jobs update" on public.job_platform_jobs;
+create policy "own employer jobs update" on public.job_platform_jobs
+  for update to authenticated
+  using (employer_id in (select id from public.job_platform_employers where user_id = auth.uid()))
+  with check (
+    partner_id is null
+    and employer_id in (select id from public.job_platform_employers where user_id = auth.uid())
+    and public.job_platform_has_role('employer')
+    and posted_at <= now()
+  );
+
+drop policy if exists "own employer jobs delete" on public.job_platform_jobs;
+create policy "own employer jobs delete" on public.job_platform_jobs
+  for delete to authenticated
+  using (employer_id in (select id from public.job_platform_employers where user_id = auth.uid()));
+
+-- Каталог = seed-профілі (user_id null, завжди is_public) + профілі
+-- зареєстрованих шукачів. Прихований профіль (is_public = false) бачить
+-- лише його власник — у кабінеті.
 drop policy if exists "public read candidates" on public.job_platform_candidates;
 create policy "public read candidates" on public.job_platform_candidates
-  for select using (true);
+  for select using (is_public or user_id = auth.uid());
+
+drop policy if exists "own candidate insert" on public.job_platform_candidates;
+create policy "own candidate insert" on public.job_platform_candidates
+  for insert to authenticated
+  with check (user_id = auth.uid() and public.job_platform_has_role('seeker'));
+
+drop policy if exists "own candidate update" on public.job_platform_candidates;
+create policy "own candidate update" on public.job_platform_candidates
+  for update to authenticated
+  using (user_id = auth.uid())
+  with check (user_id = auth.uid() and public.job_platform_has_role('seeker'));
+
+drop policy if exists "own candidate delete" on public.job_platform_candidates;
+create policy "own candidate delete" on public.job_platform_candidates
+  for delete to authenticated using (user_id = auth.uid());
 
 -- Anyone (anon key) can submit the contact/application form, but nobody can
 -- read submissions back through the API — no select policy is defined, so
