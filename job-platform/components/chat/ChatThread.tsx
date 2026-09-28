@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { inputClassName, primaryButtonClassName } from "@/components/shared/formStyles";
+import { inputClassName } from "@/components/shared/formStyles";
 import { useMounted } from "@/hooks/useMounted";
 import { markConversationRead, sendMessage } from "@/lib/chat/actions";
 import { MESSAGE_COLUMNS, mapMessageRow, type MessageRow } from "@/lib/chat/mapMessageRow";
@@ -222,8 +222,28 @@ export function ChatThread({ conversationId, currentUserId, initialMessages }: C
           placeholder={t("inputPlaceholder")}
           className={`${inputClassName} field-sizing-content max-h-40 min-h-11 resize-none`}
         />
-        <button type="submit" disabled={!canSend} className={`${primaryButtonClassName} shrink-0`}>
-          {t("send")}
+        <button
+          type="submit"
+          disabled={!canSend}
+          aria-label={t("send")}
+          title={t("send")}
+          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gray-900 text-white transition-colors hover:bg-gray-700 disabled:opacity-60 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+        >
+          {/* Горизонтальний "надіслати": симетричний по вертикалі, тож
+              центрується; translate-x-px — оптична поправка на гострий кінець. */}
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-5 w-5 translate-x-px"
+            aria-hidden="true"
+          >
+            <path d="M4 12 2.5 4.2a.8.8 0 0 1 1.1-.9l17 7.9a.9.9 0 0 1 0 1.6l-17 7.9a.8.8 0 0 1-1.1-.9Z" />
+            <path d="M4 12h8" />
+          </svg>
         </button>
       </form>
     </div>
