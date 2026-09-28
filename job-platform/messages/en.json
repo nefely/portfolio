@@ -11,7 +11,9 @@
     "partners": "Partners",
     "languageLabel": "Language",
     "login": "Log in",
-    "account": "Account"
+    "account": "Account",
+    "messages": "Messages",
+    "unreadMessages": "Unread messages"
   },
   "theme": {
     "light": "Light theme",
@@ -374,6 +376,44 @@
     "jobSalaryToLabel": "Salary to",
     "publishJob": "Publish",
     "publishingJob": "Publishing…",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "messagesLink": "Messages"
+  },
+  "chat": {
+    "title": "Messages",
+    "subtitle": "Your conversations with employers and candidates.",
+    "backToAccount": "Account",
+    "backToList": "All conversations",
+    "emptyTitle": "No conversations yet",
+    "emptyHint": "Open a candidate profile or a company's job listing and press “Message” to start one.",
+    "noMessagesYet": "No messages yet",
+    "youPrefix": "You: {text}",
+    "unknownUser": "User",
+    "unreadLabel": "Unread",
+    "kindCandidate": "Candidate",
+    "kindEmployer": "Employer",
+    "threadLabel": "Conversation history",
+    "threadEmpty": "Say hello — this is the start of your conversation.",
+    "inputLabel": "Message",
+    "inputPlaceholder": "Write a message…",
+    "send": "Send",
+    "sending": "Sending…",
+    "notSent": "Not sent.",
+    "retry": "Retry",
+    "opening": "Opening…",
+    "loginToMessage": "Log in to send a message",
+    "ctaCandidateTitle": "Message the candidate",
+    "ctaCandidateSubtitle": "Write directly — the candidate will see your message in their account.",
+    "ctaCandidateButton": "Message",
+    "ctaEmployerTitle": "Message the employer",
+    "ctaEmployerSubtitle": "Ask about the job or introduce yourself — the company will reply in chat.",
+    "ctaEmployerButton": "Message the employer",
+    "errors": {
+      "forbidden": "This action isn't available for your account.",
+      "notFound": "This person can't receive messages right now.",
+      "self": "You can't message yourself.",
+      "invalid": "Invalid request.",
+      "failed": "Something went wrong. Please try again."
+    }
   }
 }

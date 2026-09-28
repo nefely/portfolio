@@ -31,7 +31,15 @@ export default async function AccountPage({ params }: PageProps<"/[locale]/accou
             </p>
           )}
         </div>
-        <SignOutButton label={t("signOut")} />
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/account/messages"
+            className="rounded-full border border-gray-300 px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-900"
+          >
+            {t("messagesLink")}
+          </Link>
+          <SignOutButton label={t("signOut")} />
+        </div>
       </div>
 
       {role === "seeker" ? (

@@ -11,7 +11,9 @@
     "partners": "Partnerzy",
     "languageLabel": "Język",
     "login": "Zaloguj się",
-    "account": "Konto"
+    "account": "Konto",
+    "messages": "Wiadomości",
+    "unreadMessages": "Nieprzeczytane wiadomości"
   },
   "theme": {
     "light": "Jasny motyw",
@@ -374,6 +376,44 @@
     "jobSalaryToLabel": "Wynagrodzenie do",
     "publishJob": "Opublikuj",
     "publishingJob": "Publikowanie…",
-    "cancel": "Anuluj"
+    "cancel": "Anuluj",
+    "messagesLink": "Wiadomości"
+  },
+  "chat": {
+    "title": "Wiadomości",
+    "subtitle": "Twoje rozmowy z pracodawcami i kandydatami.",
+    "backToAccount": "Konto",
+    "backToList": "Wszystkie rozmowy",
+    "emptyTitle": "Nie masz jeszcze rozmów",
+    "emptyHint": "Otwórz profil kandydata lub ofertę firmy i kliknij „Napisz”, aby zacząć.",
+    "noMessagesYet": "Brak wiadomości",
+    "youPrefix": "Ty: {text}",
+    "unknownUser": "Użytkownik",
+    "unreadLabel": "Nieprzeczytane",
+    "kindCandidate": "Kandydat",
+    "kindEmployer": "Pracodawca",
+    "threadLabel": "Historia rozmowy",
+    "threadEmpty": "Przywitaj się — to początek waszej rozmowy.",
+    "inputLabel": "Wiadomość",
+    "inputPlaceholder": "Napisz wiadomość…",
+    "send": "Wyślij",
+    "sending": "Wysyłanie…",
+    "notSent": "Nie wysłano.",
+    "retry": "Ponów",
+    "opening": "Otwieranie…",
+    "loginToMessage": "Zaloguj się, aby napisać",
+    "ctaCandidateTitle": "Napisz do kandydata",
+    "ctaCandidateSubtitle": "Pisz bezpośrednio — kandydat zobaczy wiadomość na swoim koncie.",
+    "ctaCandidateButton": "Napisz",
+    "ctaEmployerTitle": "Napisz do pracodawcy",
+    "ctaEmployerSubtitle": "Zapytaj o ofertę lub przedstaw się — firma odpowie na czacie.",
+    "ctaEmployerButton": "Napisz do pracodawcy",
+    "errors": {
+      "forbidden": "Ta akcja jest niedostępna dla Twojego konta.",
+      "notFound": "Do tej osoby nie można teraz napisać.",
+      "self": "Nie możesz napisać do siebie.",
+      "invalid": "Nieprawidłowe żądanie.",
+      "failed": "Coś poszło nie tak. Spróbuj ponownie."
+    }
   }
 }

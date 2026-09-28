@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { AuthNav } from "./AuthNav";
-import { HashScrollLink } from "./HashScrollLink";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { Logo } from "./Logo";
 import { MobileNav } from "./MobileNav";
@@ -24,9 +23,6 @@ export async function Header() {
       <Link href="/candidates" className={linkClassName}>
         {t("findEmployee")}
       </Link>
-      <HashScrollLink href="/#about" className={linkClassName}>
-        {t("about")}
-      </HashScrollLink>
     </>
   );
 

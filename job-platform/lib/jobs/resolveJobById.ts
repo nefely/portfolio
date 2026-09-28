@@ -21,7 +21,7 @@ export async function resolveJobById(id: string): Promise<Job | null> {
   const { data, error } = await supabase
     .from("job_platform_jobs")
     .select(
-      "id, partner_id, employer_id, category, location_code, employment_type, work_format, experience_level, required_languages, salary_from, salary_to, currency, title, description, posted_at, job_platform_partners(slug, name), job_platform_employers(slug, name)",
+      "id, partner_id, employer_id, category, location_code, employment_type, work_format, experience_level, required_languages, salary_from, salary_to, currency, title, description, posted_at, job_platform_partners(slug, name), job_platform_employers(slug, name, user_id)",
     )
     .eq("id", id)
     .maybeSingle();
@@ -40,7 +40,11 @@ export async function resolveJobById(id: string): Promise<Job | null> {
     slug: string;
     name: LocalizedText;
   } | null;
-  const employer = data.job_platform_employers as unknown as { slug: string; name: string } | null;
+  const employer = data.job_platform_employers as unknown as {
+    slug: string;
+    name: string;
+    user_id: string | null;
+  } | null;
 
   return {
     id: data.id,
@@ -62,5 +66,6 @@ export async function resolveJobById(id: string): Promise<Job | null> {
     partnerName: partner?.name,
     employerSlug: employer?.slug,
     employerName: employer?.name,
+    employerUserId: employer?.user_id ?? undefined,
   };
 }

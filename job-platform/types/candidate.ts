@@ -35,4 +35,7 @@ export interface Candidate {
   currency?: Currency;
   availableFrom?: string;
   updatedAt: string;
+  // Акаунт власника профілю (для чату). Лише на сторінці одного кандидата;
+  // у seed-профілів каталогу акаунта немає.
+  userId?: string;
 }

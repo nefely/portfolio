@@ -1,6 +1,6 @@
 -- Демо-акаунти VV Work: один роботодавець і один шукач роботи, одразу
--- підтверджені (без листа), з роллю, заповненим профілем і — для
--- роботодавця — двома вакансіями.
+-- підтверджені (без листа), з роллю, заповненим профілем, — для
+-- роботодавця — двома вакансіями і демо-розмовою в чаті між ними.
 --
 --   Роботодавець:  employer@demo.vvwork.test  /  VVwork-demo-2026
 --   Шукач роботи:  seeker@demo.vvwork.test    /  VVwork-demo-2026
@@ -24,6 +24,7 @@ declare
   employer_uid uuid;
   seeker_uid uuid;
   company_id uuid;
+  demo_conversation_id uuid;
 begin
   -- -------------------------------------------------------------------------
   -- Користувачі (auth.users + auth.identities)
@@ -131,4 +132,34 @@ begin
     true
   )
   on conflict do nothing;
+
+  -- -------------------------------------------------------------------------
+  -- Чат: розмова роботодавця з шукачем
+  -- -------------------------------------------------------------------------
+  -- Пара у фіксованому порядку (user_a < user_b) — див.
+  -- job_platform_conversations_pair_order у schema.sql.
+  insert into public.job_platform_conversations (user_a, user_b)
+  values (least(employer_uid, seeker_uid), greatest(employer_uid, seeker_uid))
+  on conflict (user_a, user_b) do nothing;
+
+  select c.id into demo_conversation_id from public.job_platform_conversations c
+  where c.user_a = least(employer_uid, seeker_uid) and c.user_b = greatest(employer_uid, seeker_uid);
+
+  -- Лише в порожню розмову — повторний запуск не дублює повідомлення (і не
+  -- чіпає те, що демо-користувачі дописали самі). Дати в минулому: з SQL
+  -- Editor тригер їх не перезаписує. Останнє повідомлення шукача лишається
+  -- непрочитаним — у роботодавця видно бейдж.
+  if not exists (
+    select 1 from public.job_platform_messages m where m.conversation_id = demo_conversation_id
+  ) then
+    insert into public.job_platform_messages (conversation_id, sender_id, body, created_at, read_at)
+    select demo_conversation_id, m.sender_id, m.body, now() - m.ago, case when m.is_read then now() - m.ago + interval '5 minutes' end
+    from (values
+      (employer_uid, 'Добрий день, Олексію! Побачили ваш профіль — нам у Вроцлаві потрібен монтажник гіпсокартону. Цікаво?', interval '2 days 3 hours', true),
+      (seeker_uid, 'Добрий день! Так, цікаво. Який графік і чи допомагаєте з житлом?', interval '2 days 2 hours', true),
+      (employer_uid, 'Пн–Пт, 8:00–17:00, іноді субота за доплатою. Житло за рахунок компанії, 2 особи в кімнаті, 10 хв від об''єкта.', interval '2 days 1 hour', true),
+      (employer_uid, 'Ставка 5500–7500 PLN залежно від досвіду. Можемо поговорити телефоном цього тижня.', interval '1 day 6 hours', true),
+      (seeker_uid, 'Дякую, підходить! Можу почати через два тижні. Коли вам зручно зателефонувати?', interval '3 hours', false)
+    ) as m(sender_id, body, ago, is_read);
+  end if;
 end $$;

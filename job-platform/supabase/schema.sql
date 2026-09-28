@@ -308,3 +308,207 @@ create policy "own candidate delete" on public.job_platform_candidates
 drop policy if exists "public insert contact submissions" on public.job_platform_contact_submissions;
 create policy "public insert contact submissions" on public.job_platform_contact_submissions
   for insert with check (true);
+
+-- ---------------------------------------------------------------------------
+-- Чат: job_platform_conversations + job_platform_messages
+-- ---------------------------------------------------------------------------
+-- Розмова — завжди між двома акаунтами цього застосунку (будь-які ролі:
+-- роботодавець ↔ шукач, шукач ↔ шукач тощо). Пара зберігається у
+-- фіксованому порядку (user_a < user_b), тож unique гарантує одну розмову
+-- на пару незалежно від того, хто написав першим.
+create table if not exists public.job_platform_conversations (
+  id uuid primary key default gen_random_uuid(),
+  user_a uuid not null references auth.users (id) on delete cascade,
+  user_b uuid not null references auth.users (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  -- Для сортування списку розмов; оновлює лише тригер нижче.
+  last_message_at timestamptz not null default now(),
+  constraint job_platform_conversations_pair_order check (user_a < user_b),
+  constraint job_platform_conversations_pair_unique unique (user_a, user_b)
+);
+
+-- (user_a, …) покриває unique-індекс; для user_b — окремий.
+create index if not exists job_platform_conversations_user_b_idx
+  on public.job_platform_conversations (user_b);
+
+create table if not exists public.job_platform_messages (
+  id uuid primary key default gen_random_uuid(),
+  conversation_id uuid not null references public.job_platform_conversations (id) on delete cascade,
+  sender_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  body text not null check (char_length(btrim(body)) between 1 and 2000),
+  created_at timestamptz not null default now(),
+  -- null = отримувач ще не відкривав розмову після цього повідомлення.
+  read_at timestamptz
+);
+
+create index if not exists job_platform_messages_conversation_created_idx
+  on public.job_platform_messages (conversation_id, created_at desc);
+
+-- Чи має акаунт роль у ЦЬОМУ застосунку. security definer — бо RLS на
+-- job_platform_profiles дозволяє читати лише власний рядок, а тут треба
+-- перевірити співрозмовника (щоб не можна було створити розмову з
+-- акаунтом іншого проєкту спільного Supabase).
+create or replace function public.job_platform_is_member(uid uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (select 1 from public.job_platform_profiles where user_id = uid);
+$$;
+
+create or replace function public.job_platform_is_participant(conversation uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (
+    select 1 from public.job_platform_conversations
+    where id = conversation and auth.uid() in (user_a, user_b)
+  );
+$$;
+
+-- Час і "прочитаність" повідомлення від клієнта ставить сервер (інакше можна
+-- було б "підняти" повідомлення в майбутнє чи вставити вже прочитаним).
+-- auth.uid() is null — вставка з SQL Editor (postgres), напр.
+-- supabase/demo-accounts.sql з історичними датами: її не чіпаємо.
+create or replace function public.job_platform_messages_before_insert()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if auth.uid() is not null then
+    new.created_at := now();
+    new.read_at := null;
+  end if;
+  return new;
+end;
+$$;
+
+-- security definer: update-політики на conversations для клієнтів немає.
+create or replace function public.job_platform_messages_after_insert()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  update public.job_platform_conversations
+  set last_message_at = new.created_at
+  where id = new.conversation_id;
+  return new;
+end;
+$$;
+
+drop trigger if exists job_platform_messages_before_insert on public.job_platform_messages;
+create trigger job_platform_messages_before_insert
+  before insert on public.job_platform_messages
+  for each row execute function public.job_platform_messages_before_insert();
+
+drop trigger if exists job_platform_messages_after_insert on public.job_platform_messages;
+create trigger job_platform_messages_after_insert
+  after insert on public.job_platform_messages
+  for each row execute function public.job_platform_messages_after_insert();
+
+-- Позначити вхідні повідомлення розмови прочитаними. Окрема функція замість
+-- update-політики на messages: так клієнт не може змінити body чи чужий
+-- read_at — лише "я прочитав(ла) все до цього моменту".
+create or replace function public.job_platform_mark_conversation_read(conversation uuid)
+returns void
+language sql
+security definer
+set search_path = ''
+as $$
+  update public.job_platform_messages
+  set read_at = now()
+  where conversation_id = conversation
+    and sender_id <> auth.uid()
+    and read_at is null
+    and public.job_platform_is_participant(conversation);
+$$;
+
+revoke execute on function public.job_platform_mark_conversation_read(uuid) from public, anon;
+grant execute on function public.job_platform_mark_conversation_read(uuid) to authenticated;
+
+-- Список розмов поточного користувача з останнім повідомленням і кількістю
+-- непрочитаних — одним запитом замість N+1. security invoker: RLS таблиць
+-- діє як звичайно.
+create or replace function public.job_platform_my_conversations()
+returns table (
+  id uuid,
+  other_user_id uuid,
+  last_message_at timestamptz,
+  last_message_body text,
+  last_message_sender_id uuid,
+  unread_count int
+)
+language sql
+stable
+security invoker
+set search_path = ''
+as $$
+  select
+    c.id,
+    case when c.user_a = auth.uid() then c.user_b else c.user_a end,
+    c.last_message_at,
+    lm.body,
+    lm.sender_id,
+    (
+      select count(*)::int from public.job_platform_messages m
+      where m.conversation_id = c.id and m.sender_id <> auth.uid() and m.read_at is null
+    )
+  from public.job_platform_conversations c
+  left join lateral (
+    select m.body, m.sender_id from public.job_platform_messages m
+    where m.conversation_id = c.id
+    order by m.created_at desc
+    limit 1
+  ) lm on true
+  where auth.uid() in (c.user_a, c.user_b)
+  order by c.last_message_at desc;
+$$;
+
+alter table public.job_platform_conversations enable row level security;
+alter table public.job_platform_messages enable row level security;
+
+drop policy if exists "participant read conversations" on public.job_platform_conversations;
+create policy "participant read conversations" on public.job_platform_conversations
+  for select to authenticated using (auth.uid() in (user_a, user_b));
+
+drop policy if exists "participant insert conversations" on public.job_platform_conversations;
+create policy "participant insert conversations" on public.job_platform_conversations
+  for insert to authenticated
+  with check (
+    auth.uid() in (user_a, user_b)
+    and public.job_platform_is_member(user_a)
+    and public.job_platform_is_member(user_b)
+  );
+
+drop policy if exists "participant read messages" on public.job_platform_messages;
+create policy "participant read messages" on public.job_platform_messages
+  for select to authenticated using (public.job_platform_is_participant(conversation_id));
+
+drop policy if exists "participant insert messages" on public.job_platform_messages;
+create policy "participant insert messages" on public.job_platform_messages
+  for insert to authenticated
+  with check (sender_id = auth.uid() and public.job_platform_is_participant(conversation_id));
+
+-- Supabase Realtime (WebSocket) розсилає INSERT-и в job_platform_messages
+-- підписаним клієнтам — з урахуванням RLS вище, тобто лише учасникам.
+-- `alter publication ... add table` не має `if not exists`, звідси do-блок.
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'job_platform_messages'
+  ) then
+    alter publication supabase_realtime add table public.job_platform_messages;
+  end if;
+end;
+$$;

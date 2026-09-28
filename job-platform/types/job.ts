@@ -39,4 +39,7 @@ export interface Job {
   partnerName?: LocalizedText;
   employerSlug?: string;
   employerName?: string;
+  // Акаунт роботодавця (для чату) — лише на сторінці однієї вакансії і лише
+  // для компаній, зареєстрованих через кабінет.
+  employerUserId?: string;
 }

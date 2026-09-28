@@ -8,7 +8,7 @@ import type { AppLocale } from "@/types/i18n";
 import type { LocationCode } from "@/types/location";
 
 const CANDIDATE_COLUMNS =
-  "id, slug, name, avatar_url, categories, headline, profile_locale, location_code, desired_employment_types, desired_work_formats, experience_level, languages, skills, about, salary_expectation_from, currency, available_from, updated_at";
+  "id, slug, name, avatar_url, categories, headline, profile_locale, location_code, desired_employment_types, desired_work_formats, experience_level, languages, skills, about, salary_expectation_from, currency, available_from, updated_at, user_id";
 
 // Used only by app/[locale]/candidates/[slug]/page.tsx to decide
 // notFound(). Direct Supabase call, no artificial delay/failure — mirrors
@@ -49,5 +49,6 @@ export async function resolveCandidateBySlug(slug: string): Promise<Candidate | 
     currency: (data.currency as Currency | null) ?? undefined,
     availableFrom: data.available_from ?? undefined,
     updatedAt: data.updated_at,
+    userId: data.user_id ?? undefined,
   };
 }
