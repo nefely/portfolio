@@ -160,7 +160,7 @@ ${rows.join(",\n")}
 on conflict (slug) do nothing;`;
 }
 
-const output = `-- VV Work (job-platform) demo data.
+const output = `-- Work (job-platform) demo data.
 -- GENERATED FILE — do not edit by hand. Source of truth is
 -- supabase/seed-data.mjs; regenerate with \`node supabase/generate-seed.mjs\`.
 --

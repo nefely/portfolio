@@ -1,10 +1,10 @@
 {
   "meta": {
-    "title": "VV Work — Znajdź pracę. Znajdź pracownika.",
-    "description": "VV Work — platforma do znajdowania pracy i pracowników w Europie."
+    "title": "Work — Znajdź pracę. Znajdź pracownika.",
+    "description": "Work — platforma do znajdowania pracy i pracowników w Europie."
   },
   "nav": {
-    "logo": "VV Work",
+    "logo": "Work",
     "findJob": "Znajdź pracę",
     "findEmployee": "Znajdź pracownika",
     "about": "O nas",
@@ -22,7 +22,7 @@
   },
   "hero": {
     "title": "Znajdź pracę. Znajdź pracownika. Pracuj w Europie.",
-    "subtitle": "VV Work łączy kandydatów i pracodawców w całej Europie — szybko, przejrzyście, bez pośredników.",
+    "subtitle": "Work łączy kandydatów i pracodawców w całej Europie — szybko, przejrzyście, bez pośredników.",
     "ctaFindJob": "Znajdź pracę",
     "ctaFindEmployee": "Znajdź pracownika",
     "signupPrompt": "Utwórz profil, a pracodawcy sami cię znajdą.",
@@ -89,12 +89,12 @@
     "categoriesTitle": "Popularne kategorie",
     "categoriesSubtitle": "Wybierz branżę, aby zobaczyć odpowiednie oferty",
     "partnersTitle": "Nasi partnerzy",
-    "partnersSubtitle": "Firmy, które już szukają pracowników przez VV Work",
+    "partnersSubtitle": "Firmy, które już szukają pracowników przez Work",
     "employerTitle": "Potrzebujesz pracowników?",
-    "employerText": "Dodaj ofertę pracy w VV Work i dotrzyj do zweryfikowanych kandydatów z całej Europy — bez prowizji agencyjnych i zbędnej biurokracji.",
+    "employerText": "Dodaj ofertę pracy w Work i dotrzyj do zweryfikowanych kandydatów z całej Europy — bez prowizji agencyjnych i zbędnej biurokracji.",
     "employerCta": "Znajdź pracownika",
     "aboutTitle": "O nas",
-    "aboutText": "VV Work to platforma łącząca kandydatów i pracodawców w Europie. Upraszczamy poszukiwanie pracy i rekrutację dla setek firm.",
+    "aboutText": "Work to platforma łącząca kandydatów i pracodawców w Europie. Upraszczamy poszukiwanie pracy i rekrutację dla setek firm.",
     "aboutText2": "Kandydaci szukają ofert wg stanowiska lub kategorii bez rejestracji i bez ukrytych opłat za zgłoszenie. Pracodawcy publikują oferty zarówno przez zweryfikowanych partnerów kadrowych, jak i bezpośrednio — nie każda firma współpracuje z agencją, a platforma obsługuje oba warianty.",
     "aboutText3": "Działamy w dziewięciu miastach Europy — od Warszawy po Pragę — i stale rozwijamy sieć partnerów i bezpośrednich pracodawców. Cel jest prosty: sprawić, by podjęcie pracy za granicą było równie proste jak znalezienie mieszkania czy lotu.",
     "viewAllPartners": "Wszyscy partnerzy →",
@@ -102,7 +102,7 @@
   },
   "premium": {
     "title": "Zatrudniaj szybciej i skuteczniej",
-    "subtitle": "VV Work Premium dla pracodawców — priorytet tam, gdzie to ważne, bez prowizji agencyjnych.",
+    "subtitle": "Work Premium dla pracodawców — priorytet tam, gdzie to ważne, bez prowizji agencyjnych.",
     "benefit1": "Priorytetowe wyświetlanie ofert — na szczycie listy, odznaka „Polecane”",
     "benefit2": "Nieograniczona liczba aktywnych ofert jednocześnie",
     "benefit3": "Zaawansowane wyszukiwanie kandydatów — precyzyjne filtry wg budżetu i dostępności",
@@ -113,7 +113,7 @@
   },
   "partnersIndex": {
     "title": "Partnerzy",
-    "subtitle": "Firmy, które szukają pracowników przez VV Work.",
+    "subtitle": "Firmy, które szukają pracowników przez Work.",
     "emptyState": "Na razie brak partnerów w tej kategorii.",
     "errorTitle": "Nie udało się załadować partnerów"
   },
@@ -227,7 +227,7 @@
     "socialsTitle": "Media społecznościowe",
     "privacy": "Polityka prywatności",
     "terms": "Warunki korzystania",
-    "rights": "© {year} VV Work. Wszelkie prawa zastrzeżone."
+    "rights": "© {year} Work. Wszelkie prawa zastrzeżone."
   },
   "notFound": {
     "title": "Nie znaleziono strony",
@@ -249,7 +249,7 @@
     "loginTitle": "Logowanie",
     "loginSubtitle": "Zaloguj się, aby zarządzać swoim profilem.",
     "signupTitle": "Rejestracja",
-    "signupSubtitle": "Wybierz, do czego potrzebujesz VV Work — od tego zależy twój profil.",
+    "signupSubtitle": "Wybierz, do czego potrzebujesz Work — od tego zależy twój profil.",
     "emailLabel": "Email",
     "emailPlaceholder": "you@example.com",
     "passwordLabel": "Hasło",
@@ -273,7 +273,7 @@
     "checkEmailTitle": "Sprawdź skrzynkę",
     "checkEmailText": "Wysłaliśmy wiadomość na {email}. Kliknij link w środku, aby potwierdzić konto.",
     "chooseRoleTitle": "Jeszcze jeden krok",
-    "chooseRoleSubtitle": "Jesteś zalogowany, ale nie wybrałeś jeszcze, jak będziesz korzystać z VV Work.",
+    "chooseRoleSubtitle": "Jesteś zalogowany, ale nie wybrałeś jeszcze, jak będziesz korzystać z Work.",
     "chooseRoleSubmit": "Dalej",
     "errors": {
       "emailInvalid": "Podaj poprawny email.",

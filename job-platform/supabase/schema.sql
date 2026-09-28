@@ -1,4 +1,4 @@
--- VV Work (job-platform) schema.
+-- Work (job-platform) schema.
 --
 -- This Supabase project is shared across several portfolio projects living
 -- in one database (see portfolio/task-manager for the sibling project), so

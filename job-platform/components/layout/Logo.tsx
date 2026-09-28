@@ -3,9 +3,9 @@ interface LogoProps {
   title?: string;
 }
 
-// Повний lockup "VV Work": іконка-знак + напис в одному inline SVG (не
+// Повний lockup "Work": іконка-знак + напис в одному inline SVG (не
 // растр — узгоджено з рештою сайту: DotBackground, GlowDots, CATEGORY_ICONS
-// теж inline). Напис "VV Work" — частина того самого графічного елемента,
+// теж inline). Напис "Work" — частина того самого графічного елемента,
 // не окремий DOM-текст поруч, тож немає розсинхрону шрифт/трекінг між
 // SVG-знаком і рештою.
 //
@@ -19,9 +19,9 @@ interface LogoProps {
 // координати лишались круглими числами при промальовуванні деталей; SVG
 // сам по собі растрові домовленості про retina не потребує — масштабується
 // без втрати чіткості на будь-якій щільності екрана.
-export function Logo({ className, title = "VV Work" }: LogoProps) {
+export function Logo({ className, title = "Work" }: LogoProps) {
   return (
-    <svg viewBox="0 0 300 84" role="img" aria-label={title} className={className}>
+    <svg viewBox="0 0 216 84" role="img" aria-label={title} className={className}>
       <title>{title}</title>
 
       <rect width="84" height="84" rx="23" className="fill-gray-900 dark:fill-white" />
@@ -49,7 +49,7 @@ export function Logo({ className, title = "VV Work" }: LogoProps) {
         style={{ fontFamily: "var(--font-sans, ui-sans-serif, system-ui, sans-serif)" }}
         className="fill-gray-900 dark:fill-white"
       >
-        VV Work
+        Work
       </text>
     </svg>
   );
