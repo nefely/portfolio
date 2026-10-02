@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CategoryChip, DrBadge } from "@/components/badges";
-import { CompareAddForm, CompareClearButton, CompareRemoveButton, CompareSync } from "@/components/compare-controls";
+import { CompareClearButton, CompareRemoveButton, CompareSync } from "@/components/compare-controls";
+import { CompareSearch } from "@/components/compare-search";
 import { Favicon } from "@/components/favicon";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
@@ -24,7 +25,11 @@ export default async function ComparePage(props: PageProps<"/[locale]/compare">)
   const domains = [...new Set(raw.split(",").map(normalizeDomain).filter(Boolean))].slice(0, MAX_COMPARE);
 
   const entries = await Promise.all(domains.map(async (domain) => ({ domain, site: await getSite(domain) })));
-  const sites = entries.map((e) => e.site).filter((s): s is Site => s !== null);
+  // domains FreeSerp doesn't know (typed into the URL by hand) are dropped from the table
+  const found = entries.filter((e): e is { domain: string; site: Site } => e.site !== null);
+  const missing = entries.filter((e) => e.site === null).map((e) => e.domain);
+  const valid = found.map((e) => e.domain);
+  const sites = found.map((e) => e.site);
 
   const maxDr = Math.max(...sites.map((s) => s.dr ?? -1));
   const earliest = sites
@@ -70,19 +75,25 @@ export default async function ComparePage(props: PageProps<"/[locale]/compare">)
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <CompareSync urlDomains={domains} />
+      <CompareSync urlDomains={valid} />
       <header className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <h1 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{t("compare.title")}</h1>
           <p className="mt-1 text-sm text-fg-muted">{t("compare.subtitle")}</p>
         </div>
         <div className="flex w-full flex-wrap gap-2 lg:w-auto">
-          <CompareAddForm urlDomains={domains} />
-          {domains.length > 0 && <CompareClearButton />}
+          <CompareSearch urlDomains={valid} />
+          {valid.length > 0 && <CompareClearButton />}
         </div>
       </header>
 
-      {domains.length === 0 ? (
+      {missing.length > 0 && (
+        <p role="status" className="mb-4 rounded-lg border border-warning/30 bg-warning-subtle px-3 py-2 text-sm text-fg-muted">
+          {t("compare.missing", { domains: missing.join(", ") })}
+        </p>
+      )}
+
+      {valid.length === 0 ? (
         <div className="rounded-xl border border-dashed border-line-strong bg-surface-1 p-8 text-center sm:p-10">
           <p className="font-display text-lg font-semibold">{t("compare.emptyTitle")}</p>
           <p className="mx-auto mt-2 max-w-md text-sm text-fg-muted">{t("compare.emptyText")}</p>
@@ -96,7 +107,7 @@ export default async function ComparePage(props: PageProps<"/[locale]/compare">)
           <table className="w-full min-w-160 table-fixed border-collapse text-sm">
             <colgroup>
               <col className="w-36" />
-              {entries.map((e) => (
+              {found.map((e) => (
                 <col key={e.domain} />
               ))}
             </colgroup>
@@ -105,7 +116,7 @@ export default async function ComparePage(props: PageProps<"/[locale]/compare">)
                 <th scope="col" className="p-4 text-left text-xs font-medium text-fg-subtle">
                   {t("compare.metric")}
                 </th>
-                {entries.map(({ domain, site }) => (
+                {found.map(({ domain, site }) => (
                   <th key={domain} scope="col" className="p-4 text-left align-top font-normal">
                     <div className="flex items-start gap-3">
                       <Favicon domain={domain} size={36} />
@@ -117,7 +128,7 @@ export default async function ComparePage(props: PageProps<"/[locale]/compare">)
                         ) : (
                           <span className="block truncate font-display font-semibold text-fg-subtle">{domain}</span>
                         )}
-                        <CompareRemoveButton domain={domain} urlDomains={domains} />
+                        <CompareRemoveButton domain={domain} urlDomains={valid} />
                       </div>
                     </div>
                   </th>
@@ -130,7 +141,7 @@ export default async function ComparePage(props: PageProps<"/[locale]/compare">)
                   <th scope="row" className="p-4 text-left align-top text-xs font-medium text-fg-muted">
                     {row.label}
                   </th>
-                  {entries.map(({ domain, site }) => {
+                  {found.map(({ domain, site }) => {
                     const mark = site && row.highlight?.(site);
                     return (
                       <td key={domain} className={`p-4 align-top ${mark ? "bg-accent-subtle" : ""}`}>
