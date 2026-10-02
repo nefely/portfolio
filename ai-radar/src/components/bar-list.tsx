@@ -28,5 +28,6 @@ export function BarList({ items }: { items: BarItem[] }) {
         </li>
       ))}
     </ul>
+    
   );
 }
