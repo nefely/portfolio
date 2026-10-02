@@ -23,11 +23,12 @@ export function DrBadge({ dr }: { dr: number | null }) {
   );
 }
 
-export function CategoryChip({ name, linked = true }: { name: string; linked?: boolean }) {
+export function CategoryChip({ name, linked = true, size = "md" }: { name: string; linked?: boolean; size?: "sm" | "md" }) {
   const locale = useLocale();
   const label = categoryLabel(name, locale);
-  const cls =
-    "inline-flex max-w-full items-center truncate rounded-full border border-accent-border bg-accent-subtle px-2 py-0.5 text-xs text-accent-text";
+  // sm: compact pills for cards, where up to 3 niches share one narrow row
+  const sizeCls = size === "sm" ? "px-1.5 py-px text-[10px] leading-4" : "px-2 py-0.5 text-xs";
+  const cls = `inline-flex max-w-full items-center truncate rounded-full border border-accent-border bg-accent-subtle text-accent-text ${sizeCls}`;
   if (!linked) return <span className={cls}>{label}</span>;
   return (
     <Link href={catalogHref({ category: name })} className={`${cls} hover:border-accent`}>

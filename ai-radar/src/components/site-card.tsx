@@ -46,9 +46,9 @@ export function SiteCard({ site }: { site: Site }) {
       </div>
 
       {categories.length > 0 && (
-        <div className="relative z-10 flex flex-wrap gap-1.5">
+        <div className="relative z-10 flex flex-wrap gap-1">
           {categories.slice(0, 3).map((c) => (
-            <CategoryChip key={c} name={c} />
+            <CategoryChip key={c} name={c} size="sm" />
           ))}
         </div>
       )}
