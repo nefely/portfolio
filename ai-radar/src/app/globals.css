@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+/* Palette inspired by itlead.org: near-black zinc surfaces, teal accent, amber secondary.
+   ThemeProvider puts .dark / .light on <html>; dark is the default. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root,
+html.dark {
+  color-scheme: dark;
+  --page: #09090b;
+  --surface-1: #111113;
+  --surface-2: #18181b;
+  --surface-3: #232326;
+  --surface-4: #2d2d31;
+  --line: #ffffff14;
+  --line-subtle: #ffffff0d;
+  --line-strong: #ffffff21;
+  --input: #ffffff0a;
+  --fg: #f4f4f5;
+  --fg-muted: #a1a1aa;
+  --fg-subtle: #71717a;
+  --fg-disabled: #52525b;
+  --accent: oklch(78% 0.14 190);
+  --accent-hover: oklch(84% 0.13 190);
+  --accent-pressed: oklch(70% 0.14 190);
+  --accent-text: oklch(82% 0.12 190);
+  --accent-subtle: oklch(78% 0.14 190 / 0.12);
+  --accent-border: oklch(78% 0.14 190 / 0.3);
+  --on-accent: oklch(12% 0.01 190);
+  --amber: oklch(80% 0.14 80);
+  --amber-subtle: oklch(80% 0.14 80 / 0.12);
+  --success: #4ade80;
+  --success-subtle: #22c55e1f;
+  --warning: #fbbf24;
+  --warning-subtle: #f59e0b1f;
+  --danger: #f87171;
+  --dot: #ffffff12;
+  --glass: #09090bcc;
+  --scroll-thumb: #ffffff1a;
+  --selection: #8ca0b940;
+}
+
+html.light {
+  color-scheme: light;
+  --page: #f7f7f9;
+  --surface-1: #ffffff;
+  --surface-2: #f2f2f5;
+  --surface-3: #e9e9ee;
+  --surface-4: #dcdce3;
+  --line: #0000001a;
+  --line-subtle: #0000000d;
+  --line-strong: #0000002b;
+  --input: #ffffff;
+  --fg: #0f0f1a;
+  --fg-muted: #52525b;
+  --fg-subtle: #71717a;
+  --fg-disabled: #a1a1aa;
+  --accent: oklch(58% 0.12 190);
+  --accent-hover: oklch(52% 0.12 190);
+  --accent-pressed: oklch(47% 0.11 190);
+  --accent-text: oklch(46% 0.1 190);
+  --accent-subtle: oklch(58% 0.12 190 / 0.1);
+  --accent-border: oklch(58% 0.12 190 / 0.35);
+  --on-accent: #ffffff;
+  --amber: oklch(62% 0.15 65);
+  --amber-subtle: oklch(70% 0.15 70 / 0.14);
+  --success: #15803d;
+  --success-subtle: #16a34a1a;
+  --warning: #b45309;
+  --warning-subtle: #f59e0b1f;
+  --danger: #dc2626;
+  --dot: #0000000f;
+  --glass: #f7f7f9cc;
+  --scroll-thumb: #0000001f;
+  --selection: #1a6fc433;
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
+  --color-line: var(--line);
+  --color-line-subtle: var(--line-subtle);
+  --color-line-strong: var(--line-strong);
+  --color-input: var(--input);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-fg-disabled: var(--fg-disabled);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-pressed: var(--accent-pressed);
+  --color-accent-text: var(--accent-text);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-border: var(--accent-border);
+  --color-on-accent: var(--on-accent);
+  --color-amber: var(--amber);
+  --color-amber-subtle: var(--amber-subtle);
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-display: var(--font-montserrat), "Montserrat", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, monospace;
+}
+
+html {
+  background: var(--page);
+}
+
+body {
+  background: var(--page);
+  color: var(--fg);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--selection);
+}
+
+/* Dotted grid backdrop used behind the hero. */
+.bg-dot-grid {
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.glass {
+  background: var(--glass);
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+}
+
+/* Empty date input: hide the browser's "dd-----yyyy" mask behind our own placeholder */
+input[type="date"].date-empty:not(:focus) {
+  color: transparent;
+}
+input[type="date"].date-empty:not(:focus)::-webkit-datetime-edit {
+  opacity: 0;
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 37%, var(--surface-2) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
+/* Native select arrow replacement */
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+
+.select option {
+  background: var(--surface-2);
+  color: var(--fg);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: 9999px;
+}

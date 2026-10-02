@@ -1,0 +1,328 @@
+{
+  "meta": {
+    "title": "AI Radar — a catalog of new AI products",
+    "description": "Spot new AI startups before everyone else: search, filter by niche, DR and discovery date, compare sites. Data by FreeSerp API."
+  },
+  "header": {
+    "catalog": "Catalog",
+    "favorites": "Favorites",
+    "compare": "Compare",
+    "about": "About",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "theme": "Theme",
+    "toggleTheme": "Toggle theme",
+    "lightTheme": "Light theme",
+    "darkTheme": "Dark theme",
+    "signedInAs": "Signed in as"
+  },
+  "footer": {
+    "text": "AI Radar — a test project. Data:",
+    "plan": "Site plan →"
+  },
+  "common": {
+    "noTitle": "Untitled",
+    "noSummary": "No summary yet.",
+    "all": "View all →",
+    "addToCompare": "Compare",
+    "inCompare": "In comparison",
+    "compareMax": "Max {max}",
+    "addToFavorites": "Add to favorites",
+    "inFavorites": "In favorites",
+    "favoritesNeedLogin": "Add to favorites (sign in required)",
+    "drHint": "Domain Rating (0–100) — domain authority from FreeSerp's link graph",
+    "remove": "Remove",
+    "loading": "Loading…"
+  },
+  "search": {
+    "label": "Search AI sites",
+    "placeholder": "E.g. video editing, legal assistant, voice agent…",
+    "submit": "Search"
+  },
+  "home": {
+    "badge": "{count} AI products indexed",
+    "titleStart": "Discover new",
+    "titleAccent": "AI products",
+    "titleEnd": "before everyone else",
+    "subtitle": "A catalog of fresh AI startups for founders, marketers and investors: search by niche, domain authority and tech stack, compare competitors.",
+    "popular": "Popular:",
+    "statTotal": "AI products indexed",
+    "stat30": "New AI in 30 days",
+    "stat30Note": "since {date}",
+    "stat7": "New domains in 7 days",
+    "stat7Note": "whole FreeSerp index",
+    "statLive": "Live sites in index",
+    "latestTitle": "Latest launches",
+    "latestSubtitle": "The freshest AI sites detected by FreeSerp · as of {date}",
+    "nichesTitle": "Top niches",
+    "nichesSubtitle": "Number of AI products per category",
+    "buildersTitle": "What AI products are built with",
+    "buildersSubtitle": "ai_source — the builder or framework behind the homepage",
+    "leadersTitle": "DR leaders",
+    "leadersSubtitle": "The most authoritative domains among AI products — a benchmark for comparison",
+    "ctaTitle": "Compare competitors",
+    "ctaText": "Add up to 3 sites with the compare button on a card and see DR, stack and niches side by side.",
+    "ctaButton": "Go to compare →"
+  },
+  "catalog": {
+    "metaTitle": "AI sites catalog",
+    "metaDescription": "Search and filter AI startups by niche, DR, stack and discovery date.",
+    "title": "AI sites catalog",
+    "found": "Found {count} AI products",
+    "shown": "showing {from}–{to}",
+    "windowLimit": "The API returns the first {max} results — narrow the filters to see the rest.",
+    "emptyTitle": "Nothing found",
+    "emptyText": "Try removing some filters or widening the date range — FreeSerp records sites from the moment it first saw them live.",
+    "emptyLink": "Show all AI sites →",
+    "resetAll": "Reset all",
+    "removeFilter": "remove filter",
+    "chipStack": "Stack: {name}",
+    "chipFrom": "from {date}",
+    "chipTo": "to {date}",
+    "pages": "Pages",
+    "results": "Results",
+    "showFilters": "Filters",
+    "hideFilters": "Hide filters"
+  },
+  "filters": {
+    "title": "Filters",
+    "updating": "Updating…",
+    "search": "Search",
+    "searchPlaceholder": "keywords…",
+    "niche": "Niche",
+    "allNiches": "All niches",
+    "builder": "Built with",
+    "builderHint": "ai_source — the stack or builder of the homepage",
+    "anyBuilder": "Anything",
+    "drMin": "Minimum DR",
+    "drHint": "Domain Rating 0–100",
+    "drAll": "All",
+    "discovered": "Discovered by FreeSerp",
+    "discoveredHint": "went_live — when the site first became reachable",
+    "dateFrom": "From date",
+    "dateTo": "To date",
+    "sort": "Sort by",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "sort": {
+    "went_live": "Newest",
+    "dr": "Highest DR",
+    "relevance": "Relevance",
+    "domain": "Alphabetical"
+  },
+  "builders": {
+    "aiBuilder": "AI builder",
+    "v0": "AI builder by Vercel",
+    "nocode": "No-code",
+    "framework": "Framework",
+    "cms": "CMS",
+    "heuristic": "FreeSerp heuristic",
+    "aiLikely": "Other (AI signals)"
+  },
+  "site": {
+    "notFoundTitle": "Site not found",
+    "notFoundText": "FreeSerp has no profile for {domain}.",
+    "back": "← Back to catalog",
+    "visit": "Visit site ↗",
+    "summary": "AI summary",
+    "facts": "Facts",
+    "dr": "Domain Rating",
+    "wentLive": "Detected live",
+    "firstSeen": "First seen",
+    "builder": "Built with",
+    "server": "Web server",
+    "tld": "TLD",
+    "status": "HTTP status",
+    "contentSize": "Content size",
+    "fetched": "Last crawled",
+    "categories": "Niches",
+    "similar": "Similar in “{category}”",
+    "similarEmpty": "No similar sites found.",
+    "dataNote": "Data by FreeSerp (index=sites). Dates mean when FreeSerp first recorded the site, not its official launch."
+  },
+  "compare": {
+    "metaTitle": "Compare AI sites",
+    "title": "Compare",
+    "subtitle": "Up to 3 sites side by side: DR, dates, stack and niches. You can share this page by its link.",
+    "addPlaceholder": "Add a domain, e.g. bolt.new",
+    "add": "Add",
+    "emptyTitle": "Nothing to compare yet",
+    "emptyText": "Add sites with the compare button on catalog cards, or type a domain above.",
+    "toCatalog": "Open catalog →",
+    "notFound": "no data",
+    "metric": "Metric",
+    "best": "highest",
+    "earliest": "earliest",
+    "clear": "Clear",
+    "remove": "Remove",
+    "summary": "Summary"
+  },
+  "favorites": {
+    "metaTitle": "Favorites",
+    "title": "Favorites",
+    "subtitle": "Services you saved. Synced with your account — available on any device.",
+    "guestTitle": "Sign in to save favorites",
+    "guestText": "Favorites are stored in your account (Supabase), so the list won't get lost and is available on any device.",
+    "guestButton": "Sign in or sign up",
+    "emptyTitle": "Nothing here yet",
+    "emptyText": "Click ☆ on any catalog card to add a service to favorites.",
+    "toCatalog": "Open catalog →",
+    "count": "{count, plural, one {# service} other {# services}}",
+    "error": "Couldn't load favorites: {message}",
+    "missing": "FreeSerp no longer returns data for this domain."
+  },
+  "login": {
+    "metaTitle": "Sign in",
+    "title": "Sign in to AI Radar",
+    "subtitle": "An account lets you save favorite AI services and see them on any device.",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "passwordPlaceholder": "at least 6 characters",
+    "submitSignIn": "Sign in",
+    "submitSignUp": "Create account",
+    "pending": "Please wait…",
+    "checkEmailTitle": "Check your inbox",
+    "checkEmailText": "We sent an email to {email}. Follow the link to confirm your account.",
+    "errors": {
+      "email": "Enter a valid email.",
+      "password": "Password must be at least 6 characters.",
+      "invalid": "Wrong email or password.",
+      "notConfirmed": "Email not confirmed yet — check your inbox.",
+      "exists": "A user with this email already exists. Try signing in.",
+      "rateLimit": "Too many attempts. Try again in a minute.",
+      "callback": "Couldn't confirm sign-in. Please try again.",
+      "unknown": "Something went wrong. Please try again."
+    }
+  },
+  "errors": {
+    "title": "Couldn't load data",
+    "text": "FreeSerp API is temporarily unavailable or returned an error. Try again in a few seconds.",
+    "retry": "Try again",
+    "notFoundTitle": "Page not found",
+    "notFoundText": "This page doesn't exist. The link may be outdated.",
+    "home": "Go home"
+  },
+  "about": {
+    "metaTitle": "About the project and site plan",
+    "eyebrow": "Site plan",
+    "title": "AI Radar: goal, audience, structure",
+    "lead": "A small working product on top of the public FreeSerp API (index=sites, AI niche). Its job is to quickly find, filter and compare new AI products.",
+    "goalTitle": "Goal",
+    "goal": [
+      "Provide a handy showcase of new AI products: what appeared, in which niche, how authoritative the domain is.",
+      "Shorten the “find → evaluate → compare → save” path to a few clicks.",
+      "Show how a raw API becomes a product: filters in the URL, caching, account-based favorites, two languages and themes."
+    ],
+    "audienceTitle": "Audience",
+    "audience": [
+      {
+        "name": "Founders & PMs",
+        "need": "competitor research in their niche, idea discovery"
+      },
+      {
+        "name": "Marketers & SEO",
+        "need": "new market players, DR, what sites are built with"
+      },
+      {
+        "name": "Investors & scouts",
+        "need": "early signals: fresh launches by niche"
+      },
+      {
+        "name": "Developers",
+        "need": "which stacks and AI builders are actually used"
+      }
+    ],
+    "pagesTitle": "Pages",
+    "pages": [
+      {
+        "path": "/",
+        "name": "Home",
+        "text": "Positioning, search, index stats, latest launches, top niches, “built with”, DR leaders."
+      },
+      {
+        "path": "/catalog",
+        "name": "Catalog",
+        "text": "Search + filters (niche, stack, min DR, date range, sorting), pagination. All filters live in the URL — shareable by link."
+      },
+      {
+        "path": "/site/[domain]",
+        "name": "Site profile",
+        "text": "AI summary, facts (DR, dates, stack, server), niches, similar sites from the same niche, “Favorite” and “Compare” buttons."
+      },
+      {
+        "path": "/compare",
+        "name": "Compare",
+        "text": "Up to 3 sites in a table, best values highlighted, state in the URL (?d=a.com,b.ai)."
+      },
+      {
+        "path": "/favorites",
+        "name": "Favorites",
+        "text": "The user's saved services (Supabase, RLS)."
+      },
+      {
+        "path": "/login",
+        "name": "Sign in / sign up",
+        "text": "Email + password via Supabase Auth."
+      },
+      {
+        "path": "/about",
+        "name": "About",
+        "text": "This plan."
+      }
+    ],
+    "structureTitle": "Structure & data",
+    "structure": [
+      "Next.js 16 (App Router) + TypeScript + Tailwind CSS v4, /uk and /en routes (next-intl).",
+      "All FreeSerp requests run on the server (Server Components / Route Handler) and are cached for 10 minutes — fast and gentle on the free API.",
+      "Favorites — the ai_radar_favorites table in Supabase with Row Level Security: users only see their own rows. Compare works without an account, in localStorage.",
+      "Dark (default) and light themes with no flash on load."
+    ],
+    "apiTitle": "How FreeSerp API is used",
+    "api": [
+      {
+        "param": "ai_startups=1",
+        "text": "genuine AI products only (filters out noise)"
+      },
+      {
+        "param": "q",
+        "text": "full-text search and exact domain lookup"
+      },
+      {
+        "param": "ai_categories",
+        "text": "niche filter, similar sites"
+      },
+      {
+        "param": "ai_source",
+        "text": "“built with” filter and the stack chart"
+      },
+      {
+        "param": "dr_min",
+        "text": "minimum domain authority"
+      },
+      {
+        "param": "from_date / to_date",
+        "text": "discovery date range"
+      },
+      {
+        "param": "sort / order, size / from",
+        "text": "sorting and pagination (up to 10,000)"
+      },
+      {
+        "param": "stats=1",
+        "text": "index stats and top niches on the home page"
+      }
+    ],
+    "caveatsTitle": "Data caveats",
+    "caveats": [
+      "went_live is when FreeSerp first saw the site live, not the official launch; the AI startup set was collected roughly since August 2026.",
+      "The ai_categories filter accepts one niche at a time, so the UI offers a single choice.",
+      "Site summaries (ai_summary) are generated by FreeSerp in English and are not translated."
+    ]
+  }
+}
