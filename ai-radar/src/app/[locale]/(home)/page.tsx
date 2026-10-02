@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BarList } from "@/components/bar-list";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
+import { RadarSweep } from "@/components/radar-sweep";
 import { SearchBox } from "@/components/search-box";
 import { SiteGrid } from "@/components/site-card";
 import { Link } from "@/i18n/navigation";
@@ -38,6 +39,7 @@ export default async function HomePage(props: PageProps<"/[locale]">) {
       <section className="relative overflow-hidden border-b border-line">
         <div className="bg-dot-grid absolute inset-0 mask-[radial-gradient(ellipse_at_top,black_30%,transparent_75%)]" />
         <div className="absolute -top-40 left-1/2 h-80 w-160 max-w-[150vw] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
+        <RadarSweep />
         <div className="relative mx-auto flex max-w-3xl flex-col items-center px-4 pb-14 pt-14 text-center sm:pb-16 sm:pt-24">
           <Reveal>
             <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-accent-border bg-accent-subtle px-3 py-1 text-xs text-accent-text">
@@ -48,7 +50,7 @@ export default async function HomePage(props: PageProps<"/[locale]">) {
           <Reveal delay={0.08}>
             <h1 className="text-balance font-display text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">
               {t("home.titleStart")}{" "}
-              <span className="bg-linear-135 from-accent via-[oklch(66%_0.15_220)] to-amber box-decoration-clone bg-clip-text text-transparent">
+              <span className="bg-linear-135 from-accent via-[oklch(66%_0.15_220)] to-amber box-decoration-clone bg-clip-text whitespace-nowrap text-transparent">
                 {t("home.titleAccent")}
               </span>{" "}
               {t("home.titleEnd")}

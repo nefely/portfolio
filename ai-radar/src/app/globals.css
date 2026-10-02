@@ -147,6 +147,48 @@ input[type="date"].date-empty:not(:focus)::-webkit-datetime-edit {
   opacity: 0;
 }
 
+/* Hero radar (components/radar-sweep.tsx) */
+.radar-sweep {
+  animation: radar-spin var(--radar-period, 6s) linear infinite;
+}
+
+.radar-blip {
+  opacity: 0;
+  animation: radar-blip var(--radar-period, 6s) ease-out infinite;
+}
+
+@keyframes radar-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* flash when the beam passes, then fade like phosphor */
+@keyframes radar-blip {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+  12% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  60%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radar-sweep,
+  .radar-blip {
+    animation: none;
+  }
+  .radar-blip {
+    opacity: 0.5;
+  }
+}
+
 /* Skeleton shimmer */
 .skeleton {
   background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 37%, var(--surface-2) 63%);
