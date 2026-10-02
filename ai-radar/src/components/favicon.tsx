@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 
-/** Site favicon via Google's favicon service, with a letter fallback. */
+/**
+ * Site favicon via our /api/favicon proxy, which already swaps missing icons for a
+ * letter avatar. The local fallback below only covers network failures.
+ */
 export function Favicon({ domain, size = 40 }: { domain: string; size?: number }) {
   const [failed, setFailed] = useState(false);
   const style = { width: size, height: size };
@@ -19,9 +22,9 @@ export function Favicon({ domain, size = 40 }: { domain: string; size?: number }
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- external favicon, next/image adds no value here
+    // eslint-disable-next-line @next/next/no-img-element -- tiny proxied icon, next/image adds no value here
     <img
-      src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`}
+      src={`/api/favicon?domain=${encodeURIComponent(domain)}`}
       alt=""
       style={style}
       loading="lazy"
