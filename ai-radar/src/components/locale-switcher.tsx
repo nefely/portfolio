@@ -1,35 +1,47 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import NextLink from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { Link, usePathname } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
+import { type AppLocale, routing } from "@/i18n/routing";
 
 const LABELS = { uk: "UA", en: "EN" } as const;
+const LOCALE_PREFIX = new RegExp(`^/(${routing.locales.join("|")})(?=/|$)`);
 
 function Switcher() {
   const active = useLocale();
-  const pathname = usePathname();
-  const search = useSearchParams().toString();
   const t = useTranslations("header");
+  // Read the real URL and strip whatever locale prefix it has. next-intl's
+  // usePathname strips only the *current* context locale, so on a fast double
+  // click (context already "en", URL still "/uk/…") it produced "/uk/en/…".
+  const rest = usePathname().replace(LOCALE_PREFIX, "") || "/";
+  const search = useSearchParams().toString();
+
+  const hrefFor = (locale: AppLocale) => `/${locale}${rest === "/" ? "" : rest}${search ? `?${search}` : ""}`;
 
   return (
     <div role="group" aria-label={t("language")} className="flex h-8 shrink-0 items-center overflow-hidden rounded-md border border-line text-xs font-medium">
-      {routing.locales.map((locale) => (
-        <Link
-          key={locale}
-          // keep the query string (filters) when switching language
-          href={search ? `${pathname}?${search}` : pathname}
-          locale={locale}
-          aria-current={locale === active ? "true" : undefined}
-          className={`flex h-full items-center px-2 transition-colors ${
-            locale === active ? "bg-accent-subtle text-accent-text" : "text-fg-subtle hover:text-fg"
-          }`}
-        >
-          {LABELS[locale]}
-        </Link>
-      ))}
+      {routing.locales.map((locale) =>
+        locale === active ? (
+          <span key={locale} aria-current="true" className="flex h-full items-center bg-accent-subtle px-2 text-accent-text">
+            {LABELS[locale]}
+          </span>
+        ) : (
+          <NextLink
+            key={locale}
+            href={hrefFor(locale)}
+            hrefLang={locale}
+            // remember the choice for "/" (next-intl reads this cookie)
+            onClick={() => {
+              document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; samesite=lax`;
+            }}
+            className="flex h-full items-center px-2 text-fg-subtle transition-colors hover:text-fg"
+          >
+            {LABELS[locale]}
+          </NextLink>
+        ),
+      )}
     </div>
   );
 }
@@ -37,7 +49,7 @@ function Switcher() {
 // useSearchParams needs a Suspense boundary on statically rendered pages
 export function LocaleSwitcher() {
   return (
-    <Suspense fallback={<span className="h-8 w-[66px] shrink-0 rounded-md border border-line" />}>
+    <Suspense fallback={<span className="h-8 w-16.5 shrink-0 rounded-md border border-line" />}>
       <Switcher />
     </Suspense>
   );

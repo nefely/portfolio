@@ -6,6 +6,11 @@ import { routing } from "./i18n/routing";
 export default createMiddleware(routing);
 
 export const config = {
-  // skip API, auth callback, Next internals and static files
-  matcher: ["/((?!api|auth|_next|_vercel|.*\\..*).*)"],
+  matcher: [
+    // everything except API, auth callback, Next internals and static files (paths with a dot)…
+    "/((?!api|auth|_next|_vercel|.*\\..*).*)",
+    // …but localized pages may contain dots too: /en/site/bolt.new, /uk/compare?d=a.com.
+    // Without this, soft navigations to them render in the default locale.
+    "/(uk|en)/:path*",
+  ],
 };

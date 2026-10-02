@@ -31,6 +31,10 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+// Only /uk and /en exist: any other first segment (/foo.html, /api/nope) is an
+// unmatched route and gets app/global-not-found.tsx instead of Next's bare 404.
+export const dynamicParams = false;
+
 export default async function LocaleLayout({ children, params }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
