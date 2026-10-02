@@ -72,11 +72,11 @@ export const MAX_WINDOW = 10_000;
 
 export class FreeSerpError extends Error {}
 
-async function request<T>(params: URLSearchParams): Promise<T> {
+async function request<T>(params: URLSearchParams, revalidate = REVALIDATE_SECONDS): Promise<T> {
   const url = `${API_URL}?${params.toString()}`;
   const res = await fetch(url, {
     headers: { project: "ai-radar", agent: "ai-radar-demo" },
-    next: { revalidate: REVALIDATE_SECONDS },
+    next: { revalidate },
   });
   if (!res.ok) {
     throw new FreeSerpError(`FreeSerp API responded with ${res.status}`);
@@ -109,8 +109,9 @@ export function buildSearchQuery(p: SearchParams): URLSearchParams {
   return qs;
 }
 
-export function searchSites(p: SearchParams): Promise<SearchResponse> {
-  return request<SearchResponse>(buildSearchQuery(p));
+/** evalidate overrides the cache lifetime (seconds), e.g. longer for closed date ranges. */
+export function searchSites(p: SearchParams, revalidate?: number): Promise<SearchResponse> {
+  return request<SearchResponse>(buildSearchQuery(p), revalidate);
 }
 
 export function getStats(): Promise<StatsResponse> {
@@ -126,8 +127,8 @@ export async function getSite(domain: string): Promise<Site | null> {
 }
 
 /** Cheap count query: size=1 and read `total`. */
-export async function countSites(p: SearchParams): Promise<number> {
-  const res = await searchSites({ ...p, size: 1 });
+export async function countSites(p: SearchParams, revalidate?: number): Promise<number> {
+  const res = await searchSites({ ...p, size: 1 }, revalidate);
   return res.total;
 }
 

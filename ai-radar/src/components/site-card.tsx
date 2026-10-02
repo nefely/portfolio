@@ -56,10 +56,13 @@ export function SiteCard({ site }: { site: Site }) {
   );
 }
 
-export function SiteGrid({ sites }: { sites: Site[] }) {
+export function SiteGrid({ sites, columns = 3 }: { sites: Site[]; columns?: 2 | 3 }) {
   return (
     // key: replay the cascade when the result set changes (new filters / page)
-    <Stagger key={sites.map((s) => s.domain).join()} className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <Stagger
+      key={sites.map((s) => s.domain).join()}
+      className={`grid grid-cols-1 gap-3 sm:grid-cols-2 ${columns === 3 ? "lg:grid-cols-3" : ""}`}
+    >
       {sites.map((s) => (
         <StaggerItem key={s.domain} className="flex min-w-0">
           <SiteCard site={s} />

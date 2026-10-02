@@ -2,7 +2,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { catalogHref } from "@/lib/catalog-params";
 import { drTone } from "@/lib/format";
-import { categoryLabel } from "@/lib/taxonomy";
+import { AI_CATEGORIES, categoryLabel, categorySlug } from "@/lib/taxonomy";
 
 const DR_STYLES = {
   high: "border-success/30 bg-success-subtle text-success",
@@ -30,8 +30,10 @@ export function CategoryChip({ name, linked = true, size = "md" }: { name: strin
   const sizeCls = size === "sm" ? "px-1.5 py-px text-[10px] leading-4" : "px-2 py-0.5 text-xs";
   const cls = `inline-flex max-w-full items-center truncate rounded-full border border-accent-border bg-accent-subtle text-accent-text ${sizeCls}`;
   if (!linked) return <span className={cls}>{label}</span>;
+  // known niches get their own page; rarer API categories fall back to a catalog filter
+  const known = (AI_CATEGORIES as readonly string[]).includes(name);
   return (
-    <Link href={catalogHref({ category: name })} className={`${cls} hover:border-accent`}>
+    <Link href={known ? `/niches/${categorySlug(name)}` : catalogHref({ category: name })} className={`${cls} hover:border-accent`}>
       {label}
     </Link>
   );

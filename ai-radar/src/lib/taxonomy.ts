@@ -76,6 +76,20 @@ export const AI_CATEGORIES = [
   "Other AI",
 ] as const;
 
+/** URL slug for a niche page: "AI Agents & Autonomous" → "ai-agents-and-autonomous". */
+export function categorySlug(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+/** Reverse lookup; null for unknown slugs (→ 404). */
+export function categoryFromSlug(slug: string): string | null {
+  return AI_CATEGORIES.find((c) => categorySlug(c) === slug) ?? null;
+}
+
 export function categoryLabel(value: string, locale: string): string {
   return locale === "uk" ? (CATEGORY_UK[value] ?? value) : value;
 }

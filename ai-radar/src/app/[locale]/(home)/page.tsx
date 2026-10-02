@@ -8,7 +8,7 @@ import type { AppLocale } from "@/i18n/routing";
 import { catalogHref } from "@/lib/catalog-params";
 import { countSites, getStats, searchSites } from "@/lib/freeserp";
 import { daysAgoISO, formatCompact, formatDate, formatNumber } from "@/lib/format";
-import { BUILDERS, categoryLabel } from "@/lib/taxonomy";
+import { BUILDERS, categoryLabel, categorySlug } from "@/lib/taxonomy";
 
 // Home data changes slowly (FreeSerp refreshes stats every 30 min).
 export const revalidate = 600;
@@ -99,12 +99,12 @@ export default async function HomePage(props: PageProps<"/[locale]">) {
         </Reveal>
 
         <Reveal as="section" className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <Panel title={t("home.nichesTitle")} subtitle={t("home.nichesSubtitle")}>
+          <Panel title={t("home.nichesTitle")} subtitle={t("home.nichesSubtitle")} href="/niches" linkLabel={t("common.all")}>
             <BarList
               items={niches.map((n) => ({
                 label: categoryLabel(n.key, locale),
                 value: n.count,
-                href: catalogHref({ category: n.key }),
+                href: `/niches/${categorySlug(n.key)}`,
               }))}
             />
           </Panel>
@@ -189,10 +189,29 @@ function SectionHeader({
   );
 }
 
-function Panel({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
+function Panel({
+  title,
+  subtitle,
+  href,
+  linkLabel,
+  children,
+}: {
+  title: string;
+  subtitle: string;
+  href?: string;
+  linkLabel?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="min-w-0 rounded-xl border border-line bg-surface-1 p-4">
-      <h2 className="font-display text-base font-semibold">{title}</h2>
+      <div className="flex items-start justify-between gap-3">
+        <h2 className="font-display text-base font-semibold">{title}</h2>
+        {href && linkLabel && (
+          <Link href={href} className="shrink-0 text-sm text-accent-text hover:underline">
+            {linkLabel}
+          </Link>
+        )}
+      </div>
       <p className="mb-3 text-xs text-fg-subtle">{subtitle}</p>
       {children}
     </div>

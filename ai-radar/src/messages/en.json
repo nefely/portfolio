@@ -5,6 +5,7 @@
   },
   "header": {
     "catalog": "Catalog",
+    "niches": "Niches",
     "favorites": "Favorites",
     "compare": "Compare",
     "about": "About",
@@ -161,6 +162,35 @@
     "remove": "Remove",
     "summary": "Summary"
   },
+  "niches": {
+    "metaTitle": "AI product niches",
+    "title": "Niches",
+    "subtitle": "Every AI product category in FreeSerp: how many sites each has and its share of the market. A site can belong to several niches, so shares add up to more than 100%.",
+    "products": "{count} products",
+    "share": "{share} of all AI"
+  },
+  "niche": {
+    "eyebrow": "Niche",
+    "back": "← All niches",
+    "openCatalog": "Open in catalog →",
+    "statTotal": "AI products in niche",
+    "statShare": "Share of all AI",
+    "statRank": "rank #{rank} among niches",
+    "stat30": "New in 30 days",
+    "stat30Note": "since {date}",
+    "statAvg": "Average per day",
+    "statAvgNote": "over the chart period",
+    "chartTitle": "New sites per day",
+    "chartSubtitle": "How many sites in this niche FreeSerp first saw live each day · {from} – {to}",
+    "chartValue": "new sites",
+    "chartNote": "The chart starts on Aug 17, 2026: before that FreeSerp was filling its index for the first time, so those dates reflect the crawl, not real launches.",
+    "chartEmpty": "Not enough data for a chart yet.",
+    "buildersTitle": "What this niche is built with",
+    "buildersSubtitle": "ai_source — the builder or framework behind the homepage",
+    "buildersEmpty": "No stack data.",
+    "leadersTitle": "Niche leaders by DR",
+    "latestTitle": "Latest launches in niche"
+  },
   "favorites": {
     "metaTitle": "Favorites",
     "title": "Favorites",
@@ -252,6 +282,11 @@
         "path": "/catalog",
         "name": "Catalog",
         "text": "Search + filters (niche, stack, min DR, date range, sorting), pagination. All filters live in the URL — shareable by link."
+      },
+      {
+        "path": "/niches",
+        "name": "Niches",
+        "text": "All categories with product counts and shares. A niche page: metrics, a chart of new sites per day, what the niche is built with, DR leaders, latest launches."
       },
       {
         "path": "/site/[domain]",

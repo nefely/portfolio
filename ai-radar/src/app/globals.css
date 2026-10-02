@@ -35,6 +35,8 @@ html.dark {
   --warning-subtle: #f59e0b1f;
   --danger: #f87171;
   --dot: #ffffff12;
+  /* chart mark color: validated with dataviz/validate_palette.js (dark band L 0.48–0.67) */
+  --chart-1: oklch(65% 0.12 190);
   --glass: #09090bcc;
   --scroll-thumb: #ffffff1a;
   --selection: #8ca0b940;
@@ -70,6 +72,7 @@ html.light {
   --warning-subtle: #f59e0b1f;
   --danger: #dc2626;
   --dot: #0000000f;
+  --chart-1: oklch(58% 0.12 190);
   --glass: #f7f7f9cc;
   --scroll-thumb: #0000001f;
   --selection: #1a6fc433;
@@ -103,6 +106,7 @@ html.light {
   --color-warning: var(--warning);
   --color-warning-subtle: var(--warning-subtle);
   --color-danger: var(--danger);
+  --color-chart-1: var(--chart-1);
 
   --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
   --font-display: var(--font-montserrat), "Montserrat", system-ui, sans-serif;

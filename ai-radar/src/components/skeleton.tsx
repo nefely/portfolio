@@ -1,7 +1,7 @@
 // Shimmering placeholders shown while server data loads (loading.tsx) or on the client (favorites).
 
-export function Skeleton({ className = "" }: { className?: string }) {
-  return <div aria-hidden="true" className={`skeleton rounded-md ${className}`} />;
+export function Skeleton({ className = "", style }: { className?: string; style?: React.CSSProperties }) {
+  return <div aria-hidden="true" className={`skeleton rounded-md ${className}`} style={style} />;
 }
 
 export function SiteCardSkeleton() {
