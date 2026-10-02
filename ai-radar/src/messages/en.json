@@ -187,6 +187,9 @@
     "submitSignIn": "Sign in",
     "submitSignUp": "Create account",
     "pending": "Please wait…",
+    "demoButton": "Sign in as demo user",
+    "demoHint": "No sign-up needed: a shared test account with a few saved services.",
+    "or": "or use your own account",
     "checkEmailTitle": "Check your inbox",
     "checkEmailText": "We sent an email to {email}. Follow the link to confirm your account.",
     "errors": {

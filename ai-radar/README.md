@@ -4,6 +4,8 @@
 
 **Демо:** _посилання на Vercel — додати після деплою_
 
+**Тестовий акаунт** (реєстрація не потрібна): на сторінці входу є кнопка «Увійти як демо-користувач», або вручну `demo@demo.airadar.test` / `AIRadar-demo-2026`. В акаунті вже є кілька сервісів в обраному.
+
 Стек: Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · next-intl (UA/EN) · Supabase (Auth + Postgres з RLS) · Motion (Framer Motion)
 
 ---
@@ -75,7 +77,12 @@ cp .env.example .env.local   # вписати NEXT_PUBLIC_SUPABASE_URL і NEXT_P
 npm run dev                  # http://localhost:3000
 ```
 
-Для обраного потрібна таблиця в Supabase: виконайте [`supabase/schema.sql`](supabase/schema.sql) у SQL Editor проєкту. Каталог, профілі й порівняння працюють і без Supabase.
+Для обраного потрібна таблиця в Supabase. У SQL Editor проєкту виконайте по черзі:
+
+1. [`supabase/schema.sql`](supabase/schema.sql) — таблиця `ai_radar_favorites` і RLS-політики;
+2. [`supabase/demo-account.sql`](supabase/demo-account.sql) — підтверджений демо-користувач із заповненим обраним.
+
+Обидва файли можна безпечно перезапускати. Каталог, профілі й порівняння працюють і без Supabase.
 
 Перевірки: `npm run lint`, `npx tsc --noEmit`, `npm run build`.
 

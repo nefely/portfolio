@@ -8,6 +8,10 @@ import { createClient } from "@/lib/supabase/client";
 type Mode = "signin" | "signup";
 type ErrorKey = "email" | "password" | "invalid" | "notConfirmed" | "exists" | "rateLimit" | "callback" | "unknown";
 
+// Public demo account for reviewers — created by supabase/demo-account.sql.
+const DEMO_EMAIL = "demo@demo.airadar.test";
+const DEMO_PASSWORD = "AIRadar-demo-2026";
+
 const fieldCls =
   "h-11 w-full rounded-lg border border-line bg-input px-3 text-[15px] text-fg outline-none transition placeholder:text-fg-subtle focus:border-accent focus:ring-3 focus:ring-accent/20";
 
@@ -34,6 +38,20 @@ export function LoginForm({ next, initialError }: { next: string; initialError?:
   function done() {
     router.replace(next);
     router.refresh();
+  }
+
+  async function signInDemo() {
+    setError(null);
+    setPending(true);
+    try {
+      const { error } = await createClient().auth.signInWithPassword({ email: DEMO_EMAIL, password: DEMO_PASSWORD });
+      if (error) return setError(mapError(error.message));
+      done();
+    } catch {
+      setError("unknown");
+    } finally {
+      setPending(false);
+    }
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -84,6 +102,24 @@ export function LoginForm({ next, initialError }: { next: string; initialError?:
 
   return (
     <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-2 rounded-xl border border-amber/30 bg-amber-subtle p-4">
+        <button
+          type="button"
+          onClick={() => void signInDemo()}
+          disabled={pending}
+          className="h-11 rounded-lg bg-amber font-medium text-on-accent transition-opacity hover:opacity-90 disabled:opacity-60"
+        >
+          {pending ? t("pending") : t("demoButton")}
+        </button>
+        <p className="text-xs text-fg-muted">{t("demoHint")}</p>
+      </div>
+
+      <div className="flex items-center gap-3 text-xs text-fg-subtle">
+        <span className="h-px flex-1 bg-line" />
+        {t("or")}
+        <span className="h-px flex-1 bg-line" />
+      </div>
+
       <div className="grid grid-cols-2 rounded-lg border border-line bg-surface-2 p-1 text-sm" role="tablist">
         {(["signin", "signup"] as const).map((m) => (
           <button
