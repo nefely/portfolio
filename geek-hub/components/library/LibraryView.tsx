@@ -19,6 +19,7 @@ import { computeStats, filterEntries, type LibrarySort } from "@/lib/library/sta
 import { useMyEntries } from "@/hooks/useEntries";
 import { cn } from "@/lib/utils";
 import { GRID_CLASSES } from "@/components/anime/AnimeGrid";
+import { Reveal } from "@/components/motion/Reveal";
 import { LibraryCard } from "./LibraryCard";
 
 type Tab = EntryStatus | "all" | "favorites";
@@ -142,8 +143,10 @@ export function LibraryView() {
           </p>
         ) : (
           <div className={GRID_CLASSES}>
-            {visible.map((entry: Entry) => (
-              <MemoLibraryCard key={entry.animeId} entry={entry} />
+            {visible.map((entry: Entry, index) => (
+              <Reveal key={entry.animeId} index={index % 6}>
+                <MemoLibraryCard entry={entry} />
+              </Reveal>
             ))}
           </div>
         )}

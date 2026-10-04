@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import type { AnimeCard as AnimeCardData } from "@/types/anime";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Reveal } from "@/components/motion/Reveal";
 import { AnimeCard } from "./AnimeCard";
 
 interface ShelfProps {
@@ -18,10 +19,10 @@ export function AnimeShelf({ title, href, items }: ShelfProps & { items: AnimeCa
     <section className="space-y-4">
       <ShelfHeader title={title} href={href} />
       <div className="-mx-4 scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6">
-        {items.map((anime) => (
-          <div key={anime.id} className={SHELF_ITEM}>
+        {items.map((anime, index) => (
+          <Reveal key={anime.id} index={index} className={SHELF_ITEM}>
             <AnimeCard anime={anime} />
-          </div>
+          </Reveal>
         ))}
       </div>
     </section>

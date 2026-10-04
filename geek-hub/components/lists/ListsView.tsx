@@ -7,6 +7,7 @@ import { Globe, ListVideo, Lock, Plus } from "lucide-react";
 import type { AnimeList } from "@/types/library";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Reveal } from "@/components/motion/Reveal";
 import { useMyLists } from "@/hooks/useLists";
 import { ListFormDialog } from "./ListFormDialog";
 
@@ -49,8 +50,10 @@ export function ListsView() {
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {lists.map((list) => (
-              <MemoListCard key={list.id} list={list} />
+            {lists.map((list, index) => (
+              <Reveal key={list.id} index={index % 3}>
+                <MemoListCard list={list} />
+              </Reveal>
             ))}
           </div>
         )}

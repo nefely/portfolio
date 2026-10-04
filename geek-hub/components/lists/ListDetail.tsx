@@ -8,6 +8,7 @@ import type { ListItem } from "@/types/library";
 import { Button } from "@/components/ui/button";
 import { AnimeCard } from "@/components/anime/AnimeCard";
 import { GRID_CLASSES } from "@/components/anime/AnimeGrid";
+import { Reveal } from "@/components/motion/Reveal";
 import { useDeleteList, useToggleListItem, useUpdateList } from "@/hooks/useLists";
 import { useSessionUser } from "@/hooks/useSessionUser";
 import { listOptions } from "@/lib/query/userData";
@@ -96,13 +97,10 @@ export function ListDetail({ id }: { id: string }) {
           </p>
         ) : (
           <div className={GRID_CLASSES}>
-            {list.items.map((item) => (
-              <MemoListItemCard
-                key={item.animeId}
-                item={item}
-                listId={list.id}
-                removable={isOwner}
-              />
+            {list.items.map((item, index) => (
+              <Reveal key={item.animeId} index={index % 6}>
+                <MemoListItemCard item={item} listId={list.id} removable={isOwner} />
+              </Reveal>
             ))}
           </div>
         )}

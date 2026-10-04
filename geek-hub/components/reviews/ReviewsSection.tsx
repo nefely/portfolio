@@ -7,6 +7,7 @@ import { MessageSquare } from "lucide-react";
 import type { Review } from "@/types/library";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Reveal } from "@/components/motion/Reveal";
 import { useInView } from "@/hooks/useInView";
 import { useReviews } from "@/hooks/useReviews";
 import { useSessionUser } from "@/hooks/useSessionUser";
@@ -94,8 +95,10 @@ function ReviewList({ animeId }: { animeId: number }) {
       <p className="text-sm text-muted-foreground">
         {total} {total === 1 ? "review" : "reviews"}
       </p>
-      {reviews.map((review) => (
-        <MemoReviewCard key={review.id} review={review} />
+      {reviews.map((review, index) => (
+        <Reveal key={review.id} index={index % 3}>
+          <MemoReviewCard review={review} />
+        </Reveal>
       ))}
       {hasNextPage && (
         <Button

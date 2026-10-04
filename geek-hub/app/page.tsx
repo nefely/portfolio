@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { AnimeShelf, AnimeShelfError, AnimeShelfSkeleton } from "@/components/anime/AnimeShelf";
-import { FadeIn } from "@/components/motion/FadeIn";
 import { HeroSecondaryCta } from "@/components/home/HeroSecondaryCta";
 import { currentSeason, getHomeShelves, type HomeShelf } from "@/lib/anilist/queries";
 
@@ -72,24 +71,31 @@ function Hero() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_20%_0%,oklch(0.7_0.21_340/0.25),transparent),radial-gradient(50%_50%_at_90%_10%,oklch(0.78_0.13_210/0.18),transparent)]"
       />
       <div className="relative mx-auto max-w-7xl px-4 pt-16 pb-14 sm:px-6 sm:pt-24 sm:pb-20">
-        <FadeIn className="max-w-2xl space-y-6">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+        {/* Каскадна поява на CSS (rise-in у globals.css) — без JS, не чекає гідратації. */}
+        <div className="max-w-2xl space-y-6">
+          <span className="inline-flex rise-in items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
             <Sparkles className="size-3.5" /> 20,000+ anime in one place
           </span>
-          <h1 className="text-4xl leading-[1.05] font-bold tracking-tight sm:text-6xl">
+          <h1
+            className="rise-in text-4xl leading-[1.05] font-bold tracking-tight sm:text-6xl"
+            style={{ animationDelay: "80ms" }}
+          >
             Your anime life, <span className="text-gradient">organized.</span>
           </h1>
-          <p className="max-w-xl text-lg text-muted-foreground">
+          <p
+            className="max-w-xl rise-in text-lg text-muted-foreground"
+            style={{ animationDelay: "160ms" }}
+          >
             Discover new shows, track every episode, build lists worth sharing and see what other
             fans really think.
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex rise-in flex-wrap gap-3" style={{ animationDelay: "240ms" }}>
             <Link href="/anime" className={buttonVariants({ size: "lg", className: "h-11 px-5" })}>
               Browse anime <ArrowRight />
             </Link>
             <HeroSecondaryCta />
           </div>
-        </FadeIn>
+        </div>
       </div>
     </section>
   );
