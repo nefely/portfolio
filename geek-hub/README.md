@@ -13,6 +13,15 @@ Anime tracker: browse the whole AniList catalog, track what you watch, build sha
 - **Reviews**: one per user per anime, with a score and a spoiler flag.
 - **Profile settings**: username, display name, bio.
 
+## Demo account
+
+You don't need to register. Use **Try the demo account** on the sign-in page, or sign in with:
+
+- **Email:** `demo@geekhub.test`
+- **Password:** `GeekHub-demo-2026`
+
+The demo account already has a library of 18 titles, three custom lists (two public, one private) and a few reviews. Visitors can change anything; running [`supabase/demo-account.sql`](supabase/demo-account.sql) again resets it. The file is generated with real AniList data by `npm run demo:generate`.
+
 ## Getting started
 
 ```bash
@@ -21,7 +30,7 @@ cp .env.example .env.local   # Supabase keys (shared portfolio project)
 npm run dev
 ```
 
-Before the first run, paste [`supabase/schema.sql`](supabase/schema.sql) into the Supabase SQL Editor. It is safe to re-run. All tables use the `geek_hub_` prefix because the Supabase project is shared with the other portfolio apps.
+Before the first run, paste [`supabase/schema.sql`](supabase/schema.sql) into the Supabase SQL Editor. It is safe to re-run. All tables use the `geek_hub_` prefix because the Supabase project is shared with the other portfolio apps. To create the demo account, run [`supabase/demo-account.sql`](supabase/demo-account.sql) afterwards.
 
 | Script                            |                   |
 | --------------------------------- | ----------------- |

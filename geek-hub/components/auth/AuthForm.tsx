@@ -4,12 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { MailCheck } from "lucide-react";
+import { MailCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 import { ensureMyProfile } from "@/lib/auth/actions";
+import { DEMO_ACCOUNT } from "@/lib/auth/demo";
 import { GOOGLE_AUTH_ENABLED } from "@/lib/auth/features";
 import { safeNextPath } from "@/lib/auth/safeNextPath";
 import { describeAuthError, validateAuthForm, type AuthFormErrors } from "@/lib/validation/auth";
@@ -78,10 +79,15 @@ export function AuthForm({ mode }: { mode: Mode }) {
     setFormError(null);
     if (validation.email || validation.password) return;
 
+    await authenticate(email, password, mode);
+  }
+
+  async function authenticate(email: string, password: string, action: Mode) {
     setPending(true);
+    setFormError(null);
     const supabase = createClient();
     const { data, error } =
-      mode === "login"
+      action === "login"
         ? await supabase.auth.signInWithPassword({ email, password })
         : await supabase.auth.signUp({
             email,
@@ -138,6 +144,23 @@ export function AuthForm({ mode }: { mode: Mode }) {
       <div className="space-y-1 text-center">
         <h1 className="text-2xl font-bold tracking-tight">{copy.title}</h1>
         <p className="text-sm text-muted-foreground">{copy.subtitle}</p>
+      </div>
+
+      {/* Для відвідувачів портфоліо: оцінити проєкт без реєстрації. */}
+      <div className="rounded-xl border border-primary/30 bg-primary/10 p-3 text-center">
+        <p className="text-sm">Just looking around?</p>
+        <Button
+          type="button"
+          variant="secondary"
+          className="mt-2 w-full"
+          disabled={pending}
+          onClick={() => authenticate(DEMO_ACCOUNT.email, DEMO_ACCOUNT.password, "login")}
+        >
+          <Sparkles /> Try the demo account
+        </Button>
+        <p className="mt-2 text-xs text-muted-foreground">
+          {DEMO_ACCOUNT.email} · {DEMO_ACCOUNT.password}
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
