@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { AnimeShelf, AnimeShelfError, AnimeShelfSkeleton } from "@/components/anime/AnimeShelf";
 import { FadeIn } from "@/components/motion/FadeIn";
+import { HeroSecondaryCta } from "@/components/home/HeroSecondaryCta";
 import { currentSeason, getHomeShelves, type HomeShelf } from "@/lib/anilist/queries";
 
 // ISR: сторінка статична й перебудовується у фоні раз на 10 хвилин —
@@ -86,12 +87,7 @@ function Hero() {
             <Link href="/anime" className={buttonVariants({ size: "lg", className: "h-11 px-5" })}>
               Browse anime <ArrowRight />
             </Link>
-            <Link
-              href="/signup"
-              className={buttonVariants({ size: "lg", variant: "outline", className: "h-11 px-5" })}
-            >
-              Create free account
-            </Link>
+            <HeroSecondaryCta />
           </div>
         </FadeIn>
       </div>
