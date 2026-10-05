@@ -68,7 +68,7 @@ function Hero() {
     <section className="relative overflow-hidden">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_20%_0%,oklch(0.7_0.21_340/0.25),transparent),radial-gradient(50%_50%_at_90%_10%,oklch(0.78_0.13_210/0.18),transparent)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_20%_0%,oklch(0.77_0.13_220/0.22),transparent),radial-gradient(50%_50%_at_90%_10%,oklch(0.68_0.21_345/0.14),transparent)]"
       />
       <div className="relative mx-auto max-w-7xl px-4 pt-16 pb-14 sm:px-6 sm:pt-24 sm:pb-20">
         {/* Каскадна поява на CSS (rise-in у globals.css) — без JS, не чекає гідратації. */}

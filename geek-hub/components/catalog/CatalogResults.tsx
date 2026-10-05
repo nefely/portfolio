@@ -57,9 +57,13 @@ export function CatalogResults({
     return (
       <div className="flex flex-col items-center rounded-xl border border-dashed p-12 text-center">
         <SearchX className="size-10 text-muted-foreground" />
-        <p className="mt-3 font-medium">Nothing matches these filters.</p>
+        <p className="mt-3 font-medium">
+          {filters.q ? `No anime found for “${filters.q}”.` : "Nothing matches these filters."}
+        </p>
         <p className="mt-1 text-sm text-muted-foreground">
-          Try removing a genre or widening the year.
+          {filters.q
+            ? "Check the spelling, try the English or Japanese title, or remove some filters."
+            : "Try removing a genre or widening the year."}
         </p>
         <Button variant="outline" className="mt-4" onClick={onReset}>
           Reset filters
@@ -70,6 +74,11 @@ export function CatalogResults({
 
   return (
     <div>
+      {query.data.pages[0]?.approximate && (
+        <p className="mb-4 text-sm text-muted-foreground">
+          Showing popular titles that start with “{filters.q}”. Finish the word for a full search.
+        </p>
+      )}
       <div
         className={cn("transition-opacity", isPlaceholderData && "pointer-events-none opacity-50")}
       >

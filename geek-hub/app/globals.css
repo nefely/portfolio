@@ -57,43 +57,46 @@
    і не треба тягнути next-themes заради перемикача. */
 :root {
   color-scheme: dark;
-  --background: oklch(0.15 0.02 285);
-  --foreground: oklch(0.96 0.01 285);
-  --card: oklch(0.19 0.025 285);
-  --card-foreground: oklch(0.96 0.01 285);
-  --popover: oklch(0.2 0.028 285);
-  --popover-foreground: oklch(0.96 0.01 285);
-  --primary: oklch(0.7 0.21 340);
-  --primary-foreground: oklch(0.15 0.02 285);
-  --secondary: oklch(0.25 0.03 285);
-  --secondary-foreground: oklch(0.96 0.01 285);
-  --muted: oklch(0.23 0.025 285);
-  --muted-foreground: oklch(0.7 0.03 285);
-  --accent: oklch(0.27 0.04 285);
-  --accent-foreground: oklch(0.96 0.01 285);
+  --background: oklch(0.15 0.02 255);
+  --foreground: oklch(0.96 0.01 255);
+  --card: oklch(0.19 0.025 255);
+  --card-foreground: oklch(0.96 0.01 255);
+  --popover: oklch(0.2 0.028 255);
+  --popover-foreground: oklch(0.96 0.01 255);
+  --primary: oklch(0.77 0.13 220);
+  --primary-foreground: oklch(0.15 0.02 255);
+  --secondary: oklch(0.25 0.03 255);
+  --secondary-foreground: oklch(0.96 0.01 255);
+  --muted: oklch(0.23 0.025 255);
+  --muted-foreground: oklch(0.7 0.03 255);
+  --accent: oklch(0.27 0.04 255);
+  --accent-foreground: oklch(0.96 0.01 255);
   --destructive: oklch(0.68 0.2 22);
   --border: oklch(1 0 0 / 9%);
   --input: oklch(1 0 0 / 13%);
-  --ring: oklch(0.7 0.21 340 / 70%);
-  --chart-1: oklch(0.7 0.21 340);
-  --chart-2: oklch(0.78 0.13 210);
+  --ring: oklch(0.77 0.13 220 / 70%);
+  --chart-1: oklch(0.77 0.13 220);
+  --chart-2: oklch(0.68 0.21 345);
   --chart-3: oklch(0.8 0.16 85);
   --chart-4: oklch(0.72 0.17 150);
   --chart-5: oklch(0.65 0.2 290);
   --radius: 0.75rem;
-  --sidebar: oklch(0.19 0.025 285);
-  --sidebar-foreground: oklch(0.96 0.01 285);
-  --sidebar-primary: oklch(0.7 0.21 340);
-  --sidebar-primary-foreground: oklch(0.15 0.02 285);
-  --sidebar-accent: oklch(0.27 0.04 285);
-  --sidebar-accent-foreground: oklch(0.96 0.01 285);
+  --sidebar: oklch(0.19 0.025 255);
+  --sidebar-foreground: oklch(0.96 0.01 255);
+  --sidebar-primary: oklch(0.77 0.13 220);
+  --sidebar-primary-foreground: oklch(0.15 0.02 255);
+  --sidebar-accent: oklch(0.27 0.04 255);
+  --sidebar-accent-foreground: oklch(0.96 0.01 255);
   --sidebar-border: oklch(1 0 0 / 9%);
-  --sidebar-ring: oklch(0.7 0.21 340 / 70%);
+  --sidebar-ring: oklch(0.77 0.13 220 / 70%);
+
+  /* Другорядний акцент (рожевий із лого) — для градієнтів і підсвіток. */
+  --accent-pink: oklch(0.68 0.21 345);
 
   /* Кольори статусів бібліотеки — однакові в бейджах, табах і статистиці. */
   --status-watching: oklch(0.75 0.15 150);
   --status-completed: oklch(0.72 0.15 250);
-  --status-planned: oklch(0.75 0.03 285);
+  --status-planned: oklch(0.75 0.03 255);
   --status-on-hold: oklch(0.82 0.15 85);
   --status-dropped: oklch(0.68 0.2 22);
 }
@@ -116,7 +119,7 @@
 }
 
 @utility text-gradient {
-  background-image: linear-gradient(110deg, var(--primary), oklch(0.78 0.13 210));
+  background-image: linear-gradient(110deg, var(--primary), var(--accent-pink));
   background-clip: text;
   color: transparent;
 }

@@ -22,8 +22,11 @@ export interface AnimePage {
   items: AnimeCard[];
   page: number;
   hasNextPage: boolean;
-  // AniList обрізає total до 5000 — UI показує "5,000+".
+  // Приблизне (AniList часто просто віддає 5000) — у UI не показуємо.
   total: number | null;
+  // true — повнотекстовий пошук нічого не знайшов (слово ще не дописане), а
+  // це збіги за префіксами серед популярних тайтлів.
+  approximate?: boolean;
 }
 
 export interface AnimeTag {

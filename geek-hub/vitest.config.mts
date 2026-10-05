@@ -10,10 +10,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "."),
+      "@": path.resolve(import.meta.dirname, "."),
       // `server-only` кидає помилку поза React Server-оточенням — у тестах
       // підміняємо його порожнім модулем.
-      "server-only": path.resolve(__dirname, "test/empty.ts"),
+      "server-only": path.resolve(import.meta.dirname, "test/empty.ts"),
     },
   },
 });

@@ -4,6 +4,7 @@ import type { AnimeCard as AnimeCardData } from "@/types/anime";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Reveal } from "@/components/motion/Reveal";
 import { AnimeCard } from "./AnimeCard";
+import { ShelfScroller } from "./ShelfScroller";
 
 interface ShelfProps {
   title: string;
@@ -12,19 +13,19 @@ interface ShelfProps {
 
 const SHELF_ITEM = "w-36 shrink-0 snap-start sm:w-40 lg:w-44";
 
-// Горизонтальна полиця на CSS scroll-snap — без JS-каруселі і без
-// додаткових залежностей.
+// Горизонтальна полиця на CSS scroll-snap без сторонньої каруселі. Сама
+// полиця й картки рендеряться на сервері; клієнтський лише ShelfScroller
+// (стрілки й затемнення країв).
 export function AnimeShelf({ title, href, items }: ShelfProps & { items: AnimeCardData[] }) {
   return (
     <section className="space-y-4">
-      <ShelfHeader title={title} href={href} />
-      <div className="-mx-4 scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6">
+      <ShelfScroller header={<ShelfHeader title={title} href={href} />}>
         {items.map((anime, index) => (
           <Reveal key={anime.id} index={index} className={SHELF_ITEM}>
             <AnimeCard anime={anime} />
           </Reveal>
         ))}
-      </div>
+      </ShelfScroller>
     </section>
   );
 }

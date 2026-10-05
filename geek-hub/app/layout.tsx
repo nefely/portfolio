@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#14111f",
+  themeColor: "#0f1420",
 };
 
 // Layout навмисно не читає cookies/сесію: інакше всі сторінки стали б

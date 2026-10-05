@@ -51,7 +51,7 @@ export function ListsView() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {lists.map((list, index) => (
-              <Reveal key={list.id} index={index % 3}>
+              <Reveal key={list.id} index={index % 3} className="h-full">
                 <MemoListCard list={list} />
               </Reveal>
             ))}
@@ -67,7 +67,9 @@ function ListCard({ list }: { list: AnimeList }) {
   return (
     <Link
       href={`/lists/${list.id}`}
-      className="group overflow-hidden rounded-2xl border bg-card transition-colors hover:border-primary/40"
+      // flex: <a> — рядковий елемент; поза grid (всередині Reveal) його
+      // рамка рвалась на уривки. h-full (і в Reveal) — картки в ряду однакової висоти.
+      className="group flex h-full flex-col overflow-hidden rounded-2xl border bg-card transition-colors hover:border-primary/40"
     >
       <div className="grid h-36 grid-cols-4 gap-px bg-muted">
         {Array.from({ length: 4 }, (_, index) => {
