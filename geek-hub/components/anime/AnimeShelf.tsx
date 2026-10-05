@@ -32,7 +32,7 @@ export function AnimeShelf({ title, href, items }: ShelfProps & { items: AnimeCa
 
 function ShelfHeader({ title, href }: ShelfProps) {
   return (
-    <div className="flex items-end justify-between gap-4">
+    <div className="flex items-center justify-between gap-4">
       <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">{title}</h2>
       {href && (
         <Link

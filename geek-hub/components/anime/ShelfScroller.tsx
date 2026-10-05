@@ -54,7 +54,7 @@ export function ShelfScroller({ children, header }: ShelfScrollerProps) {
 
   return (
     <>
-      <div className="flex items-end gap-3">
+      <div className="flex items-center gap-3">
         <div className="min-w-0 flex-1">{header}</div>
         <div className="hidden shrink-0 gap-1 sm:flex">
           <Button
