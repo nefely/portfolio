@@ -11,21 +11,24 @@ interface ShelfProps {
   href?: string;
 }
 
-const SHELF_ITEM = "w-36 shrink-0 snap-start sm:w-40 lg:w-44";
+const SHELF_ITEM = "w-36 shrink-0 sm:w-40 lg:w-44";
 
-// Горизонтальна полиця на CSS scroll-snap без сторонньої каруселі. Сама
-// полиця й картки рендеряться на сервері; клієнтський лише ShelfScroller
-// (стрілки й затемнення країв).
+// Горизонтальна полиця на Swiper (ShelfScroller). Картки — серверні
+// компоненти, передані слайдам як готові елементи.
 export function AnimeShelf({ title, href, items }: ShelfProps & { items: AnimeCardData[] }) {
   return (
     <section className="space-y-4">
-      <ShelfScroller header={<ShelfHeader title={title} href={href} />}>
-        {items.map((anime, index) => (
-          <Reveal key={anime.id} index={index} className={SHELF_ITEM}>
-            <AnimeCard anime={anime} />
-          </Reveal>
-        ))}
-      </ShelfScroller>
+      <ShelfScroller
+        header={<ShelfHeader title={title} href={href} />}
+        items={items.map((anime, index) => ({
+          key: anime.id,
+          node: (
+            <Reveal index={index} className={SHELF_ITEM}>
+              <AnimeCard anime={anime} />
+            </Reveal>
+          ),
+        }))}
+      />
     </section>
   );
 }

@@ -163,9 +163,26 @@
   animation: shimmer 1.6s linear infinite;
 }
 
+/* Повільне "плавання" постерів у hero (див. HeroCollage: анімація на
+   внутрішньому елементі, позиція у віялі — на зовнішньому, щоб не конфліктували). */
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}
+
+@utility float {
+  animation: float 6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rise-in,
-  .shimmer {
+  .shimmer,
+  .float {
     animation: none;
   }
 }

@@ -22,9 +22,10 @@ import { useSessionUser } from "@/hooks/useSessionUser";
 import { LIST_TITLE_MAX } from "@/lib/validation/forms";
 
 export function AddToListButton({ anime }: { anime: AnimeCard }) {
-  const { user } = useSessionUser();
+  const { user, isPending } = useSessionUser();
   const pathname = usePathname();
 
+  if (isPending) return <Skeleton className="h-9 w-36" />;
   if (!user) {
     return (
       <Link

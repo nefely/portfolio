@@ -1,18 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-let appHydrated = false;
+import { useHydrated } from "./useHydrated";
 
 // Чи анімувати появу компонента. Motion рендерить initial-стилі (opacity: 0)
 // прямо в серверний HTML — тоді контент першого завантаження лишався б
-// невидимим до гідратації (гірший LCP). Тому:
-//  - серверний рендер і перша гідратація → false (контент видно одразу);
-//  - усе, що монтується пізніше (навігація, infinite scroll, нові фільтри) → true.
-export function useMountAnimation() {
-  const [shouldAnimate] = useState(() => appHydrated);
-  useEffect(() => {
-    appHydrated = true;
-  }, []);
-  return shouldAnimate;
-}
+// невидимим до гідратації (гірший LCP). Тому серверний рендер і гідратація →
+// false (контент видно одразу), а компонент, змонтований уже на клієнті
+// (навігація, infinite scroll, нові фільтри) → true. Після гідратації значення
+// стає true, але Motion читає initial лише при монтуванні — вже показаний
+// контент не "блимає".
+export const useMountAnimation = useHydrated;

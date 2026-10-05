@@ -129,6 +129,9 @@ function Hero({ anime, card }: { anime: AnimeDetails; card: AnimeCard }) {
           fill
           sizes="100vw"
           quality={60}
+          // Банер — найбільший елемент над згином (LCP): вантажимо одразу.
+          loading="eager"
+          fetchPriority="high"
           className="object-cover opacity-35"
         />
       ) : (

@@ -78,6 +78,12 @@ export interface AnimeDetails extends AnimeCard {
   siteUrl: string;
 }
 
+export interface RandomPick extends AnimeCard {
+  banner: string | null;
+  synopsis: string | null;
+  genres: string[];
+}
+
 export interface GenreGroups {
   genres: string[];
   themes: string[];

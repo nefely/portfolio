@@ -1,11 +1,12 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import { ApiError, parseRetryAfter, withRetry } from "@/lib/api/retry";
 
 const ANILIST_URL = "https://graphql.anilist.co";
 const REQUEST_TIMEOUT_MS = 10_000;
 
-// Скільки секунд тримати відповідь у Data Cache Next.js. Каталог змінюється
+// Скільки секунд тримати результат у Data Cache Next.js. Каталог змінюється
 // повільно, тож навіть "короткий" TTL — 10 хвилин: кожен унікальний запит
 // іде в AniList не частіше за раз на TTL, а не на кожного відвідувача.
 export const REVALIDATE = {
@@ -19,10 +20,18 @@ interface GraphQLResponse<T> {
   errors?: { message: string; status?: number }[];
 }
 
-export async function anilistQuery<T>(
+interface QueryOptions<T> {
+  revalidate: number;
+  tags?: string[];
+  // Додаткова перевірка "відповідь осмислена" (напр. полиці не порожні).
+  // Невалідна відповідь = збій: повтор і НЕ потрапляє в кеш.
+  validate?: (data: T) => boolean;
+}
+
+async function requestAniList<T>(
   query: string,
   variables: Record<string, unknown>,
-  { revalidate, tags }: { revalidate: number; tags?: string[] },
+  validate: ((data: T) => boolean) | undefined,
 ): Promise<T> {
   return withRetry(
     async () => {
@@ -32,11 +41,11 @@ export async function anilistQuery<T>(
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify({ query, variables }),
-          // POST Next.js кешує лише явно: force-cache + revalidate. Тіло
-          // запиту (query + variables) входить у ключ кешу. Зберігаються
-          // тільки відповіді 200, тож помилки не "залипають" у кеші.
-          cache: "force-cache",
-          next: { revalidate, tags },
+          // Сирий fetch не кешуємо: Data Cache зберігав би будь-яку відповідь
+          // 200, у т.ч. часткову (AniList під навантаженням віддає 200 з
+          // errors або порожніми списками). Кешуємо вже перевірений результат
+          // — див. unstable_cache в anilistQuery.
+          cache: "no-store",
           signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
         });
       } catch (error) {
@@ -46,8 +55,9 @@ export async function anilistQuery<T>(
 
       const body = (await response.json().catch(() => null)) as GraphQLResponse<T> | null;
 
-      if (!response.ok || !body?.data) {
-        const status = response.ok ? (body?.errors?.[0]?.status ?? 500) : response.status;
+      // Часткова відповідь (data + errors) — теж збій, а не "майже успіх".
+      if (!response.ok || !body?.data || body.errors?.length) {
+        const status = response.ok ? (body?.errors?.[0]?.status ?? 503) : response.status;
         throw new ApiError(
           body?.errors?.[0]?.message ?? `AniList ${response.status}`,
           status,
@@ -55,8 +65,30 @@ export async function anilistQuery<T>(
         );
       }
 
+      if (validate && !validate(body.data)) {
+        // 503 — щоб withRetry спробував ще раз.
+        throw new ApiError("AniList returned an incomplete response", 503);
+      }
+
       return body.data;
     },
     { retries: 2, baseDelayMs: 700 },
   );
+}
+
+// unstable_cache кешує лише успішно повернутий результат: якщо запит упав або
+// не пройшов перевірку, в кеш нічого не пишеться і наступний відвідувач
+// отримає свіжу спробу, а не "залиплу" порожню полицю на 10 хвилин.
+// Ключ — текст запиту + змінні, тож однакові запити діляться одним записом.
+export async function anilistQuery<T>(
+  query: string,
+  variables: Record<string, unknown>,
+  { revalidate, tags, validate }: QueryOptions<T>,
+): Promise<T> {
+  const cached = unstable_cache(
+    () => requestAniList<T>(query, variables, validate),
+    ["anilist", query, JSON.stringify(variables)],
+    { revalidate, tags },
+  );
+  return cached();
 }

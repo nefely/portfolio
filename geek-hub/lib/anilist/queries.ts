@@ -1,11 +1,18 @@
 import "server-only";
 
 import { cache } from "react";
-import type { AnimeCard, AnimeDetails, AnimePage, GenreGroups } from "@/types/anime";
+import type { AnimeCard, AnimeDetails, AnimePage, GenreGroups, RandomPick } from "@/types/anime";
 import { toAniListVariables, type AnimeFilters } from "@/lib/anime/filters";
 import { ApiError } from "@/lib/api/retry";
 import { anilistQuery, REVALIDATE } from "./client";
-import { toAnimeCard, toAnimeDetails, toAnimePage, toGenreGroups, uniqueById } from "./mappers";
+import {
+  cleanDescription,
+  toAnimeCard,
+  toAnimeDetails,
+  toAnimePage,
+  toGenreGroups,
+  uniqueById,
+} from "./mappers";
 import { buildSearchQuery } from "./searchQuery";
 import { searchPrefixIndex, tokenize, type PrefixIndexEntry } from "./prefixSearch";
 import type { AniListMediaCard, AniListMediaFull, AniListPage, AniListTag } from "./types";
@@ -125,7 +132,8 @@ async function getPrefixIndex(): Promise<PrefixIndexEntry[]> {
           anilistQuery<{ Page: { media: IndexMedia[] } }>(
             INDEX_QUERY,
             { page: start + offset },
-            { revalidate: REVALIDATE.long },
+            // Порожня сторінка індексу — збій, а не кінець списку (їх 20 по 50).
+            { revalidate: REVALIDATE.long, validate: (result) => result.Page.media.length > 0 },
           ).then((data) => data.Page.media),
         ),
       );
@@ -171,6 +179,8 @@ export const getHomeShelves = cache(async (): Promise<Record<HomeShelf, AnimeCar
     currentSeason(),
     {
       revalidate: REVALIDATE.short,
+      // Порожня полиця = збійна відповідь AniList: не кешуємо, пробуємо ще раз.
+      validate: (result) => Object.values(result).every((shelf) => shelf?.media?.length > 0),
     },
   );
   const toCards = (shelf: HomeShelf) => uniqueById(data[shelf].media.map(toAnimeCard));
@@ -241,6 +251,59 @@ export const getAnimeById = cache(async (id: number): Promise<AnimeDetails | nul
     throw error;
   }
 });
+
+// ---------------------------------------------------------------------------
+// Випадковий тайтл ("Random pick" на головній)
+// ---------------------------------------------------------------------------
+
+// Пул: ~1200 найпопулярніших тайтлів з оцінкою від 7 — щоб випадало щось
+// варте перегляду, а не забутий спешл. Випадковий номер сторінки при
+// perPage: 1 = випадковий тайтл; кожна сторінка кешується на тиждень, тож
+// повторні випадіння не ходять в AniList.
+const RANDOM_POOL_SIZE = 1200;
+
+const RANDOM_QUERY = `
+  query Random($page: Int) {
+    Page(page: $page, perPage: 1) {
+      media(type: ANIME, isAdult: false, sort: [POPULARITY_DESC], averageScore_greater: 69) {
+        ${CARD_FIELDS}
+        bannerImage
+        description(asHtml: false)
+        genres
+      }
+    }
+  }
+`;
+
+type RandomMedia = AniListMediaCard & {
+  bannerImage: string | null;
+  description: string | null;
+  genres: string[];
+};
+
+export async function getRandomAnime(excludeId?: number): Promise<RandomPick | null> {
+  // Дві спроби: щоб не випав той самий тайтл, що зараз на екрані.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const page = 1 + Math.floor(Math.random() * RANDOM_POOL_SIZE);
+    const data = await anilistQuery<{ Page: { media: RandomMedia[] } }>(
+      RANDOM_QUERY,
+      { page },
+      { revalidate: REVALIDATE.long, validate: (result) => result.Page.media.length > 0 },
+    );
+    const media = data.Page.media[0];
+    if (!media || media.id === excludeId) continue;
+    const synopsis = cleanDescription(media.description);
+    return {
+      ...toAnimeCard(media),
+      banner: media.bannerImage,
+      // Повний опис не потрібен — картка показує 3 рядки.
+      synopsis:
+        synopsis && synopsis.length > 400 ? `${synopsis.slice(0, 400).trimEnd()}…` : synopsis,
+      genres: media.genres.filter((genre) => genre !== "Hentai").slice(0, 4),
+    };
+  }
+  return null;
+}
 
 const GENRES_QUERY = `
   query Genres {

@@ -1,55 +1,44 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Mousewheel } from "swiper/modules";
+import type { Swiper as SwiperInstance } from "swiper";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import "swiper/css";
+import "swiper/css/free-mode";
 
 interface ShelfScrollerProps {
-  children: ReactNode;
+  // Елементи полиці — кожен стає окремим слайдом.
+  items: { key: string | number; node: ReactNode }[];
   // Заголовок і посилання полиці — стрілки стоять поруч із ними.
   header: ReactNode;
 }
 
-// Горизонтальна полиця: нативний scroll-snap (свайп на тачскріні/тачпаді) +
-// стрілки для миші, яка інакше не вміє гортати вбік. Колесо не перехоплюємо,
-// щоб не ламати вертикальну прокрутку сторінки.
-export function ShelfScroller({ children, header }: ShelfScrollerProps) {
-  const trackRef = useRef<HTMLDivElement>(null);
+// Горизонтальна полиця на Swiper: перетягування мишкою з інерцією (freeMode),
+// свайп на тачскріні, горизонтальний жест тачпада (Mousewheel + forceToAxis —
+// звичайне вертикальне колесо НЕ перехоплюється й гортає сторінку).
+// Підключено лише ядро і два модулі — без навігації/пагінації Swiper.
+export function ShelfScroller({ items, header }: ShelfScrollerProps) {
+  const swiperRef = useRef<SwiperInstance | null>(null);
   const [edges, setEdges] = useState({ start: true, end: false });
 
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
+  // Swiper шле progress на кожен кадр руху — оновлюємо стан, лише коли межа
+  // справді змінилась, тож зайвих рендерів немає.
+  const syncEdges = (swiper: SwiperInstance) => {
+    const start = swiper.isBeginning;
+    const end = swiper.isEnd;
+    setEdges((prev) => (prev.start === start && prev.end === end ? prev : { start, end }));
+  };
 
-    let frame = 0;
-    // scroll стріляє десятки разів на секунду — рахуємо раз на кадр і
-    // оновлюємо стан, лише коли межа справді змінилась (без зайвих рендерів).
-    const update = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const start = track.scrollLeft <= 4;
-        const end = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
-        setEdges((prev) => (prev.start === start && prev.end === end ? prev : { start, end }));
-      });
-    };
-
-    update();
-    track.addEventListener("scroll", update, { passive: true });
-    const observer = new ResizeObserver(update);
-    observer.observe(track);
-    return () => {
-      cancelAnimationFrame(frame);
-      track.removeEventListener("scroll", update);
-      observer.disconnect();
-    };
-  }, []);
-
-  const scrollByPage = (direction: 1 | -1) => {
-    const track = trackRef.current;
-    if (!track) return;
-    // Майже ціла видима ширина — одна картка лишається для орієнтиру.
-    track.scrollBy({ left: direction * track.clientWidth * 0.85, behavior: "smooth" });
+  // Стрілки гортають на кількість видимих карток (одна лишається для орієнтиру).
+  const page = (direction: 1 | -1) => {
+    const swiper = swiperRef.current;
+    if (!swiper) return;
+    const visible = Math.max(1, Math.floor(swiper.slidesPerViewDynamic()) - 1);
+    swiper.slideTo(Math.max(0, swiper.activeIndex + direction * visible));
   };
 
   return (
@@ -62,7 +51,7 @@ export function ShelfScroller({ children, header }: ShelfScrollerProps) {
             size="icon-sm"
             aria-label="Scroll left"
             disabled={edges.start}
-            onClick={() => scrollByPage(-1)}
+            onClick={() => page(-1)}
           >
             <ChevronLeft />
           </Button>
@@ -71,36 +60,51 @@ export function ShelfScroller({ children, header }: ShelfScrollerProps) {
             size="icon-sm"
             aria-label="Scroll right"
             disabled={edges.end}
-            onClick={() => scrollByPage(1)}
+            onClick={() => page(1)}
           >
             <ChevronRight />
           </Button>
         </div>
       </div>
+
       <div className="relative -mx-4 sm:-mx-6">
-        {/* overflow-x-auto робить і вертикаль прокручуваною (за специфікацією
-            CSS), а зсув картки при появі давав переповнення вниз — рядок
-            скролився по вертикалі. Звідси явний overflow-y-hidden і вертикальні
-            відступи, щоб рамки й тіні карток не обрізались. overscroll-x-contain:
-            свайп полиці не вмикає жест "назад" у браузері. */}
-        <div
-          ref={trackRef}
-          className="scrollbar-none flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-4 pt-1 pb-3 sm:scroll-px-6 sm:px-6"
+        {/* Відступи країв і між картками — CSS (padding контейнера, pr слайда),
+            а не slidesOffset/spaceBetween: ті ставить JS, і до гідратації картки
+            стояли б упритул, а потім "стрибали". Вертикальний padding — щоб
+            рамки й зсув анімації появи не обрізались overflow: hidden. */}
+        <Swiper
+          modules={[FreeMode, Mousewheel]}
+          slidesPerView="auto"
+          freeMode={{ enabled: true, momentumRatio: 0.6 }}
+          mousewheel={{ forceToAxis: true }}
+          grabCursor
+          watchOverflow
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+            syncEdges(swiper);
+          }}
+          onProgress={syncEdges}
+          onResize={syncEdges}
+          className="px-4! pt-1! pb-3! sm:px-6!"
         >
-          {children}
-        </div>
+          {items.map(({ key, node }) => (
+            <SwiperSlide key={key} className="w-auto! pr-4">
+              {node}
+            </SwiperSlide>
+          ))}
+        </Swiper>
         {/* Затемнення країв підказує, що далі є ще картки. */}
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-y-0 left-0 w-12 bg-linear-to-r from-background to-transparent transition-opacity",
+            "pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-linear-to-r from-background to-transparent transition-opacity",
             edges.start && "opacity-0",
           )}
         />
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-y-0 right-0 w-12 bg-linear-to-l from-background to-transparent transition-opacity",
+            "pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-linear-to-l from-background to-transparent transition-opacity",
             edges.end && "opacity-0",
           )}
         />

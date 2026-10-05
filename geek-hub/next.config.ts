@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "s4.anilist.co" },
       { protocol: "https", hostname: "img.youtube.com" },
     ],
+    // Next 16 приймає лише перелічені рівні якості: 30 — розмитий фон hero
+    // тайтлу, 60 — банер, 75 — решта (за замовчуванням).
+    qualities: [30, 60, 75],
     // Постери не змінюються — довгий TTL оптимізованих картинок економить ресайзи.
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },

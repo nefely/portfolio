@@ -1,9 +1,11 @@
-import { Suspense } from "react";
+import { Fragment, Suspense } from "react";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { AnimeShelf, AnimeShelfError, AnimeShelfSkeleton } from "@/components/anime/AnimeShelf";
 import { HeroSecondaryCta } from "@/components/home/HeroSecondaryCta";
+import { HeroCollage } from "@/components/home/HeroCollage";
+import { RandomPick } from "@/components/home/RandomPick";
 import { currentSeason, getHomeShelves, type HomeShelf } from "@/lib/anilist/queries";
 
 // ISR: сторінка статична й перебудовується у фоні раз на 10 хвилин —
@@ -54,13 +56,17 @@ async function Shelves({ shelves }: { shelves: ShelfConfig[] }) {
   // Збій AniList ловимо на рівні даних: замість полиць — заглушки, решта
   // сторінки рендериться нормально.
   const data = await getHomeShelves().catch(() => null);
-  return shelves.map(({ shelf, title, href }) =>
-    data ? (
-      <AnimeShelf key={shelf} title={title} href={href} items={data[shelf]} />
-    ) : (
-      <AnimeShelfError key={shelf} title={title} />
-    ),
-  );
+  return shelves.map(({ shelf, title, href }, index) => (
+    <Fragment key={shelf}>
+      {data ? (
+        <AnimeShelf title={title} href={href} items={data[shelf]} />
+      ) : (
+        <AnimeShelfError title={title} />
+      )}
+      {/* Випадковий тайтл — після першої полиці (клієнтський острівець). */}
+      {index === 0 && <RandomPick />}
+    </Fragment>
+  ));
 }
 
 function Hero() {
@@ -70,7 +76,7 @@ function Hero() {
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_20%_0%,oklch(0.77_0.13_220/0.22),transparent),radial-gradient(50%_50%_at_90%_10%,oklch(0.68_0.21_345/0.14),transparent)]"
       />
-      <div className="relative mx-auto max-w-7xl px-4 pt-16 pb-14 sm:px-6 sm:pt-24 sm:pb-20">
+      <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-10 px-4 pt-16 pb-14 sm:px-6 sm:pt-24 sm:pb-20">
         {/* Каскадна поява на CSS (rise-in у globals.css) — без JS, не чекає гідратації. */}
         <div className="max-w-2xl space-y-6">
           <span className="inline-flex rise-in items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
@@ -96,6 +102,11 @@ function Hero() {
             <HeroSecondaryCta />
           </div>
         </div>
+        {/* Окремий Suspense: заголовок не чекає на дані постерів. Заглушка того
+            ж розміру — щоб макет не зсувався, коли віяло з'явиться. */}
+        <Suspense fallback={<div className="hidden h-90 w-110 shrink-0 lg:block" />}>
+          <HeroCollage />
+        </Suspense>
       </div>
     </section>
   );
