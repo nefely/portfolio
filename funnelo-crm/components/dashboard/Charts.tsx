@@ -1,5 +1,7 @@
 "use client";
 
+import { m, useReducedMotion } from "motion/react";
+import { EASE_OUT } from "@/components/motion/AnimatedNumber";
 import { formatMoney, formatMoneyCompact, formatMonth } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Dashboard } from "@/types/crm";
@@ -8,6 +10,21 @@ import type { Dashboard } from "@/types/crm";
 // кілька етапів), кольори беруться з токенів теми (світла/темна без
 // дублювання), а hover-підказка — CSS group-hover. Для скрінрідерів кожен
 // графік дублюється прихованою таблицею.
+//
+// Анімація (Motion): при першій появі стовпчики виростають знизу по черзі,
+// смуги розтягуються зліва; при зміні даних (Team ↔ My numbers) — плавно
+// перетікають до нових значень. prefers-reduced-motion — без анімації.
+
+/** Параметри анімації розміру: на старті — від нуля зі зсувом за індексом. */
+function useGrow(index: number) {
+  const reduceMotion = useReducedMotion();
+  return {
+    reduceMotion,
+    transition: reduceMotion
+      ? { duration: 0 }
+      : { duration: 0.7, ease: EASE_OUT, delay: Math.min(index * 0.04, 0.4) },
+  };
+}
 
 /** Виграна виручка по місяцях — одна серія, тож без легенди: її називає заголовок. */
 export function MonthlyWonChart({ months }: { months: Dashboard["monthly"] }) {
@@ -40,7 +57,7 @@ export function MonthlyWonChart({ months }: { months: Dashboard["monthly"] }) {
         ))}
 
         <div className="absolute inset-y-0 right-0 left-12 flex items-end gap-1.5" aria-hidden>
-          {months.map((month) => {
+          {months.map((month, index) => {
             const height = (month.won_value / max) * 100;
             return (
               <div
@@ -48,20 +65,16 @@ export function MonthlyWonChart({ months }: { months: Dashboard["monthly"] }) {
                 className="group/bar relative flex h-full flex-1 items-end justify-center"
               >
                 {/* Зона наведення — уся колонка, а не лише сам стовпчик. */}
-                <div
+                <Bar
+                  index={index}
+                  height={Math.max(height, month.won_value > 0 ? 1.5 : 0)}
                   className={cn(
                     "w-full max-w-9 rounded-t-[4px] bg-primary/85 transition-colors group-hover/bar:bg-primary",
                     month.month !== current?.month && "bg-primary/55",
                   )}
-                  style={{ height: `${Math.max(height, month.won_value > 0 ? 1.5 : 0)}%` }}
                 />
                 {labelled.has(month.month) && month.won_value > 0 && (
-                  <span
-                    className="absolute text-[10px] font-medium text-muted-foreground tabular-nums group-hover/bar:opacity-0"
-                    style={{ bottom: `calc(${height}% + 4px)` }}
-                  >
-                    {formatMoneyCompact(month.won_value)}
-                  </span>
+                  <BarLabel bottom={height}>{formatMoneyCompact(month.won_value)}</BarLabel>
                 )}
                 <div className="pointer-events-none absolute bottom-full z-10 mb-1 hidden min-w-32 rounded-md border bg-popover px-2.5 py-1.5 text-xs shadow-md group-hover/bar:block">
                   <p className="font-medium">
@@ -121,7 +134,7 @@ export function PipelineByStage({ stages }: { stages: Dashboard["by_stage"] }) {
 
   return (
     <div className="space-y-3">
-      {open.map((stage) => (
+      {open.map((stage, index) => (
         <div key={stage.stage_id} className="space-y-1.5">
           <div className="flex items-baseline justify-between gap-2 text-sm">
             <span className="font-medium">{stage.name}</span>
@@ -130,14 +143,70 @@ export function PipelineByStage({ stages }: { stages: Dashboard["by_stage"] }) {
               <span className="font-medium text-foreground">{formatMoneyCompact(stage.value)}</span>
             </span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full rounded-full"
-              style={{ width: `${(stage.value / max) * 100}%`, backgroundColor: stage.color }}
-            />
-          </div>
+          <HorizontalBar
+            index={index}
+            percent={(stage.value / max) * 100}
+            className="h-2"
+            fillStyle={{ backgroundColor: stage.color }}
+          />
         </div>
       ))}
+    </div>
+  );
+}
+
+/** Вертикальний стовпчик, що виростає знизу (висота у % від колонки). */
+function Bar({ index, height, className }: { index: number; height: number; className: string }) {
+  const { reduceMotion, transition } = useGrow(index);
+  return (
+    <m.div
+      className={className}
+      initial={reduceMotion ? false : { height: "0%" }}
+      animate={{ height: `${height}%` }}
+      transition={transition}
+    />
+  );
+}
+
+/** Підпис над стовпчиком з'являється, коли стовпчик уже виріс. */
+function BarLabel({ bottom, children }: { bottom: number; children: React.ReactNode }) {
+  const reduceMotion = useReducedMotion();
+  return (
+    <m.span
+      className="absolute text-[10px] font-medium text-muted-foreground tabular-nums group-hover/bar:opacity-0"
+      initial={reduceMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1, bottom: `calc(${bottom}% + 4px)` }}
+      transition={reduceMotion ? { duration: 0 } : { duration: 0.7, ease: EASE_OUT, delay: 0.5 }}
+    >
+      {children}
+    </m.span>
+  );
+}
+
+/** Горизонтальна смуга, що розтягується зліва (воронка, лідерборд). */
+export function HorizontalBar({
+  index,
+  percent,
+  className,
+  fillClassName,
+  fillStyle,
+}: {
+  index: number;
+  percent: number;
+  className?: string;
+  fillClassName?: string;
+  fillStyle?: React.CSSProperties;
+}) {
+  const { reduceMotion, transition } = useGrow(index);
+  return (
+    <div className={cn("overflow-hidden rounded-full bg-muted", className)}>
+      <m.div
+        className={cn("h-full rounded-full", fillClassName)}
+        style={fillStyle}
+        initial={reduceMotion ? false : { width: "0%" }}
+        animate={{ width: `${percent}%` }}
+        transition={transition}
+      />
     </div>
   );
 }

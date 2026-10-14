@@ -74,11 +74,24 @@ export function ActivitiesView() {
       </div>
 
       {isPending ? (
-        <div className="space-y-3 rounded-xl border bg-card p-4">
-          {Array.from({ length: 5 }, (_, index) => (
-            <Skeleton key={index} className="h-12" />
-          ))}
-        </div>
+        // Та сама форма, що й група з ActivityItem: шапка + рядки з іконкою.
+        <section aria-busy aria-label="Loading activities" className="rounded-xl border bg-card">
+          <div className="flex items-center gap-2 border-b px-4 py-2.5">
+            <Skeleton className="h-4 w-16" />
+            <Skeleton className="h-3 w-4" />
+          </div>
+          <div className="divide-y px-4">
+            {Array.from({ length: 6 }, (_, index) => (
+              <div key={index} className="flex gap-3 py-3">
+                <Skeleton className="size-8 shrink-0 rounded-full" />
+                <div className="flex-1 space-y-2 pt-1">
+                  <Skeleton className="h-4" style={{ width: `${62 - (index % 3) * 12}%` }} />
+                  <Skeleton className="h-3 w-2/5" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       ) : data?.length === 0 ? (
         <EmptyState
           icon={<CalendarCheck />}

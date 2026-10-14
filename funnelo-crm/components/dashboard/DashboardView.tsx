@@ -4,6 +4,8 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowDownRight, ArrowUpRight, CalendarCheck } from "lucide-react";
+import { m, useReducedMotion } from "motion/react";
+import { AnimatedNumber, EASE_OUT } from "@/components/motion/AnimatedNumber";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ActivityItem } from "@/components/activities/ActivityItem";
@@ -13,7 +15,7 @@ import { useMe } from "@/components/providers/MeProvider";
 import { formatMoney, formatMoneyCompact } from "@/lib/format";
 import { dashboardOptions, dueTodayOptions } from "@/lib/query/options";
 import { cn } from "@/lib/utils";
-import { MonthlyWonChart, PipelineByStage } from "./Charts";
+import { HorizontalBar, MonthlyWonChart, PipelineByStage } from "./Charts";
 
 export function DashboardView() {
   const me = useMe();
@@ -44,23 +46,31 @@ export function DashboardView() {
         <>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <Kpi
+              index={0}
               label="Open pipeline"
-              value={formatMoney(data.open_value)}
+              value={data.open_value}
+              format={formatMoney}
               hint={`${data.open_count} open deals`}
             />
             <Kpi
+              index={1}
               label="Weighted forecast"
-              value={formatMoney(data.weighted_value)}
+              value={data.weighted_value}
+              format={formatMoney}
               hint="Value × stage probability"
             />
             <Kpi
+              index={2}
               label="Won this month"
-              value={formatMoney(data.won_this_month)}
+              value={data.won_this_month}
+              format={formatMoney}
               trend={trend(data.won_this_month, data.won_last_month)}
             />
             <Kpi
+              index={3}
               label="Win rate · 90 days"
-              value={data.win_rate_90d === null ? "—" : `${data.win_rate_90d}%`}
+              value={data.win_rate_90d}
+              format={formatPercent}
               hint={
                 data.avg_won_value_90d === null
                   ? "No closed deals yet"
@@ -99,7 +109,7 @@ export function DashboardView() {
           }
         >
           {duePending ? (
-            <Skeleton className="h-24" />
+            <ListSkeleton rows={3} />
           ) : due.length === 0 ? (
             <div className="flex flex-col items-center gap-2 py-6 text-center text-sm text-muted-foreground">
               <CalendarCheck className="size-6" />
@@ -116,7 +126,7 @@ export function DashboardView() {
 
         <Panel title="Leaderboard" subtitle="Won in the last 90 days">
           {!data ? (
-            <Skeleton className="h-40" />
+            <LeaderboardSkeleton />
           ) : (
             <ol className="space-y-3">
               {data.leaderboard.map((rep, index) => {
@@ -140,12 +150,12 @@ export function DashboardView() {
                         {formatMoneyCompact(rep.won_value)}
                       </span>
                     </div>
-                    <div className="ml-6 h-1.5 overflow-hidden rounded-full bg-muted">
-                      <div
-                        className="h-full rounded-full bg-primary/70"
-                        style={{ width: `${(rep.won_value / top) * 100}%` }}
-                      />
-                    </div>
+                    <HorizontalBar
+                      index={index}
+                      percent={(rep.won_value / top) * 100}
+                      className="ml-6 h-1.5"
+                      fillClassName="bg-primary/70"
+                    />
                   </li>
                 );
               })}
@@ -162,21 +172,35 @@ function trend(current: number, previous: number) {
   return Math.round(((current - previous) / previous) * 100);
 }
 
+const formatPercent = (value: number) => `${Math.round(value * 10) / 10}%`;
+
 function Kpi({
+  index,
   label,
   value,
+  format,
   hint,
   trend,
 }: {
+  index: number;
   label: string;
-  value: string;
+  value: number | null;
+  format: (value: number) => string;
   hint?: string;
   trend?: number | null;
 }) {
+  const reduceMotion = useReducedMotion();
   return (
-    <div className="rounded-xl border bg-card px-4 py-3.5">
+    <m.div
+      className="rounded-xl border bg-card px-4 py-3.5"
+      initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: EASE_OUT, delay: index * 0.06 }}
+    >
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <p className="mt-1.5 text-2xl font-semibold tracking-tight tabular-nums">{value}</p>
+      <p className="mt-1.5 text-2xl font-semibold tracking-tight tabular-nums">
+        {value === null ? "—" : <AnimatedNumber value={value} format={format} />}
+      </p>
       {trend !== undefined && trend !== null ? (
         <p
           className={cn(
@@ -194,7 +218,7 @@ function Kpi({
       ) : (
         <p className="mt-0.5 text-xs text-muted-foreground">{hint ?? "No data for last month"}</p>
       )}
-    </div>
+    </m.div>
   );
 }
 
@@ -223,18 +247,96 @@ function Panel({
   );
 }
 
+// Скелетони повторюють справжню розкладку (ті самі картки, панелі й висоти),
+// тож коли приходять дані, нічого не зсувається — лише заглушки змінюються
+// вмістом. Заголовки панелей статичні, тому показуються одразу.
+
+/** Висоти стовпчиків-заглушок: "схожі на графік", а не однакові бруски. */
+const SKELETON_BARS = [38, 52, 30, 64, 45, 72, 50, 58, 34, 80, 62, 46];
+
 function DashboardSkeleton() {
   return (
-    <>
+    <div aria-busy aria-label="Loading dashboard" className="space-y-6">
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 4 }, (_, index) => (
-          <Skeleton key={index} className="h-24 rounded-xl" />
+          <div key={index} className="rounded-xl border bg-card px-4 py-3.5">
+            <Skeleton className="h-3 w-24" />
+            <Skeleton className="mt-3 h-7 w-36" />
+            <Skeleton className="mt-2 h-3 w-28" />
+          </div>
         ))}
       </div>
+
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
-        <Skeleton className="h-72 rounded-xl" />
-        <Skeleton className="h-72 rounded-xl" />
+        <Panel title="Won revenue" subtitle="Last 12 months">
+          <div className="mt-5 flex h-52 items-end gap-1.5 pl-12">
+            {SKELETON_BARS.map((height, index) => (
+              <div key={index} className="flex h-full flex-1 items-end justify-center">
+                <Skeleton
+                  className="w-full max-w-9 rounded-b-none"
+                  style={{ height: `${height}%` }}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="mt-2 ml-12 flex gap-1.5">
+            {SKELETON_BARS.map((_, index) => (
+              <div key={index} className="flex flex-1 justify-center">
+                <Skeleton className="h-2.5 w-5" />
+              </div>
+            ))}
+          </div>
+        </Panel>
+
+        <Panel title="Pipeline by stage" subtitle="Open deals">
+          <div className="space-y-3">
+            {Array.from({ length: 4 }, (_, index) => (
+              <div key={index} className="space-y-1.5">
+                <div className="flex justify-between">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+                <Skeleton className="h-2 rounded-full" />
+              </div>
+            ))}
+          </div>
+        </Panel>
       </div>
-    </>
+    </div>
+  );
+}
+
+function LeaderboardSkeleton() {
+  return (
+    <div className="space-y-3">
+      {Array.from({ length: 5 }, (_, index) => (
+        <div key={index} className="space-y-1.5">
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-3 w-3" />
+            <Skeleton className="size-5 rounded-full" />
+            <Skeleton className="h-4 flex-1" />
+            <Skeleton className="h-4 w-12" />
+          </div>
+          <Skeleton className="ml-6 h-1.5 rounded-full" style={{ width: `${90 - index * 15}%` }} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Рядки на кшталт ActivityItem: іконка-кружок, заголовок, мета-рядок. */
+function ListSkeleton({ rows }: { rows: number }) {
+  return (
+    <div className="-my-3 divide-y">
+      {Array.from({ length: rows }, (_, index) => (
+        <div key={index} className="flex gap-3 py-3">
+          <Skeleton className="size-8 shrink-0 rounded-full" />
+          <div className="flex-1 space-y-2 pt-1">
+            <Skeleton className="h-4" style={{ width: `${70 - index * 12}%` }} />
+            <Skeleton className="h-3 w-1/2" />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

@@ -145,8 +145,9 @@
 }
 
 /* Скелетон із "відблиском" замість пульсації: рух у background-position не
-   чіпає layout. */
-@keyframes shimmer {
+   чіпає layout. Назва не "shimmer": shadcn/tailwind.css має власну утиліту
+   .shimmer (мерехтливий текст), яка робила б заглушку прозорою. */
+@keyframes skeleton-shimmer {
   from {
     background-position: 200% 0;
   }
@@ -155,7 +156,7 @@
   }
 }
 
-@utility shimmer {
+@utility skeleton-shimmer {
   background-image: linear-gradient(
     100deg,
     transparent 30%,
@@ -163,11 +164,11 @@
     transparent 70%
   );
   background-size: 200% 100%;
-  animation: shimmer 1.6s linear infinite;
+  animation: skeleton-shimmer 1.6s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shimmer {
+  .skeleton-shimmer {
     animation: none;
   }
 }

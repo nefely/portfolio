@@ -47,14 +47,56 @@ export function DetailRow({ label, children }: { label: string; children: ReactN
   );
 }
 
+/**
+ * Скелетон сторінки запису (угода / компанія / контакт): заголовок, мета-рядок,
+ * таймлайн ліворуч і картка деталей праворуч — та сама сітка, що й у вмісті.
+ */
 export function DetailSkeleton() {
   return (
-    <div className="space-y-6">
-      <Skeleton className="h-4 w-24" />
-      <Skeleton className="h-8 w-80" />
+    <div aria-busy aria-label="Loading" className="space-y-6">
+      <Skeleton className="h-4 w-20" />
+      <div className="space-y-2.5">
+        <Skeleton className="h-8 w-full max-w-md" />
+        <div className="flex gap-3">
+          <Skeleton className="h-5 w-20 rounded-full" />
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-5 w-28" />
+        </div>
+      </div>
+      <Skeleton className="h-10 rounded-lg" />
+
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-        <Skeleton className="h-96 rounded-xl" />
-        <Skeleton className="h-72 rounded-xl" />
+        <section className="rounded-xl border bg-card">
+          <div className="flex items-center justify-between border-b px-4 py-3">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-7 w-36" />
+          </div>
+          <div className="divide-y px-4">
+            {Array.from({ length: 4 }, (_, index) => (
+              <div key={index} className="flex gap-3 py-3">
+                <Skeleton className="size-8 shrink-0 rounded-full" />
+                <div className="flex-1 space-y-2 pt-1">
+                  <Skeleton className="h-4" style={{ width: `${68 - index * 10}%` }} />
+                  <Skeleton className="h-3 w-1/3" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-xl border bg-card">
+          <div className="border-b px-4 py-3">
+            <Skeleton className="h-5 w-16" />
+          </div>
+          <div className="space-y-3 px-4 py-4">
+            {Array.from({ length: 5 }, (_, index) => (
+              <div key={index} className="grid grid-cols-[7.5rem_1fr] gap-3">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4" style={{ width: `${80 - index * 9}%` }} />
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

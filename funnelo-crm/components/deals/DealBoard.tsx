@@ -294,15 +294,36 @@ function FinalZone({
   );
 }
 
+// Колонки й картки тієї ж форми, що й справжні (DealCard): назва, компанія,
+// сума й дата — під час завантаження дошка не "стрибає".
 function BoardSkeleton() {
   return (
-    <div className="flex gap-3 overflow-hidden">
+    <div aria-busy aria-label="Loading board" className="flex min-h-[60vh] gap-3 overflow-hidden">
       {Array.from({ length: 4 }, (_, column) => (
-        <div key={column} className="flex w-72 shrink-0 flex-col gap-2 rounded-xl bg-muted/50 p-2">
-          <Skeleton className="m-1 h-5 w-24" />
-          {Array.from({ length: 3 - (column % 2) }, (_, card) => (
-            <Skeleton key={card} className="h-24 rounded-lg" />
-          ))}
+        <div key={column} className="flex w-72 shrink-0 flex-col rounded-xl bg-muted/50">
+          <div className="flex items-center gap-2 border-t-2 border-muted px-3 pt-3 pb-2">
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-4 w-6 rounded-full" />
+            <Skeleton className="ml-auto h-3 w-12" />
+          </div>
+          <div className="flex flex-col gap-2 p-2">
+            {Array.from({ length: 4 - (column % 3) }, (_, card) => (
+              <div key={card} className="rounded-lg border bg-card p-3">
+                <div className="flex items-start justify-between gap-2">
+                  <Skeleton
+                    className="h-4"
+                    style={{ width: `${75 - ((column + card) % 3) * 12}%` }}
+                  />
+                  <Skeleton className="size-5 rounded-full" />
+                </div>
+                <Skeleton className="mt-2 h-3 w-1/2" />
+                <div className="mt-3 flex justify-between">
+                  <Skeleton className="h-3.5 w-16" />
+                  <Skeleton className="h-3.5 w-12" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ))}
     </div>
