@@ -1,0 +1,261 @@
+"use client";
+
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  type CollisionDetection,
+  DndContext,
+  type DragEndEvent,
+  type DragOverEvent,
+  DragOverlay,
+  type DragStartEvent,
+  KeyboardSensor,
+  MeasuringStrategy,
+  PointerSensor,
+  closestCorners,
+  pointerWithin,
+  useDroppable,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { AnimatePresence, m } from "motion/react";
+import { ThumbsDown, Trophy } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useMe } from "@/components/providers/MeProvider";
+import { useMoveDeal } from "@/hooks/useMoveDeal";
+import { useOpenStages, useStages, useTeamMap } from "@/hooks/useTeam";
+import {
+  type Columns,
+  buildColumns,
+  findColumn,
+  moveAcross,
+  positionInColumn,
+  reorderWithin,
+} from "@/lib/board";
+import { todayIso } from "@/lib/format";
+import { canEdit } from "@/lib/permissions";
+import { boardOptions } from "@/lib/query/options";
+import { cn } from "@/lib/utils";
+import type { DealRow } from "@/types/crm";
+import { BoardColumn } from "./BoardColumn";
+import { DealCard } from "./DealCard";
+import { type DealDefaults, DealFormDialog } from "./DealFormDialog";
+import { LostReasonDialog } from "./LostReasonDialog";
+
+const WON_ZONE = "zone:won";
+const LOST_ZONE = "zone:lost";
+
+// Зони Won/Lost маленькі й лежать поверх колонок — для них перевіряємо саме
+// курсор; для колонок і карток — найближчі кути (стабільніше між колонками).
+const collisionDetection: CollisionDetection = (args) => {
+  const zones = pointerWithin(args).filter(({ id }) => id === WON_ZONE || id === LOST_ZONE);
+  return zones.length > 0 ? zones : closestCorners(args);
+};
+
+type Filters = { search: string; ownerId: string };
+
+export function DealBoard({ filters }: { filters: Filters }) {
+  const me = useMe();
+  const team = useTeamMap();
+  const { data: stages = [] } = useStages();
+  const { data: openStages, isPending: stagesPending } = useOpenStages();
+  const { data: deals, isPending: dealsPending } = useQuery(boardOptions());
+  const moveDeal = useMoveDeal();
+  const [today] = useState(todayIso);
+
+  // Під час перетягування колонки живуть локально (щоб картка "їхала" між
+  // ними), після відпускання — знову з кешу.
+  const [drag, setDrag] = useState<{ activeId: string; columns: Columns } | null>(null);
+  const [creatingIn, setCreatingIn] = useState<DealDefaults | null>(null);
+  const [pendingLost, setPendingLost] = useState<{ deal: DealRow; position: number } | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  if (stagesPending || dealsPending || !openStages || !deals) return <BoardSkeleton />;
+
+  const query = filters.search.trim().toLowerCase();
+  const visible = deals.filter(
+    (deal) =>
+      (!filters.ownerId || deal.owner_id === filters.ownerId) &&
+      (!query ||
+        deal.title.toLowerCase().includes(query) ||
+        deal.company?.name.toLowerCase().includes(query)),
+  );
+  const byId = new Map(visible.map((deal) => [deal.id, deal]));
+  const columns = drag?.columns ?? buildColumns(visible, openStages);
+  const activeDeal = drag ? byId.get(drag.activeId) : undefined;
+  const wonStage = stages.find((stage) => stage.kind === "won");
+  const lostStage = stages.find((stage) => stage.kind === "lost");
+
+  function handleDragStart({ active }: DragStartEvent) {
+    setDrag({ activeId: String(active.id), columns: buildColumns(visible, openStages ?? []) });
+  }
+
+  function handleDragOver({ active, over }: DragOverEvent) {
+    if (!drag || !over || over.id === WON_ZONE || over.id === LOST_ZONE) return;
+    const next = moveAcross(drag.columns, String(active.id), String(over.id));
+    if (next !== drag.columns) setDrag({ ...drag, columns: next });
+  }
+
+  function handleDragEnd({ active, over }: DragEndEvent) {
+    const current = drag;
+    setDrag(null);
+    if (!current || !over) return;
+
+    const deal = byId.get(String(active.id));
+    if (!deal) return;
+    const positions = new Map(visible.map((item) => [item.id, item.position]));
+
+    if (over.id === WON_ZONE && wonStage) {
+      moveDeal.mutate({ id: deal.id, stageId: wonStage.id, kind: "won", position: deal.position });
+      return;
+    }
+    if (over.id === LOST_ZONE && lostStage) {
+      setPendingLost({ deal, position: deal.position });
+      return;
+    }
+
+    const finalColumns = reorderWithin(current.columns, deal.id, String(over.id));
+    const stageId = findColumn(finalColumns, deal.id);
+    if (!stageId) return;
+
+    const position = positionInColumn(finalColumns[stageId], deal.id, positions);
+    if (stageId === deal.stage_id && position === deal.position) return;
+    moveDeal.mutate({ id: deal.id, stageId, kind: "open", position });
+  }
+
+  return (
+    <>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={collisionDetection}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+        onDragCancel={() => setDrag(null)}
+        // Зони Won/Lost з'являються вже після старту drag (і ще анімуються) —
+        // без постійного вимірювання dnd-kit не знав би їхніх координат.
+        measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+      >
+        <div className="-mx-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <div className="flex min-h-[60vh] gap-3">
+            {openStages.map((stage) => (
+              <BoardColumn
+                key={stage.id}
+                stage={stage}
+                deals={(columns[stage.id] ?? []).flatMap((id) => byId.get(id) ?? [])}
+                team={team}
+                today={today}
+                canMove={(deal) => canEdit(me, deal.owner_id)}
+                onAdd={() => setCreatingIn({ stage_id: stage.id })}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Центрування — на обгортці, анімація — на внутрішньому елементі,
+            щоб transform від Motion не перетер translate-x. */}
+        <div className="pointer-events-none fixed inset-x-0 bottom-6 z-40 flex justify-center px-4 lg:pl-60">
+          <AnimatePresence>
+            {drag && (
+              <m.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 24 }}
+                transition={{ duration: 0.15 }}
+                className="pointer-events-auto grid w-full max-w-md grid-cols-2 gap-3"
+              >
+                <FinalZone id={WON_ZONE} label="Won" icon={<Trophy />} tone="success" />
+                <FinalZone id={LOST_ZONE} label="Lost" icon={<ThumbsDown />} tone="destructive" />
+              </m.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <DragOverlay dropAnimation={{ duration: 180, easing: "cubic-bezier(0.2, 0, 0, 1)" }}>
+          {activeDeal && (
+            <DealCard
+              deal={activeDeal}
+              owner={activeDeal.owner_id ? team?.get(activeDeal.owner_id) : undefined}
+              today={today}
+              overlay
+            />
+          )}
+        </DragOverlay>
+      </DndContext>
+
+      <DealFormDialog
+        open={creatingIn !== null}
+        onOpenChange={(open) => !open && setCreatingIn(null)}
+        defaults={creatingIn ?? undefined}
+      />
+
+      <LostReasonDialog
+        dealTitle={pendingLost?.deal.title ?? null}
+        onCancel={() => setPendingLost(null)}
+        onConfirm={(reason) => {
+          if (pendingLost && lostStage) {
+            moveDeal.mutate({
+              id: pendingLost.deal.id,
+              stageId: lostStage.id,
+              kind: "lost",
+              position: pendingLost.position,
+              lostReason: reason,
+            });
+          }
+          setPendingLost(null);
+        }}
+      />
+    </>
+  );
+}
+
+function FinalZone({
+  id,
+  label,
+  icon,
+  tone,
+}: {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  tone: "success" | "destructive";
+}) {
+  const { setNodeRef, isOver } = useDroppable({ id });
+  return (
+    <div
+      ref={setNodeRef}
+      className={cn(
+        "flex h-16 items-center justify-center gap-2 rounded-xl border-2 border-dashed bg-background/95 text-sm font-semibold shadow-lg backdrop-blur transition-colors [&_svg]:size-4",
+        tone === "success"
+          ? "border-success/50 text-success"
+          : "border-destructive/50 text-destructive",
+        isOver &&
+          (tone === "success"
+            ? "border-success bg-success/10"
+            : "border-destructive bg-destructive/10"),
+      )}
+    >
+      {icon} {label}
+    </div>
+  );
+}
+
+function BoardSkeleton() {
+  return (
+    <div className="flex gap-3 overflow-hidden">
+      {Array.from({ length: 4 }, (_, column) => (
+        <div key={column} className="flex w-72 shrink-0 flex-col gap-2 rounded-xl bg-muted/50 p-2">
+          <Skeleton className="m-1 h-5 w-24" />
+          {Array.from({ length: 3 - (column % 2) }, (_, card) => (
+            <Skeleton key={card} className="h-24 rounded-lg" />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
