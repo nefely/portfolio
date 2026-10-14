@@ -52,7 +52,7 @@ export function DealsView() {
     { value: "", label: "All owners" },
     { value: me.user_id, label: "My deals" },
     ...team
-      .filter((member) => member.user_id !== me.user_id)
+      .filter((member) => member.is_active && member.user_id !== me.user_id)
       .map((m) => ({ value: m.user_id, label: m.full_name })),
   ];
 
@@ -66,63 +66,8 @@ export function DealsView() {
             : "Every deal, open and closed."
         }
         actions={
-          <Tabs
-            value={isBoard ? "board" : "table"}
-            onValueChange={(view) => update({ view: String(view) })}
-          >
-            <TabsList>
-              <TabsTrigger value="board">
-                <KanbanSquare /> Board
-              </TabsTrigger>
-              <TabsTrigger value="table">
-                <Rows3 /> Table
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        }
-      />
-
-      <div className="flex flex-wrap items-center gap-2">
-        <SearchInput
-          value={params.search}
-          onChange={(search) => update({ search })}
-          placeholder={isBoard ? "Search deals or companies" : "Search deals"}
-        />
-        <SimpleSelect
-          value={params.ownerId}
-          onChange={(ownerId) => update({ ownerId })}
-          options={ownerOptions}
-          placeholder="All owners"
-          className="w-40"
-          size="sm"
-        />
-        {!isBoard && (
           <>
-            <SimpleSelect
-              value={listParams.status}
-              onChange={(status) => update({ status: status || "open" })}
-              options={[
-                { value: "open", label: "Open" },
-                { value: "won", label: "Won" },
-                { value: "lost", label: "Lost" },
-                { value: "all", label: "All statuses" },
-              ]}
-              placeholder="Status"
-              className="w-32"
-              size="sm"
-            />
-            <SimpleSelect
-              value={params.stageId}
-              onChange={(stageId) => update({ stageId })}
-              options={[
-                { value: "", label: "All stages" },
-                ...stages.map((s) => ({ value: s.id, label: s.name })),
-              ]}
-              placeholder="All stages"
-              className="w-36"
-              size="sm"
-            />
-            <div className="ml-auto">
+            {!isBoard && (
               <ExportButton
                 filename="deals"
                 fetchRows={async () =>
@@ -144,7 +89,61 @@ export function DealsView() {
                   { header: "Created at", value: (d) => d.created_at },
                 ]}
               />
-            </div>
+            )}
+            <Tabs
+              value={isBoard ? "board" : "table"}
+              onValueChange={(view) => update({ view: String(view) })}
+            >
+              <TabsList>
+                <TabsTrigger value="board">
+                  <KanbanSquare /> Board
+                </TabsTrigger>
+                <TabsTrigger value="table">
+                  <Rows3 /> Table
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </>
+        }
+      />
+
+      <div className="flex flex-wrap items-center gap-2">
+        <SearchInput
+          value={params.search}
+          onChange={(search) => update({ search })}
+          placeholder={isBoard ? "Search deals or companies" : "Search deals"}
+        />
+        <SimpleSelect
+          value={params.ownerId}
+          onChange={(ownerId) => update({ ownerId })}
+          options={ownerOptions}
+          placeholder="All owners"
+          className="min-w-0 flex-1 sm:w-40 sm:flex-none"
+        />
+        {!isBoard && (
+          <>
+            <SimpleSelect
+              value={listParams.status}
+              onChange={(status) => update({ status: status || "open" })}
+              options={[
+                { value: "open", label: "Open" },
+                { value: "won", label: "Won" },
+                { value: "lost", label: "Lost" },
+                { value: "all", label: "All statuses" },
+              ]}
+              placeholder="Status"
+              className="min-w-0 flex-1 sm:w-32 sm:flex-none"
+            />
+            <SimpleSelect
+              value={params.stageId}
+              onChange={(stageId) => update({ stageId })}
+              options={[
+                { value: "", label: "All stages" },
+                ...stages.map((s) => ({ value: s.id, label: s.name })),
+              ]}
+              placeholder="All stages"
+              className="min-w-0 flex-1 sm:w-36 sm:flex-none"
+            />
           </>
         )}
       </div>

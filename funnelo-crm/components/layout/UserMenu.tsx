@@ -7,7 +7,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -35,13 +34,15 @@ export function UserMenu() {
         <PersonAvatar person={me} size="md" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-60">
-        <DropdownMenuLabel className="space-y-0.5 px-2 py-1.5">
+        {/* Шапка меню — звичайний div: DropdownMenuLabel (base-ui GroupLabel)
+            працює лише всередині Menu.Group і без неї падає. */}
+        <div className="space-y-0.5 px-2 py-1.5 text-xs text-muted-foreground">
           <span className="block text-sm font-medium text-foreground">{me.full_name}</span>
-          <span className="block truncate font-normal">{me.email}</span>
+          <span className="block truncate">{me.email}</span>
           <span className="mt-1 inline-block rounded-full bg-muted px-1.5 text-[10px] font-semibold tracking-wide uppercase">
             {me.role}
           </span>
-        </DropdownMenuLabel>
+        </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem render={<Link href="/settings" />}>
           <Settings /> Settings

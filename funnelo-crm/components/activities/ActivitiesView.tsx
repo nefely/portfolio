@@ -65,12 +65,11 @@ export function ActivitiesView() {
             { value: "me", label: "My activities" },
             { value: "", label: "Whole team" },
             ...team
-              .filter((m) => m.user_id !== me.user_id)
+              .filter((m) => m.is_active && m.user_id !== me.user_id)
               .map((m) => ({ value: m.user_id, label: m.full_name })),
           ]}
           placeholder="Owner"
-          className="w-44"
-          size="sm"
+          className="min-w-0 flex-1 sm:w-44 sm:flex-none"
         />
       </div>
 

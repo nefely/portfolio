@@ -69,7 +69,7 @@ export function DashboardView() {
             />
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[1fr_22rem]">
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
             <Panel title="Won revenue" subtitle="Last 12 months">
               <MonthlyWonChart months={data.monthly} />
             </Panel>
@@ -88,7 +88,7 @@ export function DashboardView() {
         </>
       )}
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_22rem]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <Panel
           title="Due today"
           subtitle="Your open calls, meetings and tasks, including overdue ones"
@@ -231,7 +231,7 @@ function DashboardSkeleton() {
           <Skeleton key={index} className="h-24 rounded-xl" />
         ))}
       </div>
-      <div className="grid gap-6 xl:grid-cols-[1fr_22rem]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <Skeleton className="h-72 rounded-xl" />
         <Skeleton className="h-72 rounded-xl" />
       </div>

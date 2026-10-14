@@ -63,7 +63,7 @@ export function LoginForm() {
             type="button"
             disabled={pending !== null}
             onClick={() => signIn(account.email, DEMO_PASSWORD, account.role)}
-            className="group flex items-center gap-3 rounded-xl border bg-card p-3 text-left transition-colors hover:border-primary/40 hover:bg-accent/50 disabled:opacity-60"
+            className="group flex w-full min-w-0 items-center gap-3 rounded-xl border bg-card p-3 text-left transition-colors hover:border-primary/40 hover:bg-accent/50 disabled:opacity-60"
           >
             <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
               {account.role === "admin" ? (

@@ -156,7 +156,7 @@ export function DealDetail({ id }: { id: string }) {
         onSelect={(stageId) => move.mutate({ stage_id: stageId })}
       />
 
-      <div className="grid items-start gap-6 lg:grid-cols-[1fr_22rem]">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <ActivityTimeline
           kind="deal"
           id={deal.id}

@@ -52,8 +52,7 @@ export function AuditLog() {
           })),
         ]}
         placeholder="All records"
-        className="w-44"
-        size="sm"
+        className="min-w-0 flex-1 sm:w-44 sm:flex-none"
       />
 
       {data?.total === 0 ? (

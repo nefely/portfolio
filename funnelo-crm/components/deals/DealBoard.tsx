@@ -53,7 +53,27 @@ const collisionDetection: CollisionDetection = (args) => {
   return zones.length > 0 ? zones : closestCorners(args);
 };
 
+const DROP_ANIMATION = { duration: 200, easing: "cubic-bezier(0.2, 0, 0, 1)" };
+
 type Filters = { search: string; ownerId: string };
+
+type DragState = {
+  /** null — картку вже відпущено, чекаємо на оновлення кешу. */
+  activeId: string | null;
+  columns: Columns;
+  /** Колонки на момент старту — для скасування й Lost (картка повертається). */
+  start: Columns;
+  overZone: string | null;
+  /** Кеш і фільтри, з яких побудовано `columns`. */
+  basis: DealRow[] | undefined;
+  filtersKey: string;
+};
+
+function removeFromColumns(columns: Columns, id: string): Columns {
+  return Object.fromEntries(
+    Object.entries(columns).map(([stageId, ids]) => [stageId, ids.filter((item) => item !== id)]),
+  );
+}
 
 export function DealBoard({ filters }: { filters: Filters }) {
   const me = useMe();
@@ -65,8 +85,10 @@ export function DealBoard({ filters }: { filters: Filters }) {
   const [today] = useState(todayIso);
 
   // Під час перетягування колонки живуть локально (щоб картка "їхала" між
-  // ними), після відпускання — знову з кешу.
-  const [drag, setDrag] = useState<{ activeId: string; columns: Columns } | null>(null);
+  // ними). Після відпускання вони ще тримаються, доки не оновиться кеш
+  // (оптимістичне оновлення асинхронне) — інакше на один кадр дошка
+  // намалювалась би зі старих даних: картка "відлітала" б у стару колонку.
+  const [drag, setDrag] = useState<DragState | null>(null);
   const [creatingIn, setCreatingIn] = useState<DealDefaults | null>(null);
   const [pendingLost, setPendingLost] = useState<{ deal: DealRow; position: number } | null>(null);
 
@@ -86,44 +108,69 @@ export function DealBoard({ filters }: { filters: Filters }) {
         deal.company?.name.toLowerCase().includes(query)),
   );
   const byId = new Map(visible.map((deal) => [deal.id, deal]));
-  const columns = drag?.columns ?? buildColumns(visible, openStages);
-  const activeDeal = drag ? byId.get(drag.activeId) : undefined;
+  const filtersKey = `${filters.ownerId}|${query}`;
+  // Локальні колонки діють, поки триває drag, або поки кеш ще той самий, з
+  // якого стартували (тобто оптимістичне оновлення ще не застосувалось).
+  const keepLocal =
+    drag !== null &&
+    (drag.activeId !== null || (drag.basis === deals && drag.filtersKey === filtersKey));
+  const columns = keepLocal ? drag.columns : buildColumns(visible, openStages);
+  const activeDeal = drag?.activeId ? byId.get(drag.activeId) : undefined;
   const wonStage = stages.find((stage) => stage.kind === "won");
   const lostStage = stages.find((stage) => stage.kind === "lost");
 
   function handleDragStart({ active }: DragStartEvent) {
-    setDrag({ activeId: String(active.id), columns: buildColumns(visible, openStages ?? []) });
+    const start = buildColumns(visible, openStages ?? []);
+    setDrag({
+      activeId: String(active.id),
+      columns: start,
+      start,
+      overZone: null,
+      basis: deals,
+      filtersKey,
+    });
   }
 
   function handleDragOver({ active, over }: DragOverEvent) {
-    if (!drag || !over || over.id === WON_ZONE || over.id === LOST_ZONE) return;
-    const next = moveAcross(drag.columns, String(active.id), String(over.id));
-    if (next !== drag.columns) setDrag({ ...drag, columns: next });
+    if (!drag) return;
+    const overId = over ? String(over.id) : null;
+    const overZone = overId === WON_ZONE || overId === LOST_ZONE ? overId : null;
+    const next =
+      overId && !overZone ? moveAcross(drag.columns, String(active.id), overId) : drag.columns;
+    if (next !== drag.columns || overZone !== drag.overZone)
+      setDrag({ ...drag, columns: next, overZone });
+  }
+
+  /** Завершити drag, лишивши дошку в стані `columns` до оновлення кешу. */
+  function settle(current: DragState, columns: Columns) {
+    setDrag({ ...current, activeId: null, columns });
   }
 
   function handleDragEnd({ active, over }: DragEndEvent) {
     const current = drag;
-    setDrag(null);
-    if (!current || !over) return;
-
+    if (!current) return;
     const deal = byId.get(String(active.id));
-    if (!deal) return;
-    const positions = new Map(visible.map((item) => [item.id, item.position]));
+    if (!over || !deal) return settle(current, current.start);
 
     if (over.id === WON_ZONE && wonStage) {
+      settle(current, removeFromColumns(current.start, deal.id));
       moveDeal.mutate({ id: deal.id, stageId: wonStage.id, kind: "won", position: deal.position });
       return;
     }
     if (over.id === LOST_ZONE && lostStage) {
+      // Картка повертається на місце, доки користувач не підтвердить причину.
+      settle(current, current.start);
       setPendingLost({ deal, position: deal.position });
       return;
     }
 
     const finalColumns = reorderWithin(current.columns, deal.id, String(over.id));
     const stageId = findColumn(finalColumns, deal.id);
-    if (!stageId) return;
+    if (!stageId) return settle(current, current.start);
 
+    const positions = new Map(visible.map((item) => [item.id, item.position]));
     const position = positionInColumn(finalColumns[stageId], deal.id, positions);
+    settle(current, finalColumns);
     if (stageId === deal.stage_id && position === deal.position) return;
     moveDeal.mutate({ id: deal.id, stageId, kind: "open", position });
   }
@@ -136,7 +183,7 @@ export function DealBoard({ filters }: { filters: Filters }) {
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
-        onDragCancel={() => setDrag(null)}
+        onDragCancel={() => drag && settle(drag, drag.start)}
         // Зони Won/Lost з'являються вже після старту drag (і ще анімуються) —
         // без постійного вимірювання dnd-kit не знав би їхніх координат.
         measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
@@ -161,7 +208,7 @@ export function DealBoard({ filters }: { filters: Filters }) {
             щоб transform від Motion не перетер translate-x. */}
         <div className="pointer-events-none fixed inset-x-0 bottom-6 z-40 flex justify-center px-4 lg:pl-60">
           <AnimatePresence>
-            {drag && (
+            {drag?.activeId && (
               <m.div
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -176,7 +223,9 @@ export function DealBoard({ filters }: { filters: Filters }) {
           </AnimatePresence>
         </div>
 
-        <DragOverlay dropAnimation={{ duration: 180, easing: "cubic-bezier(0.2, 0, 0, 1)" }}>
+        {/* Після відпускання оверлей "доїжджає" до нового місця картки. У Won
+            картка зникає з дошки — летіти нікуди, тож без анімації. */}
+        <DragOverlay dropAnimation={drag?.overZone === WON_ZONE ? null : DROP_ANIMATION}>
           {activeDeal && (
             <DealCard
               deal={activeDeal}

@@ -52,7 +52,7 @@ export function DetailSkeleton() {
     <div className="space-y-6">
       <Skeleton className="h-4 w-24" />
       <Skeleton className="h-8 w-80" />
-      <div className="grid gap-6 lg:grid-cols-[1fr_22rem]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <Skeleton className="h-96 rounded-xl" />
         <Skeleton className="h-72 rounded-xl" />
       </div>

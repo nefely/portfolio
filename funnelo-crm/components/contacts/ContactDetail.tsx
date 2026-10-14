@@ -81,12 +81,22 @@ export function ContactDetail({ id }: { id: string }) {
         </div>
         <div className="flex items-center gap-2">
           {contact.email && (
-            <Button variant="outline" size="sm" render={<a href={`mailto:${contact.email}`} />}>
+            <Button
+              variant="outline"
+              size="sm"
+              nativeButton={false}
+              render={<a href={`mailto:${contact.email}`} />}
+            >
               <Mail /> Email
             </Button>
           )}
           {contact.phone && (
-            <Button variant="outline" size="sm" render={<a href={`tel:${contact.phone}`} />}>
+            <Button
+              variant="outline"
+              size="sm"
+              nativeButton={false}
+              render={<a href={`tel:${contact.phone}`} />}
+            >
               <Phone /> Call
             </Button>
           )}
@@ -110,7 +120,7 @@ export function ContactDetail({ id }: { id: string }) {
         </div>
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[1fr_22rem]">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <ActivityTimeline
           kind="contact"
           id={contact.id}

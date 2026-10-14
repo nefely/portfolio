@@ -54,9 +54,35 @@ export function CompaniesView() {
         title="Companies"
         description="Accounts with their contacts and pipeline value."
         actions={
-          <Button size="sm" onClick={() => setCreating(true)}>
-            <Plus /> New company
-          </Button>
+          <>
+            {/* Експорт у шапці, а не в рядку фільтрів — на мобільному
+                фільтри тоді ділять ширину порівну. */}
+            <ExportButton
+              filename="companies"
+              fetchRows={async () =>
+                (await fetchCompanyList(createClient(), params, EXPORT_RANGE)).rows
+              }
+              columns={[
+                { header: "Name", value: (c) => c.name },
+                { header: "Domain", value: (c) => c.domain },
+                { header: "Industry", value: (c) => c.industry },
+                { header: "Size", value: (c) => c.size },
+                { header: "Country", value: (c) => c.country },
+                { header: "City", value: (c) => c.city },
+                { header: "Phone", value: (c) => c.phone },
+                {
+                  header: "Owner",
+                  value: (c) => (c.owner_id ? teamMap?.get(c.owner_id)?.full_name : ""),
+                },
+                { header: "Contacts", value: (c) => c.contacts_count },
+                { header: "Open pipeline (USD)", value: (c) => c.open_value },
+                { header: "Won (USD)", value: (c) => c.won_value },
+              ]}
+            />
+            <Button size="sm" onClick={() => setCreating(true)}>
+              <Plus /> New company
+            </Button>
+          </>
         }
       />
 
@@ -73,12 +99,11 @@ export function CompaniesView() {
             { value: "", label: "All owners" },
             { value: me.user_id, label: "My companies" },
             ...team
-              .filter((m) => m.user_id !== me.user_id)
+              .filter((m) => m.is_active && m.user_id !== me.user_id)
               .map((m) => ({ value: m.user_id, label: m.full_name })),
           ]}
           placeholder="All owners"
-          className="w-40"
-          size="sm"
+          className="min-w-0 flex-1 sm:w-40 sm:flex-none"
         />
         <SimpleSelect
           value={params.industry}
@@ -88,33 +113,8 @@ export function CompaniesView() {
             ...industries.map((i) => ({ value: i, label: i })),
           ]}
           placeholder="All industries"
-          className="w-44"
-          size="sm"
+          className="min-w-0 flex-1 sm:w-44 sm:flex-none"
         />
-        <div className="ml-auto">
-          <ExportButton
-            filename="companies"
-            fetchRows={async () =>
-              (await fetchCompanyList(createClient(), params, EXPORT_RANGE)).rows
-            }
-            columns={[
-              { header: "Name", value: (c) => c.name },
-              { header: "Domain", value: (c) => c.domain },
-              { header: "Industry", value: (c) => c.industry },
-              { header: "Size", value: (c) => c.size },
-              { header: "Country", value: (c) => c.country },
-              { header: "City", value: (c) => c.city },
-              { header: "Phone", value: (c) => c.phone },
-              {
-                header: "Owner",
-                value: (c) => (c.owner_id ? teamMap?.get(c.owner_id)?.full_name : ""),
-              },
-              { header: "Contacts", value: (c) => c.contacts_count },
-              { header: "Open pipeline (USD)", value: (c) => c.open_value },
-              { header: "Won (USD)", value: (c) => c.won_value },
-            ]}
-          />
-        </div>
       </div>
 
       {data?.total === 0 ? (

@@ -128,7 +128,7 @@ export function CompanyDetail({ id }: { id: string }) {
         <Stat label="Contacts" value={String(company.contacts_count)} />
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[1fr_22rem]">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="space-y-6">
           <DetailCard title={`Deals (${deals.length})`}>
             {deals.length === 0 ? (

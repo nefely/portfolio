@@ -52,9 +52,29 @@ export function ContactsView() {
         title="Contacts"
         description="Everyone you talk to across your accounts."
         actions={
-          <Button size="sm" onClick={() => setCreating(true)}>
-            <Plus /> New contact
-          </Button>
+          <>
+            <ExportButton
+              filename="contacts"
+              fetchRows={async () =>
+                (await fetchContactList(createClient(), params, EXPORT_RANGE)).rows
+              }
+              columns={[
+                { header: "First name", value: (c) => c.first_name },
+                { header: "Last name", value: (c) => c.last_name },
+                { header: "Email", value: (c) => c.email },
+                { header: "Phone", value: (c) => c.phone },
+                { header: "Job title", value: (c) => c.job_title },
+                { header: "Company", value: (c) => c.company?.name },
+                {
+                  header: "Owner",
+                  value: (c) => (c.owner_id ? teamMap?.get(c.owner_id)?.full_name : ""),
+                },
+              ]}
+            />
+            <Button size="sm" onClick={() => setCreating(true)}>
+              <Plus /> New contact
+            </Button>
+          </>
         }
       />
 
@@ -71,33 +91,12 @@ export function ContactsView() {
             { value: "", label: "All owners" },
             { value: me.user_id, label: "My contacts" },
             ...team
-              .filter((m) => m.user_id !== me.user_id)
+              .filter((m) => m.is_active && m.user_id !== me.user_id)
               .map((m) => ({ value: m.user_id, label: m.full_name })),
           ]}
           placeholder="All owners"
-          className="w-40"
-          size="sm"
+          className="min-w-0 flex-1 sm:w-40 sm:flex-none"
         />
-        <div className="ml-auto">
-          <ExportButton
-            filename="contacts"
-            fetchRows={async () =>
-              (await fetchContactList(createClient(), params, EXPORT_RANGE)).rows
-            }
-            columns={[
-              { header: "First name", value: (c) => c.first_name },
-              { header: "Last name", value: (c) => c.last_name },
-              { header: "Email", value: (c) => c.email },
-              { header: "Phone", value: (c) => c.phone },
-              { header: "Job title", value: (c) => c.job_title },
-              { header: "Company", value: (c) => c.company?.name },
-              {
-                header: "Owner",
-                value: (c) => (c.owner_id ? teamMap?.get(c.owner_id)?.full_name : ""),
-              },
-            ]}
-          />
-        </div>
       </div>
 
       {data?.total === 0 ? (
