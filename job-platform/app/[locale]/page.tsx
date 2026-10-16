@@ -31,14 +31,24 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               <p>{t("aboutText3")}</p>
             </div>
           </div>
+          {/* SVG через <img> не бачить клас .dark на <html>, тож дві версії
+              ілюстрації й перемикання через dark:-варіант Tailwind. */}
           <div className="mx-auto w-full max-w-xs sm:max-w-none">
+            <Image
+              src="/vv-work-about-illustration-light.svg"
+              alt=""
+              width={760}
+              height={520}
+              unoptimized
+              className="h-auto w-full dark:hidden"
+            />
             <Image
               src="/vv-work-about-illustration.svg"
               alt=""
               width={760}
               height={520}
               unoptimized
-              className="h-auto w-full"
+              className="hidden h-auto w-full dark:block"
             />
           </div>
         </div>
