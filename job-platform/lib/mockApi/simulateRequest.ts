@@ -17,6 +17,10 @@ export class ApiError extends Error {
 export const SIMULATED_FAILURE_MESSAGE = "SIMULATED_FAILURE";
 export const UNKNOWN_ERROR_MESSAGE = "UNKNOWN_ERROR";
 
+// Шанс симульованої помилки за замовчуванням (0..1). Зараз 0 — помилки
+// вимкнені; щоб знову показати skeleton/retry на рев'ю, постав 0.2 (~1/5).
+export const DEFAULT_FAILURE_RATE = 0;
+
 export interface SimulateRequestOptions {
   minDelayMs?: number;
   maxDelayMs?: number;
@@ -48,7 +52,7 @@ export async function simulateRequest<T>(
   resolve: () => Promise<T> | T,
   options: SimulateRequestOptions = {},
 ): Promise<T> {
-  const { minDelayMs = 300, maxDelayMs = 800, failureRate = 0.2, signal } = options;
+  const { minDelayMs = 300, maxDelayMs = 800, failureRate = DEFAULT_FAILURE_RATE, signal } = options;
 
   await wait(minDelayMs + Math.random() * (maxDelayMs - minDelayMs), signal);
 
