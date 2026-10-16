@@ -33,7 +33,7 @@ export function Catalog({ genres }: { genres: GenreGroups }) {
         <CatalogSearch value={filters.q} onSearch={(q) => setFilters({ q }, "replace")} />
         <SortSelect value={filters.sort} onChange={(sort) => setFilters({ sort })} />
         <Sheet>
-          <SheetTrigger render={<Button variant="outline" className="h-10 lg:hidden" />}>
+          <SheetTrigger render={<Button variant="outline" className="h-10 flex-1 sm:flex-none lg:hidden" />}>
             <SlidersHorizontal /> Filters
             {activeCount > 0 && (
               <span className="rounded-full bg-primary px-1.5 text-[11px] text-primary-foreground">

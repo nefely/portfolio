@@ -26,7 +26,7 @@ export function SortSelect({
       value={value}
       onValueChange={(next) => next && onChange(next as AnimeSort)}
     >
-      <SelectTrigger aria-label="Sort by" className="h-10! w-48">
+      <SelectTrigger aria-label="Sort by" className="h-10! min-w-0 flex-1 sm:w-48 sm:flex-none">
         <ArrowUpDown className="text-muted-foreground" />
         <SelectValue />
       </SelectTrigger>
