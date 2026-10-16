@@ -6,7 +6,7 @@ import { FilterChipGroup } from "./FilterChipGroup";
 import { Select } from "./Select";
 
 const inputClassName =
-  "h-10.5 rounded-lg border border-gray-300 px-4 text-sm font-normal focus:border-gray-900 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-gray-100";
+  "h-10.5 rounded-lg border border-gray-300 px-4 text-sm font-normal focus:border-brand-600 focus:ring-3 focus:ring-brand-500/15 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-brand-400";
 
 // Один "вимір" фільтрації — мультиселект-чіпи, число (напр. зарплата) або
 // односелект (напр. "дата розміщення"). Ресурсно-нейтральний: конкретний
@@ -121,7 +121,7 @@ export function FiltersPanel({
           <path d="M4 6h16M7 12h10M10 18h4" />
         </svg>
         {activeCount > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-xs font-semibold text-white dark:bg-white dark:text-gray-900">
+          <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-700 text-xs font-semibold text-white dark:bg-brand-500 dark:text-gray-950">
             {activeCount}
           </span>
         )}
@@ -131,7 +131,7 @@ export function FiltersPanel({
         <button
           type="button"
           onClick={onReset}
-          className="basis-full text-right text-xs font-medium text-gray-500 underline-offset-2 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-white"
+          className="basis-full text-right text-xs font-medium text-gray-500 underline-offset-2 hover:text-brand-700 hover:underline dark:text-gray-400 dark:hover:text-brand-400"
         >
           {resetLabel}
         </button>

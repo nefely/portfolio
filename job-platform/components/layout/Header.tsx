@@ -7,7 +7,7 @@ import { Logo } from "./Logo";
 import { MobileNav } from "./MobileNav";
 
 const linkClassName =
-  "text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-white";
+  "text-sm font-medium text-gray-600 transition-colors hover:text-brand-700 dark:text-gray-300 dark:hover:text-brand-400";
 
 export async function Header() {
   const t = await getTranslations("nav");

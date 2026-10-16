@@ -26,7 +26,7 @@ export async function CandidateDetailView({ candidate }: CandidateDetailViewProp
     <div>
       <Link
         href="/candidates"
-        className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+        className="text-sm font-medium text-gray-500 hover:text-brand-700 dark:text-gray-400 dark:hover:text-brand-400"
       >
         {t("backLink")}
       </Link>
@@ -64,7 +64,7 @@ export async function CandidateDetailView({ candidate }: CandidateDetailViewProp
         </div>
         <div className="flex gap-1">
           <dt className="font-medium">{t("salaryExpectationLabel")}:</dt>
-          <dd>{salaryText}</dd>
+          <dd className="font-semibold text-brand-700 dark:text-brand-400">{salaryText}</dd>
         </div>
         {candidate.availableFrom && (
           <div className="flex gap-1">
@@ -91,7 +91,7 @@ export async function CandidateDetailView({ candidate }: CandidateDetailViewProp
             {candidate.skills.map((skill) => (
               <span
                 key={skill}
-                className="rounded-full border border-gray-300 px-2.5 py-0.5 text-xs text-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                className="rounded-full border border-brand-200 bg-brand-50 px-2.5 py-0.5 text-xs text-brand-800 dark:border-brand-900 dark:bg-brand-950/40 dark:text-brand-300"
               >
                 {skill}
               </span>

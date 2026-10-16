@@ -11,6 +11,7 @@ import {
   inputClassName,
   primaryButtonClassName,
 } from "@/components/shared/formStyles";
+import { DemoAccounts } from "./DemoAccounts";
 import { GoogleButton } from "./GoogleButton";
 import { OrDivider } from "./OrDivider";
 
@@ -31,6 +32,10 @@ export function LoginForm({ next, initialError }: LoginFormProps) {
 
   return (
     <div className="flex flex-col gap-6">
+      <DemoAccounts action={action} next={next} disabled={pending} />
+
+      <OrDivider label={t("orDivider")} />
+
       <form action={action} noValidate className="flex flex-col gap-4">
         {next && <input type="hidden" name="next" value={next} />}
 

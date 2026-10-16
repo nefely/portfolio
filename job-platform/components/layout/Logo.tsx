@@ -24,7 +24,7 @@ export function Logo({ className, title = "Work" }: LogoProps) {
     <svg viewBox="0 0 216 84" role="img" aria-label={title} className={className}>
       <title>{title}</title>
 
-      <rect width="84" height="84" rx="23" className="fill-gray-900 dark:fill-white" />
+      <rect width="84" height="84" rx="23" className="fill-brand-600 dark:fill-brand-500" />
 
       <text
         x="42"
@@ -34,7 +34,7 @@ export function Logo({ className, title = "Work" }: LogoProps) {
         fontSize="52"
         fontWeight="800"
         style={{ fontFamily: "var(--font-sans, ui-sans-serif, system-ui, sans-serif)" }}
-        className="fill-white dark:fill-gray-900"
+        className="fill-white dark:fill-gray-950"
       >
         W
       </text>

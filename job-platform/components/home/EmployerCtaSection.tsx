@@ -18,7 +18,7 @@ export async function EmployerCtaSection() {
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/candidates"
-              className="rounded-full bg-gray-900 px-6 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+              className="rounded-full bg-brand-700 px-6 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-brand-800 dark:bg-brand-500 dark:text-gray-950 dark:hover:bg-brand-400"
             >
               {t("employerCta")}
             </Link>

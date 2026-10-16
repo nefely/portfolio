@@ -88,7 +88,7 @@ export function AuthNav() {
         {unread > 0 && (
           <span
             aria-hidden="true"
-            className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-gray-900 px-1 text-[11px] leading-none font-semibold text-white ring-2 ring-white dark:bg-white dark:text-gray-900 dark:ring-gray-950"
+            className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-700 px-1 text-[11px] leading-none font-semibold text-white ring-2 ring-white dark:bg-brand-500 dark:text-gray-950 dark:ring-gray-950"
           >
             {unread > 99 ? "99+" : unread}
           </span>

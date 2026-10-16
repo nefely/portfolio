@@ -1,10 +1,10 @@
 // Ті самі класи, що й у ContactForm / FiltersPanel — спільні для форм
 // авторизації та кабінету, щоб усі поля на сайті виглядали однаково.
 export const inputClassName =
-  "w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-gray-900 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-gray-100";
+  "w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-brand-600 focus:ring-3 focus:ring-brand-500/15 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-brand-400";
 
 export const primaryButtonClassName =
-  "rounded-full bg-gray-900 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-gray-700 disabled:opacity-60 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200";
+  "rounded-full bg-brand-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-800 disabled:opacity-60 dark:bg-brand-500 dark:text-gray-950 dark:hover:bg-brand-400";
 
 export const secondaryButtonClassName =
   "rounded-full border border-gray-300 px-6 py-3 text-sm font-semibold transition-colors hover:bg-gray-100 disabled:opacity-60 dark:border-gray-700 dark:hover:bg-gray-900";

@@ -33,7 +33,10 @@ function JobCardComponent({ job }: JobCardProps) {
         {tCategories(job.category)}
       </span>
       <h3 className="mt-2 font-semibold">
-        <Link href={`/jobs/${job.id}`} className="hover:underline">
+        <Link
+          href={`/jobs/${job.id}`}
+          className="transition-colors hover:text-brand-700 dark:hover:text-brand-400"
+        >
           {pickLocalized(job.title, locale)}
         </Link>
       </h3>
@@ -68,7 +71,7 @@ function JobCardComponent({ job }: JobCardProps) {
         </div>
         <div className="flex gap-1">
           <dt className="font-medium">{t("salaryLabel")}:</dt>
-          <dd>{salaryText}</dd>
+          <dd className="font-semibold text-brand-700 dark:text-brand-400">{salaryText}</dd>
         </div>
       </dl>
     </article>

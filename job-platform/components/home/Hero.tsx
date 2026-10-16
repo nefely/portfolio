@@ -26,7 +26,7 @@ export async function Hero() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/jobs"
-              className="rounded-full bg-gray-900 px-6 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+              className="rounded-full bg-brand-700 px-6 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-brand-800 dark:bg-brand-500 dark:text-gray-950 dark:hover:bg-brand-400"
             >
               {t("ctaFindJob")}
             </Link>
@@ -41,7 +41,7 @@ export async function Hero() {
             {t("signupPrompt")}{" "}
             <Link
               href={{ pathname: "/signup", query: { role: "seeker" } }}
-              className="font-semibold text-gray-900 underline underline-offset-4 dark:text-white"
+              className="font-semibold text-brand-700 underline underline-offset-4 dark:text-brand-400"
             >
               {t("signupLink")}
             </Link>

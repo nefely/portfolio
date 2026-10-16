@@ -30,7 +30,7 @@ export default function LocaleError({
       <RetryBlock title={t("title")} message={t("text")} onRetry={reset} />
       <Link
         href="/"
-        className="text-sm font-medium text-gray-600 underline-offset-2 hover:text-gray-900 hover:underline dark:text-gray-300 dark:hover:text-white"
+        className="text-sm font-medium text-gray-600 underline-offset-2 hover:text-brand-700 hover:underline dark:text-gray-300 dark:hover:text-brand-400"
       >
         {t("backHome")}
       </Link>

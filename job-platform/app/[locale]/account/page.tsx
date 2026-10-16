@@ -21,7 +21,7 @@ export default async function AccountPage({ params }: PageProps<"/[locale]/accou
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <span className="inline-block rounded-full bg-gray-900 px-3 py-1 text-xs font-semibold text-white dark:bg-white dark:text-gray-900">
+          <span className="inline-block rounded-full bg-brand-700 px-3 py-1 text-xs font-semibold text-white dark:bg-brand-500 dark:text-gray-950">
             {role === "seeker" ? t("seekerBadge") : t("employerBadge")}
           </span>
           <h1 className="mt-3 text-3xl font-bold tracking-tight">{t("title")}</h1>

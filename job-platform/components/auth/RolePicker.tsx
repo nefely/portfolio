@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { cardHoverClassName } from "@/components/shared/cardStyles";
 import { ACCOUNT_ROLES } from "@/lib/auth/roles";
 import type { AccountRole } from "@/types/account";
 
@@ -31,8 +32,8 @@ export function RolePicker({ value, onChange }: RolePickerProps) {
               key={role}
               className={`flex cursor-pointer flex-col gap-1 rounded-xl border p-4 transition-colors has-focus-visible:ring-2 has-focus-visible:ring-gray-400 ${
                 isActive
-                  ? "border-gray-900 bg-gray-50 dark:border-gray-100 dark:bg-gray-900"
-                  : "border-gray-200 hover:border-gray-400 dark:border-gray-800 dark:hover:border-gray-600"
+                  ? "border-brand-600 bg-brand-50 dark:border-brand-500 dark:bg-brand-950/40"
+                  : `border-gray-200 dark:border-gray-800 ${cardHoverClassName}`
               }`}
             >
               <input

@@ -227,7 +227,7 @@ export function ChatThread({ conversationId, currentUserId, initialMessages }: C
           disabled={!canSend}
           aria-label={t("send")}
           title={t("send")}
-          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gray-900 text-white transition-colors hover:bg-gray-700 disabled:opacity-60 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand-700 text-white transition-colors hover:bg-brand-800 disabled:opacity-60 dark:bg-brand-500 dark:text-gray-950 dark:hover:bg-brand-400"
         >
           {/* Горизонтальний "надіслати": симетричний по вертикалі, тож
               центрується; translate-x-px — оптична поправка на гострий кінець. */}
@@ -262,7 +262,7 @@ function MessageBubble({ mine, body, dimmed, children }: MessageBubbleProps) {
     <div
       className={`max-w-[85%] rounded-2xl px-4 py-2 sm:max-w-[70%] ${
         mine
-          ? "self-end rounded-br-sm bg-gray-900 text-white dark:bg-white dark:text-gray-900"
+          ? "self-end rounded-br-sm bg-brand-700 text-white dark:bg-brand-800 dark:text-brand-50"
           : "self-start rounded-bl-sm bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100"
       } ${dimmed ? "opacity-60" : ""}`}
     >

@@ -35,8 +35,8 @@ export function LocaleSwitcher() {
             aria-current={isActive ? "true" : undefined}
             className={`flex h-full items-center px-2 transition-colors ${
               isActive
-                ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
-                : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                ? "bg-brand-700 text-white dark:bg-brand-500 dark:text-gray-950"
+                : "text-gray-500 hover:text-brand-700 dark:text-gray-400 dark:hover:text-gray-100"
             }`}
           >
             {LOCALE_LABELS[locale]}

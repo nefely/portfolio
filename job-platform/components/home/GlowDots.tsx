@@ -50,7 +50,7 @@ export function GlowDots() {
     <div
       ref={containerRef}
       aria-hidden="true"
-      className="absolute inset-0 text-gray-500 dark:text-gray-200"
+      className="absolute inset-0 text-brand-500 dark:text-brand-400"
       style={{
         backgroundImage: "radial-gradient(currentColor 1.5px, transparent 1.5px)",
         backgroundSize: "24px 24px",

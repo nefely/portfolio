@@ -21,7 +21,7 @@ export async function PremiumCtaSection() {
 
         <div className="relative grid gap-10 sm:grid-cols-2">
           <div>
-            <span className="inline-block rounded-full bg-gray-900 px-3 py-1 text-xs font-semibold text-white dark:bg-white dark:text-gray-900">
+            <span className="inline-block rounded-full bg-brand-700 px-3 py-1 text-xs font-semibold text-white dark:bg-brand-500 dark:text-gray-950">
               Premium
             </span>
             <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">{t("title")}</h2>
@@ -40,7 +40,7 @@ export async function PremiumCtaSection() {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="mt-0.5 h-4 w-4 shrink-0 text-gray-900 dark:text-white"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-brand-600 dark:text-brand-400"
                     aria-hidden="true"
                   >
                     <path d="M20 6 9 17l-5-5" />

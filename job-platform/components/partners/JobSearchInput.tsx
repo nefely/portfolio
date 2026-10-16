@@ -33,7 +33,7 @@ function JobSearchInputComponent({
         value={value}
         onChange={(event) => setValue(event.target.value)}
         placeholder={t("searchPlaceholder")}
-        className="h-10.5 w-full rounded-lg border border-gray-300 px-4 text-sm font-normal focus:border-gray-900 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-gray-100"
+        className="h-10.5 w-full rounded-lg border border-gray-300 px-4 text-sm font-normal focus:border-brand-600 focus:ring-3 focus:ring-brand-500/15 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-brand-400"
       />
     </label>
   );

@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { cardHoverClassName } from "@/components/shared/cardStyles";
 import { CATEGORY_COLORS } from "@/data/categoryColors";
 import { pickLocalized } from "@/lib/i18n/pickLocalized";
 import type { AppLocale } from "@/types/i18n";
@@ -20,7 +21,7 @@ function PartnerCardComponent({ partner }: PartnerCardProps) {
   return (
     <Link
       href={`/partners/${partner.slug}`}
-      className="block h-full rounded-xl border border-gray-200 p-4 transition-colors hover:border-gray-400 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-950/70 dark:hover:border-gray-600 dark:hover:bg-gray-800"
+      className={`block h-full rounded-xl border border-gray-200 p-4 transition-colors dark:border-gray-800 dark:bg-gray-950/70 ${cardHoverClassName}`}
     >
       <p className="font-semibold">{pickLocalized(partner.name, locale)}</p>
       <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">

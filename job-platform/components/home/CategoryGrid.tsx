@@ -4,6 +4,7 @@ import { CATEGORY_ICONS } from "@/data/categoryIcons";
 import { CATEGORY_IDS } from "@/data/categories";
 import { Link } from "@/i18n/navigation";
 import { StaggerContainer, StaggerItem } from "@/components/motion/Stagger";
+import { cardHoverClassName } from "@/components/shared/cardStyles";
 
 export async function CategoryGrid() {
   const t = await getTranslations("home");
@@ -20,7 +21,7 @@ export async function CategoryGrid() {
           <StaggerItem key={categoryId}>
             <Link
               href={`/jobs?category=${categoryId}`}
-              className="flex h-full flex-col gap-3 rounded-xl border border-gray-200 p-4 transition-colors hover:border-gray-400 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-950/70 dark:hover:border-gray-600 dark:hover:bg-gray-800"
+              className={`flex h-full flex-col gap-3 rounded-xl border border-gray-200 p-4 transition-colors dark:border-gray-800 dark:bg-gray-950/70 ${cardHoverClassName}`}
             >
               <span
                 className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${CATEGORY_COLORS[categoryId]}`}

@@ -28,7 +28,7 @@ export function FeaturedPartnersSection() {
         </div>
         <Link
           href="/partners"
-          className="shrink-0 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+          className="shrink-0 text-sm font-medium text-gray-600 hover:text-brand-700 dark:text-gray-300 dark:hover:text-brand-400"
         >
           {t("viewAllPartners")}
         </Link>

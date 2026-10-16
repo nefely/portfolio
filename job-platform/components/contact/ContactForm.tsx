@@ -101,7 +101,7 @@ export function ContactForm() {
           placeholder={t("namePlaceholder")}
           aria-invalid={touched.name && errors.name ? "true" : undefined}
           aria-describedby={touched.name && errors.name ? "contact-name-error" : undefined}
-          className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-gray-900 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-gray-100"
+          className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-brand-600 focus:ring-3 focus:ring-brand-500/15 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-brand-400"
         />
         {touched.name && errors.name && (
           <p id="contact-name-error" className="text-sm text-red-600 dark:text-red-400">
@@ -123,7 +123,7 @@ export function ContactForm() {
           placeholder={t("contactPlaceholder")}
           aria-invalid={touched.contact && errors.contact ? "true" : undefined}
           aria-describedby={touched.contact && errors.contact ? "contact-contact-error" : undefined}
-          className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-gray-900 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-gray-100"
+          className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-brand-600 focus:ring-3 focus:ring-brand-500/15 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-brand-400"
         />
         {touched.contact && errors.contact && (
           <p id="contact-contact-error" className="text-sm text-red-600 dark:text-red-400">
@@ -147,7 +147,7 @@ export function ContactForm() {
           rows={4}
           aria-invalid={touched.message && errors.message ? "true" : undefined}
           aria-describedby={touched.message && errors.message ? "contact-message-error" : undefined}
-          className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-gray-900 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-gray-100"
+          className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-brand-600 focus:ring-3 focus:ring-brand-500/15 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-brand-400"
         />
         {touched.message && errors.message && (
           <p id="contact-message-error" className="text-sm text-red-600 dark:text-red-400">
@@ -176,7 +176,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="mt-2 rounded-full bg-gray-900 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-gray-700 disabled:opacity-60 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+        className="mt-2 rounded-full bg-brand-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-800 disabled:opacity-60 dark:bg-brand-500 dark:text-gray-950 dark:hover:bg-brand-400"
       >
         {status === "submitting" ? t("submitting") : t("submit")}
       </button>

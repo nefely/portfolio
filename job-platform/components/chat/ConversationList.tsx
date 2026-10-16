@@ -76,7 +76,7 @@ export function ConversationList({ conversations }: ConversationListProps) {
                     {preview}
                   </p>
                   {unread && (
-                    <span className="shrink-0 rounded-full bg-gray-900 px-2 py-0.5 text-xs font-semibold text-white dark:bg-white dark:text-gray-900">
+                    <span className="shrink-0 rounded-full bg-brand-700 px-2 py-0.5 text-xs font-semibold text-white dark:bg-brand-500 dark:text-gray-950">
                       <span className="sr-only">{t("unreadLabel")}: </span>
                       {conversation.unreadCount}
                     </span>

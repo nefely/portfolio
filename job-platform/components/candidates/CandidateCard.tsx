@@ -38,7 +38,10 @@ function CandidateCardComponent({ candidate }: CandidateCardProps) {
       </div>
 
       <h3 className="mt-2 font-semibold">
-        <Link href={`/candidates/${candidate.slug}`} className="hover:underline">
+        <Link
+          href={`/candidates/${candidate.slug}`}
+          className="transition-colors hover:text-brand-700 dark:hover:text-brand-400"
+        >
           {candidate.name}
         </Link>
       </h3>
@@ -62,7 +65,7 @@ function CandidateCardComponent({ candidate }: CandidateCardProps) {
           <dd>{candidate.desiredWorkFormats.map((f) => tWorkFormat(f)).join(", ")}</dd>
         </div>
         <div className="flex gap-1">
-          <dt className="font-medium">{salaryText}</dt>
+          <dt className="font-semibold text-brand-700 dark:text-brand-400">{salaryText}</dt>
         </div>
         {candidate.availableFrom && (
           <div className="flex gap-1">
@@ -77,7 +80,7 @@ function CandidateCardComponent({ candidate }: CandidateCardProps) {
           {candidate.skills.map((skill) => (
             <span
               key={skill}
-              className="rounded-full border border-gray-300 px-2 py-0.5 text-xs text-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+              className="rounded-full border border-brand-200 bg-brand-50 px-2 py-0.5 text-xs text-brand-800 dark:border-brand-900 dark:bg-brand-950/40 dark:text-brand-300"
             >
               {skill}
             </span>

@@ -30,7 +30,7 @@ export async function JobDetailView({ job }: JobDetailViewProps) {
     <div>
       <Link
         href="/jobs"
-        className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+        className="text-sm font-medium text-gray-500 hover:text-brand-700 dark:text-gray-400 dark:hover:text-brand-400"
       >
         {t("backLink")}
       </Link>
@@ -70,7 +70,7 @@ export async function JobDetailView({ job }: JobDetailViewProps) {
         </div>
         <div className="flex gap-1">
           <dt className="font-medium">{t("salaryLabel")}:</dt>
-          <dd>{salaryText}</dd>
+          <dd className="font-semibold text-brand-700 dark:text-brand-400">{salaryText}</dd>
         </div>
         <div className="flex gap-1">
           <dt className="font-medium">{t("postedLabel")}:</dt>

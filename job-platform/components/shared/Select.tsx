@@ -34,7 +34,7 @@ export function Select<T extends string>({
         <select
           value={value}
           onChange={(event) => onChange(event.target.value as T)}
-          className="h-10.5 w-full appearance-none rounded-lg border border-gray-300 py-2.5 pr-9 pl-4 text-sm font-normal focus:border-gray-900 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-gray-100"
+          className="h-10.5 w-full appearance-none rounded-lg border border-gray-300 py-2.5 pr-9 pl-4 text-sm font-normal focus:border-brand-600 focus:ring-3 focus:ring-brand-500/15 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:focus:border-brand-400"
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>

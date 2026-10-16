@@ -17,7 +17,7 @@ export default async function MessagesPage({ params }: PageProps<"/[locale]/acco
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <Link
         href="/account"
-        className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+        className="text-sm font-medium text-gray-500 hover:text-brand-700 dark:text-gray-400 dark:hover:text-brand-400"
       >
         ← {t("backToAccount")}
       </Link>

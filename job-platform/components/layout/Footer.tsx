@@ -4,7 +4,7 @@ import { HashScrollLink } from "./HashScrollLink";
 import { Logo } from "./Logo";
 
 const columnLinkClassName =
-  "text-sm text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white";
+  "text-sm text-gray-500 transition-colors hover:text-brand-700 dark:text-gray-400 dark:hover:text-brand-400";
 
 export async function Footer() {
   const t = await getTranslations("footer");
@@ -47,8 +47,8 @@ export async function Footer() {
         <div className="mt-10 flex flex-col gap-3 border-t border-gray-200 pt-6 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between dark:border-gray-800 dark:text-gray-400">
           <p>{t("rights", { year })}</p>
           <div className="flex gap-4">
-            <span className="hover:text-gray-900 dark:hover:text-white">{t("privacy")}</span>
-            <span className="hover:text-gray-900 dark:hover:text-white">{t("terms")}</span>
+            <span className="hover:text-brand-700 dark:hover:text-brand-400">{t("privacy")}</span>
+            <span className="hover:text-brand-700 dark:hover:text-brand-400">{t("terms")}</span>
           </div>
         </div>
       </div>

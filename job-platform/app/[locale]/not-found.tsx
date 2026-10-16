@@ -11,7 +11,7 @@ export default async function NotFound() {
         <p className="text-gray-600 dark:text-gray-300">{t("text")}</p>
         <Link
           href="/"
-          className="rounded-full bg-gray-900 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+          className="rounded-full bg-brand-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-800 dark:bg-brand-500 dark:text-gray-950 dark:hover:bg-brand-400"
         >
           {t("backHome")}
         </Link>
