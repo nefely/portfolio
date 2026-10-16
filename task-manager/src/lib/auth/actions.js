@@ -40,6 +40,25 @@ export async function login(_prevState, formData) {
   redirect("/board");
 }
 
+// Public portfolio demo account — credentials are intentionally shown on the login page.
+const DEMO_EMAIL = "demo@taskmanager.app";
+const DEMO_PASSWORD = "DemoBoard2026!";
+
+export async function loginAsDemo() {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email: DEMO_EMAIL,
+    password: DEMO_PASSWORD,
+  });
+
+  if (error) {
+    return { error: translateAuthError(error) };
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/board");
+}
+
 export async function signup(_prevState, formData) {
   const email = String(formData.get("email") || "").trim();
   const password = String(formData.get("password") || "");

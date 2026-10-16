@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AuthForm from "@/components/AuthForm";
+import DemoLoginButton from "@/components/DemoLoginButton";
 import { login } from "@/lib/auth/actions";
 
 export const metadata = { title: "Log in — Task Manager" };
@@ -26,6 +27,14 @@ export default async function LoginPage({ searchParams }) {
             {linkError}
           </p>
         )}
+
+        <DemoLoginButton />
+
+        <div className="my-6 flex items-center gap-3 text-xs text-slate-400">
+          <span className="h-px flex-1 bg-slate-200" />
+          or
+          <span className="h-px flex-1 bg-slate-200" />
+        </div>
 
         <AuthForm action={login} mode="login" />
 
