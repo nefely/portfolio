@@ -121,7 +121,7 @@ export function FiltersPanel({
           <path d="M4 6h16M7 12h10M10 18h4" />
         </svg>
         {activeCount > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-700 text-xs font-semibold text-white dark:bg-brand-500 dark:text-gray-950">
+          <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-xs font-semibold text-white dark:bg-white dark:text-gray-950">
             {activeCount}
           </span>
         )}
