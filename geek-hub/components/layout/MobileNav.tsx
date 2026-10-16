@@ -17,9 +17,16 @@ export function MobileNav() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
-        render={<Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu" />}
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="-ml-2 size-11 md:hidden"
+            aria-label="Open menu"
+          />
+        }
       >
-        <Menu />
+        <Menu className="size-6" />
       </SheetTrigger>
       <SheetContent side="left" className="w-72">
         <SheetHeader>
@@ -34,13 +41,13 @@ export function MobileNav() {
               href={href}
               onClick={() => setOpen(false)}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex min-h-11 items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium transition-colors",
                 isActivePath(pathname, href)
                   ? "bg-accent text-foreground"
                   : "text-muted-foreground hover:bg-accent/60",
               )}
             >
-              <Icon className="size-4" />
+              <Icon className="size-5" />
               {label}
             </Link>
           ))}
